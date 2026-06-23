@@ -19,8 +19,8 @@
   --accent-border:rgba(56,189,248,0.28);
   --accent-border-h:rgba(56,189,248,0.5);
   --accent2:#06b6d4;
-  --text:#f0f0f0;--text2:#9ca3af;--muted:#4b5563;
-  --shift:#fbbf24;--off-c:#38bdf8;
+  --text:#f0f0f0;--text2:#9ca3af;--muted:#7b8290;
+  --shift:#c9a46e;--off-c:#38bdf8;
   --err:#f87171;--ok:#38bdf8;
   --fh:'Syne',sans-serif;--fb:'Space Grotesk',sans-serif;
 }
@@ -201,8 +201,8 @@ nav{
 @media(max-width:640px){.calc-wrap{padding:56px 16px}}
 .calc-card{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:30px}
 .calc-intro{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px}
-.calc-note{background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.18);border-radius:12px;padding:14px 18px;font-size:13px;color:#d4a820;margin-bottom:20px;line-height:1.6}
-.calc-note strong{color:#fcd34d}
+.calc-note{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.2);border-radius:12px;padding:14px 18px;font-size:13px;color:#7ec8e8;margin-bottom:20px;line-height:1.6}
+.calc-note strong{color:var(--accent)}
 .entry-block{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;position:relative}
 .entry-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:14px}
 .rm-btn{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--err);cursor:pointer;font-size:11px;padding:4px 8px;border-radius:6px;font-family:var(--fb)}
@@ -218,10 +218,15 @@ nav{
 .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
 .err-msg{background:rgba(248,65,0,0.07);border:1px solid rgba(248,65,0,0.18);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--err);margin-top:14px;display:none;white-space:pre-line}
 .err-msg.show{display:block}
-.result-card{background:rgba(56,189,248,0.03);border:1px solid rgba(56,189,248,0.18);border-radius:16px;padding:26px;margin-top:16px;display:none}
+.result-card{background:rgba(56,189,248,0.03);border:1px solid rgba(56,189,248,0.18);border-radius:16px;padding:26px;margin-top:16px;display:none;text-align:center}
 .result-card.show{display:block}
-.result-total{font-family:var(--fh);font-size:52px;font-weight:800;color:#fff;letter-spacing:-2.5px;margin-bottom:4px;line-height:1}
-.result-sub{font-size:14px;color:var(--accent);margin-bottom:20px}
+.result-decimal{font-family:var(--fh);font-size:68px;font-weight:800;color:#fff;letter-spacing:-3px;line-height:1}
+.result-unit{font-size:14px;color:var(--accent);margin-bottom:18px}
+.result-time-row{display:flex;background:var(--s2);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:20px}
+.result-time-item{flex:1;padding:14px 18px;text-align:left}
+.result-time-item+.result-time-item{border-left:1px solid var(--border)}
+.rt-val{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--text)}
+.rt-lbl{font-size:10px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-top:4px}
 .result-tbl{width:100%;border-collapse:collapse;font-size:13px}
 .result-tbl th{text-align:left;padding:7px 10px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:700}
 .result-tbl td{padding:7px 10px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.03)}
@@ -233,7 +238,7 @@ nav{
 .guide-wrap{max-width:960px;margin:0 auto;padding:80px 24px}
 @media(max-width:640px){.guide-wrap{padding:56px 16px}}
 .guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.guide-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:22px;text-decoration:none;display:block;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.guide-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:22px;text-decoration:none;display:block;cursor:pointer;transition:border-color .2s,background .2s,transform .2s;position:relative}
 .guide-card:hover{border-color:rgba(56,189,248,0.25);background:var(--s3);transform:translateY(-2px)}
 .gi{font-size:26px;margin-bottom:12px}
 .gt{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
@@ -254,6 +259,10 @@ nav{
 .pdf-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:10px;padding:10px 16px;font-size:13px;color:var(--accent);font-weight:700;text-decoration:none;margin-top:10px;transition:all .15s}
 .pdf-btn:hover{background:rgba(56,189,248,0.18);border-color:var(--accent-border-h)}
 
+/* Guide admin actions */
+.guide-admin-actions{display:none;position:absolute;top:12px;right:12px;gap:6px;z-index:10}
+.guide-admin-actions.visible{display:flex}
+
 /* ── SCHEDULE PAGE ── */
 .sched-wrap{max-width:1200px;margin:0 auto;padding:80px 24px}
 @media(max-width:640px){.sched-wrap{padding:56px 12px}}
@@ -271,10 +280,10 @@ nav{
 .sched-table thead tr{background:rgba(56,189,248,0.07)}
 .sched-table thead th{padding:12px 8px;text-align:center;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);font-family:var(--fh);font-size:11px;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
 .sched-table thead th:first-child{text-align:left;padding-left:16px;width:14%}
-.sched-table tbody tr{background:var(--s1)}
-.sched-table tbody tr:nth-child(even){background:var(--s2)}
+.sched-table tbody tr{background:#0d1117}
+.sched-table tbody tr:nth-child(even){background:#121a28}
 .sched-table tbody td{padding:11px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.035);font-size:12px}
-.sched-table tbody td:first-child{text-align:left;padding-left:16px;font-family:var(--fh);font-weight:700;color:var(--text);font-size:13px}
+.sched-table tbody td:first-child{text-align:left;padding-left:16px;cursor:default}
 td.off{color:var(--off-c);font-weight:600;background:rgba(56,189,248,0.04)}
 td.sh{color:var(--shift);font-weight:500}
 body.editing .sched-table thead th.day-th{cursor:pointer}
@@ -282,6 +291,12 @@ body.editing .sched-table thead th.day-th:hover{background:rgba(56,189,248,0.14)
 body.editing .sched-table thead th.day-th::after{content:' ▾';font-size:9px;opacity:.45}
 body.editing td.sh,body.editing td.off{cursor:pointer}
 body.editing td.sh:hover,body.editing td.off:hover{outline:2px solid var(--accent);outline-offset:-2px;border-radius:3px}
+body.editing .sched-table tbody td:first-child{cursor:pointer}
+body.editing .sched-table tbody td:first-child:hover{background:rgba(56,189,248,0.08)}
+
+/* Name+hrs stacked in schedule table */
+.spc-name-cell{font-family:var(--fh);font-weight:700;color:var(--text);font-size:13px}
+.spc-hrs-cell{font-size:11px;color:var(--accent);margin-top:2px}
 
 /* mobile schedule cards */
 .sched-mobile{display:none}
@@ -294,10 +309,10 @@ body.editing td.sh:hover,body.editing td.off:hover{outline:2px solid var(--accen
 .spc-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .spc-day{border-radius:8px;padding:6px 4px;text-align:center}
 .spc-day.off{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.15)}
-.spc-day.working{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25)}
+.spc-day.working{background:rgba(201,164,110,0.08);border:1px solid rgba(201,164,110,0.25)}
 .spc-day-name{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
 .spc-day.off .spc-day-name{color:rgba(56,189,248,0.5)}
-.spc-day.working .spc-day-name{color:rgba(251,191,36,0.6)}
+.spc-day.working .spc-day-name{color:rgba(201,164,110,0.6)}
 .spc-day-time{font-size:9px;color:var(--text2);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spc-day.off .spc-day-time{color:rgba(56,189,248,0.7);font-weight:600}
 .spc-day.working .spc-day-time{color:var(--shift)}
@@ -381,7 +396,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
   <div class="hero">
     <div class="hero-eyebrow" id="hero-eyebrow-el">
       <div class="hero-eyebrow-dot"></div>
-      <span id="hero-eyebrow-text">Week of Jun 23, 2026</span>
+      <span id="hero-eyebrow-text">Week of Jun 22, 2026</span>
     </div>
     <h1 class="hero-title" id="hero-title-el">New tasks<br><span class="hl">available.</span></h1>
     <p class="hero-sub" id="hero-sub-el">Review the latest guidelines and complete your assessment before starting tasks.</p>
@@ -445,10 +460,20 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
       </div>
       <div class="err-msg" id="calc-err"></div>
       <div class="result-card" id="calc-result">
-        <div class="result-total" id="r-hms">—</div>
-        <div class="result-sub" id="r-dec">—</div>
+        <div class="result-decimal" id="r-decimal">—</div>
+        <div class="result-unit">decimal hours</div>
+        <div class="result-time-row">
+          <div class="result-time-item">
+            <div class="rt-val" id="r-hms-full">—</div>
+            <div class="rt-lbl">hh:mm:ss</div>
+          </div>
+          <div class="result-time-item">
+            <div class="rt-val" id="r-minsec">—</div>
+            <div class="rt-lbl">minutes total</div>
+          </div>
+        </div>
         <div class="divider" style="margin:14px 0"></div>
-        <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:12px">Breakdown</div>
+        <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:12px;text-align:left">Breakdown</div>
         <div style="overflow-x:auto"><table class="result-tbl"><thead><tr><th>#</th><th>Task ID</th><th>Raw</th><th>Applied</th></tr></thead><tbody id="r-tbody"></tbody></table></div>
       </div>
     </div>
@@ -544,7 +569,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
     <div id="editModalFields"></div>
     <div class="em-actions">
       <button class="btn btn-secondary btn-sm" onclick="closeEditModal()">Cancel</button>
-      <button class="btn btn-primary btn-sm" onclick="saveEditModal()">Save</button>
+      <button class="btn btn-primary btn-sm" id="saveEditBtn" onclick="saveEditModal()">Save</button>
     </div>
   </div>
 </div>
@@ -553,24 +578,51 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
 
 <script>
 // ═══════════════════════════ CMS DATA ═══════════════════════════
-const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 23, 2026","title":"New tasks\navailable.","sub":"Review the latest guidelines and complete your assessment before starting tasks.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}]};
+const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"New tasks\navailable.","sub":"Review the latest guidelines and complete your assessment before starting tasks.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
 
 const CMS_KEY='exp_cms';
-function getCMS(){try{const s=localStorage.getItem(CMS_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_CONTENT));}catch{return JSON.parse(JSON.stringify(DEFAULT_CONTENT));}}
+function getCMS(){try{const s=localStorage.getItem(CMS_KEY);const d=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_CONTENT));if(!d.guides)d.guides={};return d;}catch{return JSON.parse(JSON.stringify(DEFAULT_CONTENT));}}
 function saveCMSLocal(d){localStorage.setItem(CMS_KEY,JSON.stringify(d));}
 function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
 
 // ═══════════════════════════ NAV ═══════════════════════════
+let _currentPage='home';
 function showPage(id){
+  _currentPage=id;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   const nt=document.getElementById('nav-'+id);if(nt)nt.classList.add('active');
   if(id!=='guides'){document.getElementById('guides-index').style.display='';document.getElementById('guides-detail').style.display='none';}
+  // Show navEditBtn only on home and guides pages
+  const navEditBtn=document.getElementById('navEditBtn');
+  if(id==='home'||id==='guides'){navEditBtn.style.display='';}
+  else{navEditBtn.style.display='none';}
   window.scrollTo({top:0,behavior:'smooth'});
   document.getElementById('mobileMenu').classList.remove('open');
 }
 function toggleMobileMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+
+// ═══════════════════════════ SCHEDULE HOUR HELPERS ═══════════════════════════
+function parseShiftHours(s){
+  if(!s||s.trim().toUpperCase()==='OFF')return 0;
+  const parts=s.split('–').map(x=>x.trim());
+  if(parts.length<2)return 0;
+  function toDecH(str){
+    const m=str.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return null;
+    let h=+m[1];const mn=+m[2];const ap=m[3].toUpperCase();
+    if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;
+    return h+mn/60;
+  }
+  const start=toDecH(parts[0]);const end=toDecH(parts[1]);
+  if(start===null||end===null)return 0;
+  let diff=end-start;if(diff<0)diff+=24;
+  return diff;
+}
+
+function personHours(shifts){
+  return shifts.reduce((sum,s)=>sum+parseShiftHours(s),0);
+}
 
 // ═══════════════════════════ RENDER HOME ═══════════════════════════
 function renderHome(){
@@ -604,16 +656,20 @@ function renderHome(){
       </div>
     </div>`).join('');
 
-  // team
-  document.getElementById('team-strip').innerHTML=cms.team.map((m,i)=>`
-    <div class="tm" id="tm-${i}" style="position:relative">
+  // team — compute hours from schedule by name match
+  const schedData=getSD();
+  document.getElementById('team-strip').innerHTML=cms.team.map((m,i)=>{
+    const match=schedData.find(p=>p.n===m.name);
+    const computedHrs=match?personHours(match.s).toFixed(1):m.hrs;
+    return`<div class="tm" id="tm-${i}" style="position:relative">
       <div class="tm-name">${esc(m.name)}</div>
-      <div class="tm-hrs">${esc(m.hrs)} hrs</div>
+      <div class="tm-hrs">${computedHrs} hrs</div>
       <div class="item-actions${adminMode?' visible':''}" id="ia-tm-${i}" style="top:-8px;right:-8px">
         <button class="ia-btn ia-edit" onclick="openEditModal('member',${i})">✏</button>
         <button class="ia-btn ia-del" onclick="deleteItem('member',${i})">✕</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   // show/hide add buttons
   document.getElementById('add-update-row').className='admin-add-row'+(adminMode?' visible':'');
@@ -700,6 +756,8 @@ function enterAdmin(){
   document.getElementById('hero-title-el').onclick=()=>openEditModal('hero','title');
   document.getElementById('hero-sub-el').style.cursor='pointer';
   document.getElementById('hero-sub-el').onclick=()=>openEditModal('hero','sub');
+  // re-render guide grid with admin overlays if on guides page
+  if(_currentPage==='guides') renderGuideGrid();
 }
 function exitAdmin(){
   adminMode=false;
@@ -708,6 +766,7 @@ function exitAdmin(){
   document.getElementById('hero-title-el').onclick=null;
   document.getElementById('hero-sub-el').style.cursor='';
   renderHome();
+  if(_currentPage==='guides') renderGuideGrid();
 }
 
 // ═══════════════════════════ EDIT MODAL ═══════════════════════════
@@ -761,6 +820,22 @@ function openEditModal(type,id){
       <div class="em-field"><label>Name</label><input id="ef-name" value="${esc(m.name)}"></div>
       <div class="em-field"><label>Hours</label><input id="ef-hrs" value="${esc(m.hrs)}"></div>`;
     _editCtx.isNew=isNew;_editCtx.midx=isNew?-1:id;
+  }else if(type==='schedname'){
+    const pi=id;
+    const mem=getSchedMem()[pi]||{};
+    title.textContent='Edit Name';
+    fields.innerHTML=`<div class="em-field"><label>Name</label><input id="ef-schedname" value="${esc(mem.n||'')}"></div>`;
+    _editCtx.pi=pi;
+  }else if(type==='guide'){
+    const key=id;
+    const g=getGuideMeta(key);
+    title.textContent='Edit Guide Card';
+    fields.innerHTML=`
+      <div class="em-field"><label>Title</label><input id="ef-guide-title" value="${esc(g.title)}"></div>
+      <div class="em-field"><label>Description</label><textarea id="ef-guide-desc">${esc(g.desc)}</textarea></div>
+      <div class="em-field"><label>PDF URL</label><input id="ef-guide-url" value="${esc(g.pdfUrl)}"></div>
+      <div class="em-field"><label>Upload New PDF</label><input type="file" id="ef-pdf" accept=".pdf" style="background:none;border:none;padding:0;color:var(--text2)"></div>`;
+    _editCtx.guideKey=key;
   }
 
   document.getElementById('editModalWrap').classList.add('on');
@@ -769,7 +844,7 @@ function openEditModal(type,id){
 
 function closeEditModal(){document.getElementById('editModalWrap').classList.remove('on');_editCtx=null;}
 
-function saveEditModal(){
+async function saveEditModal(){
   if(!_editCtx)return;
   const cms=getCMS();
   const{type,id}=_editCtx;
@@ -787,6 +862,45 @@ function saveEditModal(){
   }else if(type==='member'){
     const m={name:document.getElementById('ef-name').value,hrs:document.getElementById('ef-hrs').value};
     if(_editCtx.isNew){cms.team.push(m);}else{cms.team[_editCtx.midx]=m;}
+  }else if(type==='schedname'){
+    const pi=_editCtx.pi;
+    const newName=document.getElementById('ef-schedname').value.trim();
+    getSchedMem()[pi].n=newName;
+    if(cms.team[pi])cms.team[pi].name=newName;
+    saveCMSLocal(cms);
+    closeEditModal();
+    renderSched();
+    renderHome();
+    markSchedDirty();
+    return;
+  }else if(type==='guide'){
+    const key=_editCtx.guideKey;
+    if(!cms.guides)cms.guides={};
+    const fileInput=document.getElementById('ef-pdf');
+    let pdfUrl=document.getElementById('ef-guide-url').value.trim();
+    if(fileInput&&fileInput.files&&fileInput.files[0]){
+      const file=fileInput.files[0];
+      try{
+        const tok=(localStorage.getItem('exp_ghtok')||DEFAULT_TOK).trim();
+        const repo=(localStorage.getItem('exp_ghrepo')||DEFAULT_REPO).trim();
+        const uploadPath=`SOPs/${file.name}`;
+        const url=`https://api.github.com/repos/${repo}/contents/${uploadPath}`;
+        const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
+        const gr=await fetch(url,{headers:hdr});
+        const sha=gr.ok?(await gr.json()).sha:null;
+        const ab=await file.arrayBuffer();
+        const b64=btoa(String.fromCharCode(...new Uint8Array(ab)));
+        await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
+          body:JSON.stringify({message:`Upload PDF ${file.name}`,content:b64,...(sha?{sha}:{})})});
+        pdfUrl=`https://maemaam.github.io/exponn/SOPs/${file.name}`;
+      }catch(e){console.warn('PDF upload failed',e);}
+    }
+    if(!cms.guides[key])cms.guides[key]={};
+    cms.guides[key].title=document.getElementById('ef-guide-title').value.trim();
+    cms.guides[key].desc=document.getElementById('ef-guide-desc').value.trim();
+    cms.guides[key].pdfUrl=pdfUrl;
+    saveCMSLocal(cms);closeEditModal();renderGuideGrid();publishCMS(cms);
+    return;
   }
 
   saveCMSLocal(cms);closeEditModal();renderHome();
@@ -799,6 +913,10 @@ function deleteItem(type,id){
   else if(type==='member'){
     const i=typeof id==='number'?id:parseInt(id);
     cms.team.splice(i,1);
+  }else if(type==='guide'){
+    if(!confirm('Reset this guide to defaults?'))return;
+    if(cms.guides)delete cms.guides[id];
+    saveCMSLocal(cms);renderGuideGrid();publishCMS(cms);return;
   }
   saveCMSLocal(cms);renderHome();publishCMS(cms);
 }
@@ -820,36 +938,53 @@ async function publishCMS(cms){
 
 // ═══════════════════════════ GUIDELINES ═══════════════════════════
 const GUIDES={
-  'annot-critic':{icon:'🎯',title:'Annotation Critic',file:'annot-critic-q7r.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/annot-critic-q7r.pdf',updated:'Jun 2026',html:`<h3>Overview</h3><p>Quality review criteria for annotation tasks. Use this when self-reviewing or peer-reviewing completed annotations.</p><h3>Scoring Rubric</h3><ul><li><strong>Accuracy (40%):</strong> Correct identification of entities, boundaries, and labels.</li><li><strong>Completeness (30%):</strong> All required fields and regions annotated.</li><li><strong>Consistency (20%):</strong> Uniform style and approach across the task batch.</li><li><strong>Speed (10%):</strong> Task completed within the allocated time window.</li></ul><h3>Common Errors</h3><ul><li>Loose bounding boxes — boxes must be pixel-tight.</li><li>Missing secondary entities in crowded scenes.</li><li>Inconsistent label casing or formatting.</li><li>Skipping the verification step before submission.</li></ul><div class="callout">Open the full PDF for scoring examples and edge-case illustrations.</div>`},
-  'ig-entity':{icon:'🔍',title:'IG Entity Verification',file:'IG-Entity-Verification.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/IG-Entity-Verification.pdf',updated:'Jun 2026',html:`<h3>Purpose</h3><p>Step-by-step process for verifying entities in IG annotation tasks.</p><h3>Verification Steps</h3><ol><li>Open the task and identify all visible entities.</li><li>Cross-reference with the reference document.</li><li>Confirm label match — type, sub-type, and attributes.</li><li>Check bounding region for pixel alignment.</li><li>Mark verified and submit.</li></ol><div class="callout">When in doubt, refer to the original reference PDF before marking as verified.</div>`},
-  'sl-box':{icon:'📦',title:'SL Box Verification & Correction',file:'SL-Box-Verification.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/SL-Box-Verification.pdf',updated:'Jun 2026',html:`<h3>Overview</h3><p>How to verify and correct bounding box annotations in SL tasks.</p><h3>Verification Checklist</h3><ul><li>Box must fully enclose the target — no cropping of edges.</li><li>No background padding &gt;5px on any side.</li><li>Overlapping boxes must be clearly separated.</li><li>Confirm label before submission.</li></ul><h3>Correction Procedure</h3><ol><li>Identify the misaligned box.</li><li>Resize using corner handles — do not drag the center.</li><li>Use zoom (minimum 200%) for pixel-level corrections.</li><li>Re-verify after correction before saving.</li></ol><div class="callout">If a box cannot be corrected within 2 minutes, flag for supervisor review.</div>`},
-  'boundary':{icon:'✂️',title:'Find the Boundary v2',file:'find-the-boundary-v2.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/find-the-boundary-v2.pdf',updated:'Jun 2026',html:`<h3>What's New in v2</h3><p>Updated boundary detection criteria aligned with the i2i pixel-aligned filter spec. Use for all tasks after May 2026.</p><h3>Core Principles</h3><ul><li>Boundaries must be pixel-level — no approximation.</li><li>Use edge-contrast as the primary signal; texture is secondary.</li><li>For blurry edges, use the midpoint of the gradient.</li><li>Do not interpolate across occlusions.</li></ul><h3>Tool Settings</h3><ul><li>Brush hardness: 100%</li><li>Zoom: minimum 300% for final check</li><li>Grid: on</li></ul><div class="callout">Always use alongside i2i-pixel-aligned-filter.pdf.</div>`},
-  'i2i':{icon:'🖼️',title:'i2i Pixel-Aligned Filter',file:'i2i-pixel-aligned-filter.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/i2i-pixel-aligned-filter.pdf',updated:'Jun 2026',html:`<h3>Overview</h3><p>Defines how image-to-image transformations must preserve pixel-level boundary accuracy. Companion to find-the-boundary-v2.</p><h3>Filter Requirements</h3><ul><li>Input and output must be the same resolution.</li><li>No anti-aliasing on boundary pixels.</li><li>Color channels must not bleed across annotated boundaries.</li><li>Alpha channel must match boundary mask exactly.</li></ul><h3>Validation</h3><ul><li>Compare at 400% zoom on at least 3 boundary regions.</li><li>Check for sub-pixel shifts using the overlay comparison tool.</li><li>Log discrepancies before submission.</li></ul><div class="callout">Mandatory for all image tasks using the updated pipeline (post-May 2026).</div>`}
+  'annot-critic':{icon:'🎯',title:'Annotation Critic',desc:'Quality review criteria, scoring rubric, and common errors.',file:'annot-critic-q7r.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/annot-critic-q7r.pdf',updated:'Jun 2026',html:`<h3>Overview</h3><p>Quality review criteria for annotation tasks. Use this when self-reviewing or peer-reviewing completed annotations.</p><h3>Scoring Rubric</h3><ul><li><strong>Accuracy (40%):</strong> Correct identification of entities, boundaries, and labels.</li><li><strong>Completeness (30%):</strong> All required fields and regions annotated.</li><li><strong>Consistency (20%):</strong> Uniform style and approach across the task batch.</li><li><strong>Speed (10%):</strong> Task completed within the allocated time window.</li></ul><h3>Common Errors</h3><ul><li>Loose bounding boxes — boxes must be pixel-tight.</li><li>Missing secondary entities in crowded scenes.</li><li>Inconsistent label casing or formatting.</li><li>Skipping the verification step before submission.</li></ul><div class="callout">Open the full PDF for scoring examples and edge-case illustrations.</div>`},
+  'ig-entity':{icon:'🔍',title:'IG Entity Verification',desc:'Step-by-step entity verification for IG tasks.',file:'IG-Entity-Verification.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/IG-Entity-Verification.pdf',updated:'Jun 2026',html:`<h3>Purpose</h3><p>Step-by-step process for verifying entities in IG annotation tasks.</p><h3>Verification Steps</h3><ol><li>Open the task and identify all visible entities.</li><li>Cross-reference with the reference document.</li><li>Confirm label match — type, sub-type, and attributes.</li><li>Check bounding region for pixel alignment.</li><li>Mark verified and submit.</li></ol><div class="callout">When in doubt, refer to the original reference PDF before marking as verified.</div>`},
+  'sl-box':{icon:'📦',title:'SL Box Verification & Correction',desc:'Box verification and correction procedures.',file:'SL-Box-Verification.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/SL-Box-Verification.pdf',updated:'Jun 2026',html:`<h3>Overview</h3><p>How to verify and correct bounding box annotations in SL tasks.</p><h3>Verification Checklist</h3><ul><li>Box must fully enclose the target — no cropping of edges.</li><li>No background padding &gt;5px on any side.</li><li>Overlapping boxes must be clearly separated.</li><li>Confirm label before submission.</li></ul><h3>Correction Procedure</h3><ol><li>Identify the misaligned box.</li><li>Resize using corner handles — do not drag the center.</li><li>Use zoom (minimum 200%) for pixel-level corrections.</li><li>Re-verify after correction before saving.</li></ol><div class="callout">If a box cannot be corrected within 2 minutes, flag for supervisor review.</div>`},
+  'boundary':{icon:'✂️',title:'Find the Boundary v2',desc:'Pixel-aligned boundary detection. Updated v2 specs.',file:'find-the-boundary-v2.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/find-the-boundary-v2.pdf',updated:'Jun 2026',html:`<h3>What's New in v2</h3><p>Updated boundary detection criteria aligned with the i2i pixel-aligned filter spec. Use for all tasks after May 2026.</p><h3>Core Principles</h3><ul><li>Boundaries must be pixel-level — no approximation.</li><li>Use edge-contrast as the primary signal; texture is secondary.</li><li>For blurry edges, use the midpoint of the gradient.</li><li>Do not interpolate across occlusions.</li></ul><h3>Tool Settings</h3><ul><li>Brush hardness: 100%</li><li>Zoom: minimum 300% for final check</li><li>Grid: on</li></ul><div class="callout">Always use alongside i2i-pixel-aligned-filter.pdf.</div>`},
+  'i2i':{icon:'🖼️',title:'i2i Pixel-Aligned Filter',desc:'Image-to-image filter alignment specification.',file:'i2i-pixel-aligned-filter.pdf',pdfUrl:'https://maemaam.github.io/exponn/SOPs/i2i-pixel-aligned-filter.pdf',updated:'Jun 2026',html:`<h3>Overview</h3><p>Defines how image-to-image transformations must preserve pixel-level boundary accuracy. Companion to find-the-boundary-v2.</p><h3>Filter Requirements</h3><ul><li>Input and output must be the same resolution.</li><li>No anti-aliasing on boundary pixels.</li><li>Color channels must not bleed across annotated boundaries.</li><li>Alpha channel must match boundary mask exactly.</li></ul><h3>Validation</h3><ul><li>Compare at 400% zoom on at least 3 boundary regions.</li><li>Check for sub-pixel shifts using the overlay comparison tool.</li><li>Log discrepancies before submission.</li></ul><div class="callout">Mandatory for all image tasks using the updated pipeline (post-May 2026).</div>`}
 };
+
+function getGuideMeta(key){
+  const base=GUIDES[key]||{};
+  const cms=getCMS();
+  const ov=(cms.guides&&cms.guides[key])||{};
+  return Object.assign({},base,{
+    title:ov.title||base.title||key,
+    desc:ov.desc||base.desc||'',
+    pdfUrl:ov.pdfUrl||base.pdfUrl||''
+  });
+}
 
 function renderGuideGrid(){
   document.getElementById('guide-grid-el').innerHTML=Object.keys(GUIDES).map(k=>{
-    const g=GUIDES[k];
+    const g=getGuideMeta(k);
+    const adminOverlay=adminMode?`<div class="guide-admin-actions visible">
+      <button class="ia-btn ia-edit" onclick="event.preventDefault();event.stopPropagation();openEditModal('guide','${k}')">✏ Edit</button>
+      <button class="ia-btn ia-del" onclick="event.preventDefault();event.stopPropagation();deleteItem('guide','${k}')">✕ Reset</button>
+    </div>`:'';
     return`<a class="guide-card" href="#" onclick="showGuide('${k}');return false">
+      ${adminOverlay}
       <div class="gi">${g.icon}</div><div class="gt">${g.title}</div>
-      <div class="gd">${g.file}</div>
+      <div class="gd">${esc(g.desc)}</div>
       <div class="gf"><span class="gl">${g.updated}</span><span class="ga">→</span></div>
     </a>`;
   }).join('');
 }
 
 function showGuide(key){
-  const g=GUIDES[key];if(!g)return;
+  const g=getGuideMeta(key);if(!g.title)return;
+  const base=GUIDES[key];if(!base)return;
   showPage('guides');
   document.getElementById('guides-index').style.display='none';
   const det=document.getElementById('guides-detail');det.style.display='';
   det.innerHTML=`
     <button class="back-btn" onclick="backToGuides()">← All Guidelines</button>
     <div class="guide-detail">
-      <div style="font-size:32px;margin-bottom:10px">${g.icon}</div>
-      <h2>${g.title}</h2>
-      <div class="guide-detail-meta">Updated: ${g.updated} · ${g.file}</div>
-      ${g.html}
+      <div style="font-size:32px;margin-bottom:10px">${base.icon}</div>
+      <h2>${esc(g.title)}</h2>
+      <div class="guide-detail-meta">Updated: ${base.updated} · ${base.file}</div>
+      ${base.html}
       <a class="pdf-btn" href="${g.pdfUrl}" target="_blank">📄 Open Full PDF →</a>
     </div>`;
 }
@@ -874,7 +1009,9 @@ function addCalcEntry(){
 function rmCalcEntry(n){const e=document.getElementById('ce-'+n);if(e)e.remove();}
 function pT(s){const m=(s||'').trim().match(/^(\d+):(\d{2})$/);return m?+m[1]*60+ +m[2]:null;}
 function fT(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return h>0?`${h}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`:`${m}:${String(sc).padStart(2,'0')}`;}
-function fD(s){const h=s/3600,hh=Math.floor(h),mn=Math.round((h-hh)*60);return hh===0?`${mn} min total`:`${hh} hr ${mn} min (${h.toFixed(2)} hrs total)`;}
+function fDecimal(s){return(s/3600).toFixed(2);}
+function fHMS_full(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;}
+function fMinSec(s){const totalMin=Math.floor(s/60),sec=s%60;return sec>0?`${totalMin} min ${sec} sec`:`${totalMin} min`;}
 function parsePaste(txt){
   return txt.split('\n').map(l=>l.trim()).filter(l=>l).reduce((a,line)=>{
     const c=line.split(/\t| {2,}/).map(x=>x.trim()).filter(x=>x);if(c.length<2)return a;
@@ -910,8 +1047,9 @@ function doCalc(){
     if(groups.length>1){const hr=document.createElement('tr');hr.className='grp-hdr';hr.innerHTML=`<td colspan="4">Group ${g.n} — cap ${g.cap} · subtotal ${fT(g.sub)}</td>`;tbody.appendChild(hr);}
     for(const t of g.tasks){const tr=document.createElement('tr');tr.innerHTML=`<td>${rn++}</td><td class="mono">${t.id}</td><td>${t.ts}</td><td class="${t.capped?'capped':''}">${fT(t.a)}${t.capped?' ↓':''}</td>`;tbody.appendChild(tr);}
   }
-  document.getElementById('r-hms').textContent=fT(grand);
-  document.getElementById('r-dec').textContent=fD(grand);
+  document.getElementById('r-decimal').textContent=fDecimal(grand);
+  document.getElementById('r-hms-full').textContent=fHMS_full(grand);
+  document.getElementById('r-minsec').textContent=fMinSec(grand);
   res.className='result-card show';res.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function showCErr(m){const b=document.getElementById('calc-err');b.textContent=m;b.className='err-msg show';}
@@ -944,24 +1082,35 @@ function renderSchedHeaders(sun){
     dates.map((d,i)=>`<th class="day-th" onclick="openDayPicker(event,${i})">${DAYS[i]}<br><span style="font-weight:400;font-size:10px;color:var(--muted)">${fmt(d)}</span></th>`).join('');
   const range=mon.getMonth()===sunD.getMonth()?`${MONTHS[mon.getMonth()]} ${mon.getDate()}–${sunD.getDate()}, ${sunD.getFullYear()}`:`${fmt(mon)} – ${fmt(sunD)}, ${sunD.getFullYear()}`;
   document.getElementById('schedTitle').textContent=`Team Schedule — ${range}`;
-  document.getElementById('schedSub').textContent=`${fmt(mon)} → ${fmt(sunD)}`;
 }
 
 function renderSched(){
   const sun=getSunday();const dates=weekDates(sun);
   renderSchedHeaders(sun);
   const data=getSD();
+
+  // Update schedSub
+  const n=data.length;
+  if(schedEditing){
+    const totalHrs=data.reduce((sum,p)=>sum+personHours(p.s),0);
+    document.getElementById('schedSub').textContent=`${n} members · ${totalHrs.toFixed(1)} hrs this week`;
+  }else{
+    document.getElementById('schedSub').textContent=`${n} members on shift this week`;
+  }
+
   // desktop table
-  document.getElementById('schedBody').innerHTML=data.map((p,pi)=>
-    `<tr><td>${p.n}</td>`+p.s.map((v,di)=>`<td class="${v.trim().toUpperCase()==='OFF'?'off':'sh'}" data-pi="${pi}" data-di="${di}" onclick="editSchedCell(this)">${v}</td>`).join('')+`</tr>`
-  ).join('');
+  document.getElementById('schedBody').innerHTML=data.map((p,pi)=>{
+    const hrs=personHours(p.s);
+    const nameCellContent=`<div class="spc-name-cell">${esc(p.n)}</div><div class="spc-hrs-cell">${hrs.toFixed(1)} hrs</div>`;
+    return`<tr><td data-pi="${pi}" onclick="nameEditClick(this)">${nameCellContent}</td>`+p.s.map((v,di)=>`<td class="${v.trim().toUpperCase()==='OFF'?'off':'sh'}" data-pi="${pi}" data-di="${di}" onclick="editSchedCell(this)">${v}</td>`).join('')+`</tr>`;
+  }).join('');
+
   // mobile cards
   document.getElementById('schedMobile').innerHTML=data.map((p,pi)=>`
     <div class="sched-person-card">
       <div class="spc-name">${esc(p.n)}</div>
       <div class="spc-days">${p.s.map((v,di)=>{
         const isOff=v.trim().toUpperCase()==='OFF';
-        // shorten time for mobile
         const short=isOff?'Off':v.replace(' AM','a').replace(' PM','p').replace(' – ','–');
         return`<div class="spc-day ${isOff?'off':'working'}">
           <div class="spc-day-name">${DAYS[di].slice(0,1)}</div>
@@ -969,6 +1118,16 @@ function renderSched(){
         </div>`;
       }).join('')}</div>
     </div>`).join('');
+}
+
+function nameEditClick(td){
+  if(!schedEditing)return;
+  const pi=+td.dataset.pi;
+  openEditModal('schedname',pi);
+}
+
+function markSchedDirty(){
+  if(!schedEditing){setSaveSt('Unsaved changes — click Save & Publish','');}
 }
 
 function openDayPicker(e,di){
@@ -982,7 +1141,18 @@ function openDayPicker(e,di){
   pop.style.top=(rect.bottom+window.scrollY+4)+'px';pop.style.left=Math.min(rect.left+window.scrollX,window.innerWidth-185)+'px';
   pop.classList.add('on');setTimeout(()=>{const c=pop.querySelector('.dp-cur');if(c)c.scrollIntoView({block:'center'});},40);
 }
-function pickDay(sun){localStorage.setItem(SK,sun);renderSchedHeaders(sun);document.getElementById('dayPicker').classList.remove('on');}
+
+function pickDay(sun){
+  localStorage.setItem(SK,sun);
+  // Auto-sync hero eyebrow with schedule week
+  const monDate=weekDates(sun)[0];
+  const newEyebrow=`Week of ${MONTHS[monDate.getMonth()]} ${monDate.getDate()}, ${monDate.getFullYear()}`;
+  const cms=getCMS();cms.hero.eyebrow=newEyebrow;saveCMSLocal(cms);
+  renderSchedHeaders(sun);
+  document.getElementById('dayPicker').classList.remove('on');
+  renderHome();
+}
+
 document.addEventListener('click',e=>{const p=document.getElementById('dayPicker');if(!p.contains(e.target))p.classList.remove('on');});
 function parseMin(s){const m=s.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return null;let h=+m[1];const ap=m[3].toUpperCase();if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+(+m[2]);}
 function normTime(s){const m=s.match(/(\d+):(\d+)\s*(AM|PM)/i);return m?`${+m[1]}:${m[2]} ${m[3].toUpperCase()}`:null;}
@@ -1013,7 +1183,7 @@ function authSched(){
     closeSchedPw();startSchedEdit();
   }else{document.getElementById('schedPwe').textContent='Incorrect password.';document.getElementById('schedPw').value='';}
 }
-function startSchedEdit(){_schedMem=getSD();schedEditing=true;document.body.classList.add('editing');document.getElementById('schedEditBtn').style.display='none';document.getElementById('saveBar').classList.add('on');setSaveSt('Click any cell to edit · Click day header to change week','');}
+function startSchedEdit(){_schedMem=getSD();schedEditing=true;document.body.classList.add('editing');document.getElementById('schedEditBtn').style.display='none';document.getElementById('saveBar').classList.add('on');setSaveSt('Click any cell to edit · Click day header to change week · Click name to rename','');renderSched();}
 function cancelSchedEdit(){schedEditing=false;_schedMem=null;document.body.classList.remove('editing');document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');renderSched();}
 function persistSched(){localStorage.setItem(SC,JSON.stringify(getSchedMem()));_schedMem=null;schedEditing=false;document.body.classList.remove('editing');document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');renderSched();}
 async function saveSchedGh(){
@@ -1035,6 +1205,8 @@ document.getElementById('editModalWrap').addEventListener('click',e=>{if(e.targe
 addCalcEntry();
 renderHome();
 renderSched();
+// Set initial navEditBtn visibility
+document.getElementById('navEditBtn').style.display='';
 </script>
 </body>
 </html>
