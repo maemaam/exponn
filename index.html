@@ -99,14 +99,20 @@ nav{
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* ── CAROUSEL ── */
-.carousel-wrap{position:relative;overflow:hidden;border-radius:20px;height:320px}
-@media(max-width:640px){.carousel-wrap{height:260px}}
-.carousel-track{display:flex;height:100%;transition:transform .7s cubic-bezier(.4,0,.2,1)}
-.carousel-slide{
-  min-width:100%;height:100%;position:relative;flex-shrink:0;
-  display:flex;align-items:flex-end;padding:28px;overflow:hidden;cursor:pointer;
+.carousel-wrap{
+  position:relative;overflow-y:scroll;overflow-x:hidden;border-radius:20px;height:320px;
+  scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
-.carousel-bg{position:absolute;inset:0;z-index:0}
+.carousel-wrap::-webkit-scrollbar{display:none}
+@media(max-width:640px){.carousel-wrap{height:280px}}
+.carousel-track{display:flex;flex-direction:column}
+.carousel-slide{
+  height:320px;flex-shrink:0;position:relative;
+  display:flex;align-items:flex-end;padding:28px;overflow:hidden;cursor:pointer;
+  scroll-snap-align:start;
+}
+@media(max-width:640px){.carousel-slide{height:280px}}
+.carousel-bg{position:absolute;inset:-15%;z-index:0;will-change:transform}
 
 /* Task-specific BGs */
 .cbg-0{background:linear-gradient(135deg,#0a0f1e 0%,#0d1a3a 40%,#0a2040 100%)}
@@ -146,13 +152,12 @@ nav{
 .carousel-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.25);border-radius:9999px;padding:3px 10px;margin-bottom:8px}
 .carousel-title{font-family:var(--fh);font-size:clamp(18px,3vw,24px);font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-.5px}
 .carousel-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.5}
-.carousel-nav{position:absolute;bottom:16px;right:20px;z-index:4;display:flex;gap:6px}
-.carousel-dot{width:6px;height:6px;border-radius:9999px;background:rgba(255,255,255,0.2);cursor:pointer;transition:all .3s}
-.carousel-dot.active{background:var(--accent);width:20px;box-shadow:0 0 6px rgba(56,189,248,0.6)}
-.carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;background:rgba(6,8,15,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:9999px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:14px;transition:all .15s;backdrop-filter:blur(8px)}
-.carousel-arrow:hover{background:rgba(56,189,248,0.15);border-color:rgba(56,189,248,0.4);color:var(--accent)}
-.carousel-arrow.prev{left:14px}
-.carousel-arrow.next{right:14px}
+/* vertical dots on right edge */
+.carousel-nav{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:4;display:flex;flex-direction:column;gap:5px}
+.carousel-dot{width:5px;height:5px;border-radius:9999px;background:rgba(255,255,255,0.18);cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1)}
+.carousel-dot.active{background:var(--accent);height:22px;box-shadow:0 0 8px rgba(56,189,248,0.7)}
+/* arrows hidden — scroll/swipe is the interaction */
+.carousel-arrow{display:none}
 
 /* ── UPDATES ── */
 .updates-list{border-radius:18px;overflow:hidden;border:1px solid var(--border)}
@@ -711,14 +716,15 @@ function capitalize(s){return s?s[0].toUpperCase()+s.slice(1):'';}
 // ═══════════════════════════ CAROUSEL ═══════════════════════════
 const CAROUSEL_VISUALS=['vis-0','vis-1','vis-2','vis-3','vis-4'];
 const CAROUSEL_BGCLS=['cbg-0','cbg-1','cbg-2','cbg-3','cbg-4'];
-let carIdx=0,carTimer=null;
+let carIdx=0,carTimer=null,_carScrollHandler=null;
 
 function renderCarousel(tasks){
+  const wrap=document.getElementById('carousel');
   const track=document.getElementById('carouselTrack');
   const dots=document.getElementById('carouselDots');
   track.innerHTML=tasks.map((t,i)=>{
     const vi=i%5;
-    return`<div class="carousel-slide" onclick="${t.guideKey?`showGuide('${t.guideKey}')`:'showPage(\'guides\')'}" >
+    return`<div class="carousel-slide" onclick="${t.guideKey?`showGuide('${t.guideKey}')`:'showPage(\'guides\')'}">
       <div class="carousel-bg ${CAROUSEL_BGCLS[vi]}"></div>
       <div class="carousel-visual ${CAROUSEL_VISUALS[vi]}">${getCarouselInner(vi)}</div>
       <div class="carousel-glass"></div>
@@ -731,8 +737,41 @@ function renderCarousel(tasks){
   }).join('');
   dots.innerHTML=tasks.map((_,i)=>`<div class="carousel-dot${i===0?' active':''}" onclick="carouselGo(${i})"></div>`).join('');
   carIdx=0;
+  wrap.scrollTop=0;
   clearInterval(carTimer);
-  if(tasks.length>1) carTimer=setInterval(()=>carouselMove(1),4000);
+  // Remove old scroll handler
+  if(_carScrollHandler) wrap.removeEventListener('scroll',_carScrollHandler);
+  if(tasks.length>1){
+    _carScrollHandler=_makeCarScrollHandler(wrap,tasks.length);
+    wrap.addEventListener('scroll',_carScrollHandler,{passive:true});
+    carTimer=setInterval(()=>carouselMove(1),5000);
+  }
+}
+
+function _makeCarScrollHandler(wrap,count){
+  return function(){
+    const slideH=wrap.offsetHeight;
+    if(!slideH)return;
+    const st=wrap.scrollTop;
+    // Parallax on each slide
+    wrap.querySelectorAll('.carousel-slide').forEach((slide,i)=>{
+      const rel=st-i*slideH;
+      const bg=slide.querySelector('.carousel-bg');
+      const vis=slide.querySelector('.carousel-visual');
+      const content=slide.querySelector('.carousel-content');
+      if(bg) bg.style.transform=`translateY(${rel*0.3}px)`;
+      if(vis) vis.style.transform=`translateY(${rel*0.12}px)`;
+      if(content) content.style.transform=`translateY(${rel*0.05}px)`;
+    });
+    // Update active dot
+    const newIdx=Math.round(st/slideH);
+    if(newIdx!==carIdx&&newIdx>=0&&newIdx<count){
+      carIdx=newIdx;
+      document.querySelectorAll('.carousel-dot').forEach((d,j)=>d.classList.toggle('active',j===carIdx));
+      clearInterval(carTimer);
+      carTimer=setInterval(()=>carouselMove(1),5000);
+    }
+  };
 }
 
 function getCarouselInner(vi){
@@ -748,12 +787,13 @@ function getCarouselInner(vi){
 }
 
 function carouselGo(i){
-  const cms=getCMS();
-  carIdx=((i%cms.tasks.length)+cms.tasks.length)%cms.tasks.length;
-  document.getElementById('carouselTrack').style.transform=`translateX(-${carIdx*100}%)`;
+  const count=getCMS().tasks.length;
+  carIdx=((i%count)+count)%count;
+  const wrap=document.getElementById('carousel');
+  wrap.scrollTo({top:carIdx*wrap.offsetHeight,behavior:'smooth'});
   document.querySelectorAll('.carousel-dot').forEach((d,j)=>d.classList.toggle('active',j===carIdx));
 }
-function carouselMove(dir){const cms=getCMS();carouselGo(carIdx+dir);}
+function carouselMove(dir){carouselGo(carIdx+dir);}
 
 // ═══════════════════════════ ADMIN MODE ═══════════════════════════
 let adminMode=false;
@@ -1280,17 +1320,6 @@ async function saveSchedGh(){
 function setSaveSt(m,t){const e=document.getElementById('saveSt');e.textContent=m;e.className='save-st'+(t?' '+t:'');}
 document.getElementById('schedOv').addEventListener('click',e=>{if(e.target===document.getElementById('schedOv'))closeSchedPw();});
 document.getElementById('editModalWrap').addEventListener('click',e=>{if(e.target===document.getElementById('editModalWrap'))closeEditModal();});
-
-// ═══════════════════════════ CAROUSEL TOUCH ═══════════════════════════
-(()=>{
-  let tx=0;
-  const el=document.getElementById('carousel');
-  el.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
-  el.addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-tx;
-    if(Math.abs(dx)>40)carouselMove(dx<0?1:-1);
-  },{passive:true});
-})();
 
 // ═══════════════════════════ INIT ═══════════════════════════
 addCalcEntry();
