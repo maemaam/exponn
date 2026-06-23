@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exponn</title>
+<link rel="icon" type="image/webp" href="../logo.webp">
+<style>
+:root{
+  --bg:#111;--s1:#1c1c1c;--s2:#242424;--s3:#2a2a2a;--border:#2e2e2e;
+  --accent:#2d7a5e;--accent-h:#226650;--accent-m:#6bab90;
+  --text:#f0f0f0;--muted:#777;
+  --shift:#fbbf24;
+  --err:#f87171;--ok:#4ade80;
+  --info:#60a5fa;--info-bg:#0d1a2e;
+  --warn:#fbbf24;--warn-bg:#1c1500;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+nav{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:10px;padding:12px 0;margin-right:28px;text-decoration:none}
+.nav-brand img{height:32px;border-radius:5px}
+.nav-brand span{font-size:15px;font-weight:700;color:#fff}
+.nav-brand small{font-size:10px;color:var(--muted);display:block;line-height:1}
+.nav-links{display:flex;gap:0;flex:1}
+.nav-link{padding:16px 16px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-link:hover{color:var(--text)}
+.nav-link.active{color:var(--accent-m);border-bottom-color:var(--accent)}
+.nav-schedule{margin-left:auto;padding:7px 14px;background:var(--accent);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s}
+.nav-schedule:hover{background:var(--accent-h)}
+
+/* PAGE WRAPPER */
+.page{display:none;padding:28px 24px;max-width:1000px;margin:0 auto}
+.page.active{display:block}
+
+/* HERO */
+.hero{text-align:center;padding:32px 0 24px}
+.hero h1{font-size:28px;font-weight:800;color:#fff;margin-bottom:6px}
+.hero p{color:var(--muted);font-size:14px}
+.badge-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px}
+.badge-green{background:#0d2318;color:var(--accent-m);border:1px solid var(--accent)}
+.badge-blue{background:var(--info-bg);color:var(--info);border:1px solid #1e3a5f}
+.badge-amber{background:var(--warn-bg);color:var(--warn);border:1px solid #3a2800}
+
+/* CARDS */
+.section-title{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;margin-top:28px}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px}
+.card-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.card-title{font-size:15px;font-weight:700;color:#fff}
+.card-meta{font-size:11px;color:var(--muted)}
+.card-body{font-size:13px;color:#ccc;line-height:1.6;margin-top:8px}
+.card-body ul{padding-left:18px;margin-top:6px}
+.card-body li{margin-bottom:4px}
+.card-tag{display:inline-block;padding:2px 9px;border-radius:12px;font-size:10px;font-weight:700;margin-right:6px}
+.tag-new{background:#0d2318;color:var(--accent-m)}
+.tag-updated{background:var(--info-bg);color:var(--info)}
+.tag-important{background:#2a0d0d;color:#f87171}
+
+/* GUIDELINES GRID */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:4px}
+.guide-card{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:16px;cursor:pointer;transition:border-color .15s,background .15s;text-decoration:none;display:block}
+.guide-card:hover{border-color:var(--accent);background:var(--s3)}
+.guide-card-icon{font-size:22px;margin-bottom:8px}
+.guide-card-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+.guide-card-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.guide-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.guide-card-date{font-size:10px;color:var(--muted)}
+.guide-card-arrow{color:var(--accent-m);font-size:12px;font-weight:700}
+
+/* TASK CALCULATOR */
+.calc-container{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:8px}
+.calc-desc{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.calc-desc strong{color:var(--text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.single{grid-template-columns:1fr}
+@media(max-width:540px){.form-row{grid-template-columns:1fr}}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.3px}
+.field input,.field textarea{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:9px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{min-height:160px;resize:vertical;font-size:12px;font-family:'Courier New',monospace;line-height:1.5}
+.field .hint{font-size:11px;color:var(--muted);margin-top:4px}
+.calc-add{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.btn{padding:9px 20px;border-radius:7px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:background .15s}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-h)}
+.btn-secondary{background:var(--s3);color:var(--text)}.btn-secondary:hover{background:#383838}
+.btn-danger{background:#2a0d0d;color:var(--err);border:1px solid #4a1a1a}.btn-danger:hover{background:#3a1212}
+.btn-sm{padding:6px 12px;font-size:12px}
+.entry-block{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:16px;margin-bottom:12px;position:relative}
+.entry-num{position:absolute;top:12px;right:14px;font-size:11px;color:var(--muted);font-weight:700}
+.remove-entry{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--err);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px}
+.note-box{background:#1c1500;border:1px solid #3a2800;border-radius:7px;padding:12px 14px;font-size:12px;color:var(--warn);margin-bottom:16px;line-height:1.5}
+.note-box strong{color:#fcd34d}
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+.result-box{background:#0d2318;border:1px solid var(--accent);border-radius:9px;padding:20px;display:none}
+.result-box.show{display:block}
+.result-title{font-size:13px;font-weight:700;color:var(--accent-m);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.result-total{font-size:32px;font-weight:800;color:#fff;margin-bottom:4px}
+.result-decimal{font-size:15px;color:var(--info);margin-bottom:14px}
+.result-breakdown{border-top:1px solid #1a3a2a;padding-top:14px;margin-top:4px}
+.result-breakdown-title{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.result-table{width:100%;border-collapse:collapse;font-size:12px}
+.result-table th{text-align:left;padding:5px 8px;color:var(--muted);font-weight:600;border-bottom:1px solid #1a3a2a}
+.result-table td{padding:5px 8px;color:#ccc;border-bottom:1px solid #142a1e}
+.result-table td.capped{color:var(--warn)}
+.result-table td.id-col{font-family:'Courier New',monospace;font-size:11px;color:var(--muted)}
+.result-table td.grp{font-weight:700;color:#fff;padding-top:10px}
+.err-box{background:#2a0d0d;border:1px solid #4a1a1a;border-radius:7px;padding:12px 14px;font-size:12px;color:var(--err);margin-top:10px;display:none}
+.err-box.show{display:block}
+
+/* GUIDELINES PAGE */
+.guide-content{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px}
+.guide-content h2{font-size:20px;font-weight:700;color:#fff;margin-bottom:6px}
+.guide-content .guide-meta{font-size:12px;color:var(--muted);margin-bottom:20px}
+.guide-content h3{font-size:15px;font-weight:700;color:var(--accent-m);margin:20px 0 8px}
+.guide-content p{font-size:13px;color:#ccc;line-height:1.7;margin-bottom:10px}
+.guide-content ul,
+.guide-content ol{padding-left:20px;margin-bottom:12px}
+.guide-content li{font-size:13px;color:#ccc;line-height:1.7;margin-bottom:4px}
+.guide-content .callout{background:var(--s2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 7px 7px 0;margin:12px 0;font-size:13px;color:#ccc;line-height:1.6}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--accent-m);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px;background:none;border:none;padding:0}
+.back-btn:hover{color:#fff}
+
+/* FOOTER */
+footer{text-align:center;padding:32px 24px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="#" onclick="showPage('home')">
+    <img src="../logo.webp" alt="Exponn">
+    <span>Exponn<small>Connecting AI. Empowering People.</small></span>
+
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#" id="nav-home" onclick="showPage('home');return false">Home</a>
+    <a class="nav-link" href="#" id="nav-calc" onclick="showPage('calc');return false">Time Calculator</a>
+    <a class="nav-link" href="#" id="nav-guides" onclick="showPage('guides');return false">Guidelines</a>
+    <a class="nav-link" href="https://maemaam.github.io/exponn-schedule" target="_blank" id="nav-schedule">Schedule</a>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>Exponn</h1>
+    <p>Your central hub for updates, guidelines, and tools.</p>
+    <div class="badge-row">
+      <span class="badge badge-green">▲ Live</span>
+      <span class="badge badge-blue">Week of Jun 23, 2026</span>
+      <span class="badge badge-amber">95 hrs/week total</span>
+    </div>
+  </div>
+
+  <div class="section-title">Latest Updates</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-tag tag-new">NEW</span>
+        <span class="card-title">Task Time Calculator</span>
+      </div>
+      <span class="card-meta">Jun 23, 2026</span>
+    </div>
+    <div class="card-body">
+      Quickly calculate your total work time from task IDs. Paste your task list, set your first &amp; last task ID, apply a time cap, and get your total instantly. Supports multiple task types per session.
+      <br><br>
+      <a href="#" onclick="showPage('calc');return false" style="color:var(--accent-m);font-weight:600;font-size:13px">→ Open Calculator</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-tag tag-updated">UPDATED</span>
+        <span class="card-title">Team Schedule — Week of Jun 23</span>
+      </div>
+      <span class="card-meta">Jun 22, 2026</span>
+    </div>
+    <div class="card-body">
+      Schedule updated. Mohamed Elsahrigy removed. Final weekly distribution:
+      <ul>
+        <li>Menna: 22.5 hrs &nbsp;|&nbsp; Mazen: 20 hrs &nbsp;|&nbsp; Yahya: 17.5 hrs</li>
+        <li>Eiman: 22.5 hrs &nbsp;|&nbsp; Ahmed: 14 hrs &nbsp;|&nbsp; Mostafa: 13.5 hrs</li>
+        <li><strong>Total: 95 hrs/week</strong></li>
+      </ul>
+      <br>
+      <a href="https://maemaam.github.io/exponn-schedule" target="_blank" style="color:var(--accent-m);font-weight:600;font-size:13px">→ View Full Schedule</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <span class="card-tag tag-important">IMPORTANT</span>
+        <span class="card-title">Annotation Quality Reminder</span>
+      </div>
+      <span class="card-meta">Jun 20, 2026</span>
+    </div>
+    <div class="card-body">
+      Please review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps. Accuracy directly impacts project scoring.
+    </div>
+  </div>
+
+  <div class="section-title">Quick Access — Guidelines</div>
+  <div class="guide-grid">
+    <a class="guide-card" href="#" onclick="showGuide('annot-critic');return false">
+      <div class="guide-card-icon">🎯</div>
+      <div class="guide-card-title">Annotation Critic</div>
+      <div class="guide-card-desc">Quality review criteria for annotation tasks. Scoring rubric and common errors.</div>
+      <div class="guide-card-footer">
+        <span class="guide-card-date">annot-critic-q7r</span>
+        <span class="guide-card-arrow">→</span>
+      </div>
+    </a>
+    <a class="guide-card" href="#" onclick="showGuide('ig-entity');return false">
+      <div class="guide-card-icon">🔍</div>
+      <div class="guide-card-title">IG Entity Verification</div>
+      <div class="guide-card-desc">Step-by-step entity verification process for IG tasks. Reference guide.</div>
+      <div class="guide-card-footer">
+        <span class="guide-card-date">IG Entity Verification</span>
+        <span class="guide-card-arrow">→</span>
+      </div>
+    </a>
+    <a class="guide-card" href="#" onclick="showGuide('sl-box');return false">
+      <div class="guide-card-icon">📦</div>
+      <div class="guide-card-title">SL Box Verification</div>
+      <div class="guide-card-desc">Box verification and correction procedures. Boundary alignment standards.</div>
+      <div class="guide-card-footer">
+        <span class="guide-card-date">SL Box Verification</span>
+        <span class="guide-card-arrow">→</span>
+      </div>
+    </a>
+    <a class="guide-card" href="#" onclick="showGuide('boundary');return false">
+      <div class="guide-card-icon">✂️</div>
+      <div class="guide-card-title">Find the Boundary v2</div>
+      <div class="guide-card-desc">Pixel-aligned boundary detection. Updated v2 with i2i filter specs.</div>
+      <div class="guide-card-footer">
+        <span class="guide-card-date">find-the-boundary-v2</span>
+        <span class="guide-card-arrow">→</span>
+      </div>
+    </a>
+    <a class="guide-card" href="#" onclick="showGuide('i2i');return false">
+      <div class="guide-card-icon">🖼️</div>
+      <div class="guide-card-title">i2i Pixel-Aligned Filter</div>
+      <div class="guide-card-desc">Image-to-image filter alignment spec. Use alongside boundary detection tasks.</div>
+      <div class="guide-card-footer">
+        <span class="guide-card-date">i2i-pixel-aligned-filter</span>
+        <span class="guide-card-arrow">→</span>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- TIME CALCULATOR PAGE -->
+<div class="page" id="page-calc">
+  <div style="padding-top:8px">
+    <div class="section-title">Task Time Calculator</div>
+    <div class="calc-container">
+      <div class="calc-desc">
+        Paste your full task list, enter the <strong>first</strong> and <strong>last</strong> task ID you worked on, and set the <strong>max time cap</strong> per task. The calculator will sum only your tasks and apply the cap automatically.<br><br>
+        <strong>Note:</strong> If you worked on tasks with two different max times (e.g., 10-min tasks and 15-min tasks), add them as separate entries below.
+      </div>
+
+      <div class="note-box">
+        <strong>⚠️ How time capping works:</strong><br>
+        If max is <strong>10:00</strong> — a task at <strong>10:01</strong> becomes <strong>10:00</strong>, but <strong>09:59</strong> stays <strong>09:59</strong>. Only times strictly above the cap are rounded down.
+      </div>
+
+      <div id="entries-container"></div>
+
+      <div class="calc-add">
+        <button class="btn btn-secondary btn-sm" onclick="addEntry()">+ Add Another Task Type</button>
+        <span style="font-size:12px;color:var(--muted)">For tasks with a different time cap</span>
+      </div>
+
+      <hr class="divider">
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="calculate()">Calculate Total Time</button>
+        <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
+      </div>
+
+      <div class="err-box" id="err-box"></div>
+
+      <div class="result-box" id="result-box">
+        <div class="result-title">Total Time Worked</div>
+        <div class="result-total" id="result-hms">—</div>
+        <div class="result-decimal" id="result-decimal">—</div>
+        <div class="result-breakdown">
+          <div class="result-breakdown-title">Task Breakdown</div>
+          <table class="result-table" id="result-table">
+            <thead><tr><th>#</th><th>Task ID</th><th>Raw Time</th><th>Applied</th></tr></thead>
+            <tbody id="result-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDELINES PAGE -->
+<div class="page" id="page-guides">
+  <div id="guides-list">
+    <div class="section-title">All Guidelines</div>
+    <div class="guide-grid">
+      <a class="guide-card" href="#" onclick="showGuide('annot-critic');return false">
+        <div class="guide-card-icon">🎯</div>
+        <div class="guide-card-title">Annotation Critic</div>
+        <div class="guide-card-desc">Quality review criteria, scoring rubric, and common annotation errors.</div>
+        <div class="guide-card-footer"><span class="guide-card-date">annot-critic-q7r.pdf</span><span class="guide-card-arrow">→</span></div>
+      </a>
+      <a class="guide-card" href="#" onclick="showGuide('ig-entity');return false">
+        <div class="guide-card-icon">🔍</div>
+        <div class="guide-card-title">IG Entity Verification</div>
+        <div class="guide-card-desc">Entity verification and reference process for IG annotation tasks.</div>
+        <div class="guide-card-footer"><span class="guide-card-date">IG Entity Verification.pdf</span><span class="guide-card-arrow">→</span></div>
+      </a>
+      <a class="guide-card" href="#" onclick="showGuide('sl-box');return false">
+        <div class="guide-card-icon">📦</div>
+        <div class="guide-card-title">SL Box Verification & Correction</div>
+        <div class="guide-card-desc">Box verification procedures and correction standards for SL tasks.</div>
+        <div class="guide-card-footer"><span class="guide-card-date">SL Box Verification & Correction.pdf</span><span class="guide-card-arrow">→</span></div>
+      </a>
+      <a class="guide-card" href="#" onclick="showGuide('boundary');return false">
+        <div class="guide-card-icon">✂️</div>
+        <div class="guide-card-title">Find the Boundary v2</div>
+        <div class="guide-card-desc">Pixel-aligned boundary detection guide, version 2.</div>
+        <div class="guide-card-footer"><span class="guide-card-date">find-the-boundary-v2.pdf</span><span class="guide-card-arrow">→</span></div>
+      </a>
+      <a class="guide-card" href="#" onclick="showGuide('i2i');return false">
+        <div class="guide-card-icon">🖼️</div>
+        <div class="guide-card-title">i2i Pixel-Aligned Filter</div>
+        <div class="guide-card-desc">Image-to-image filter alignment specification.</div>
+        <div class="guide-card-footer"><span class="guide-card-date">i2i-pixel-aligned-filter.pdf</span><span class="guide-card-arrow">→</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div id="guide-detail" style="display:none">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<footer>Exponn Solutions · Team Portal · &copy; 2026</footer>
+
+<script>
+// ─── NAVIGATION ────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  if (id !== 'guides') {
+    document.getElementById('guides-list').style.display = '';
+    document.getElementById('guide-detail').style.display = 'none';
+  }
+}
+
+// ─── GUIDELINES ────────────────────────────────────────────────────────────
+const GUIDES = {
+  'annot-critic': {
+    title: 'Annotation Critic',
+    file: 'annot-critic-q7r.pdf',
+    icon: '🎯',
+    updated: 'Jun 2026',
+    content: `
+      <h3>Overview</h3>
+      <p>The annotation critic guideline defines quality review criteria for annotation tasks. Use this as your reference when self-reviewing or peer-reviewing completed annotations.</p>
+      <h3>Scoring Rubric</h3>
+      <ul>
+        <li><strong>Accuracy (40%):</strong> Correct identification of entities, boundaries, and labels.</li>
+        <li><strong>Completeness (30%):</strong> All required fields and regions annotated.</li>
+        <li><strong>Consistency (20%):</strong> Uniform style and approach across the task batch.</li>
+        <li><strong>Speed (10%):</strong> Task completed within the allocated time window.</li>
+      </ul>
+      <h3>Common Errors to Avoid</h3>
+      <ul>
+        <li>Loose bounding boxes — boxes must be pixel-tight.</li>
+        <li>Missing secondary entities in crowded scenes.</li>
+        <li>Inconsistent label casing or formatting.</li>
+        <li>Skipping the verification step before submission.</li>
+      </ul>
+      <div class="callout">Always open the full PDF for the latest scoring examples and edge-case illustrations.</div>
+      <p><a href="../SOPs and Guidelines/annot-critic-q7r.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
+    `
+  },
+  'ig-entity': {
+    title: 'IG Entity Verification',
+    file: 'IG Entity Verification.pdf',
+    icon: '🔍',
+    updated: 'Jun 2026',
+    content: `
+      <h3>Purpose</h3>
+      <p>This guide covers the step-by-step process for verifying entities in IG annotation tasks. It ensures annotators follow a consistent verification path before marking a task complete.</p>
+      <h3>Verification Steps</h3>
+      <ol>
+        <li>Open the task and identify all visible entities in the scene.</li>
+        <li>Cross-reference each entity with the reference document (original-ig-entity-ref-verification-v1.pdf).</li>
+        <li>Confirm label match — entity type, sub-type, and attributes.</li>
+        <li>Check bounding region for pixel alignment.</li>
+        <li>Mark verified and submit.</li>
+      </ol>
+      <h3>Reference Materials</h3>
+      <ul>
+        <li>Primary: IG Entity Verification.pdf</li>
+        <li>Reference: original-ig-entity-ref-verification-v1.pdf</li>
+        <li>Video walkthrough: Ig Entity.mp4 (in SOPs folder)</li>
+      </ul>
+      <div class="callout">When in doubt, refer to the original reference PDF before marking an entity as verified.</div>
+      <p><a href="../SOPs and Guidelines/IG Entity Verification.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
+    `
+  },
+  'sl-box': {
+    title: 'SL Box Verification & Correction',
+    file: 'SL Box Verification & Correction.pdf',
+    icon: '📦',
+    updated: 'Jun 2026',
+    content: `
+      <h3>Overview</h3>
+      <p>This guideline covers how to verify and correct bounding box annotations in SL tasks. It applies to all box-based annotation workflows.</p>
+      <h3>Verification Checklist</h3>
+      <ul>
+        <li>Box must fully enclose the target object — no cropping of edges.</li>
+        <li>Box must not include significant background padding (&gt;5px on any side).</li>
+        <li>Overlapping boxes for distinct objects must be clearly separated.</li>
+        <li>Confirm label before submission.</li>
+      </ul>
+      <h3>Correction Procedure</h3>
+      <ol>
+        <li>Identify the misaligned box.</li>
+        <li>Resize using the corner handles — do not drag the center.</li>
+        <li>Use zoom (minimum 200%) when making pixel-level corrections.</li>
+        <li>Re-verify after correction before saving.</li>
+      </ol>
+      <div class="callout">If a box cannot be corrected within 2 minutes, flag it for supervisor review rather than guessing.</div>
+      <p><a href="../SOPs and Guidelines/SL Box Verification %26 Correction.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
+    `
+  },
+  'boundary': {
+    title: 'Find the Boundary v2',
+    file: 'find-the-boundary-v2.pdf',
+    icon: '✂️',
+    updated: 'Jun 2026',
+    content: `
+      <h3>What's New in v2</h3>
+      <p>Version 2 introduces updated boundary detection criteria aligned with the i2i pixel-aligned filter specification. Use this version for all tasks dated after May 2026.</p>
+      <h3>Core Principles</h3>
+      <ul>
+        <li>Boundaries must be defined at the pixel level — sub-pixel approximation is not accepted.</li>
+        <li>Use edge-contrast as the primary signal; texture is secondary.</li>
+        <li>For blurry edges, use the midpoint of the gradient as the boundary.</li>
+        <li>Do not interpolate across occlusions — mark boundaries where visible only.</li>
+      </ul>
+      <h3>Tool Settings</h3>
+      <ul>
+        <li>Brush hardness: 100%</li>
+        <li>Zoom level: minimum 300% for final check</li>
+        <li>Grid: on (helps with alignment verification)</li>
+      </ul>
+      <div class="callout">Always use this guide alongside i2i-pixel-aligned-filter.pdf for consistency.</div>
+      <p><a href="../SOPs and Guidelines/find-the-boundary-v2.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
+    `
+  },
+  'i2i': {
+    title: 'i2i Pixel-Aligned Filter',
+    file: 'i2i-pixel-aligned-filter.pdf',
+    icon: '🖼️',
+    updated: 'Jun 2026',
+    content: `
+      <h3>Overview</h3>
+      <p>The i2i pixel-aligned filter specification defines how image-to-image transformations should preserve pixel-level boundary accuracy. This is a companion document to find-the-boundary-v2.</p>
+      <h3>Filter Requirements</h3>
+      <ul>
+        <li>Input and output images must be the same resolution.</li>
+        <li>No anti-aliasing on boundary pixels.</li>
+        <li>Color channels must not bleed across annotated boundaries.</li>
+        <li>Alpha channel (if present) must match boundary mask exactly.</li>
+      </ul>
+      <h3>Validation</h3>
+      <ul>
+        <li>Compare input vs. output at 400% zoom on at least 3 boundary regions.</li>
+        <li>Check for any sub-pixel shifts using the overlay comparison tool.</li>
+        <li>Log any discrepancies before submission.</li>
+      </ul>
+      <div class="callout">This filter spec is mandatory for all image tasks using the updated pipeline (post-May 2026).</div>
+      <p><a href="../SOPs and Guidelines/i2i-pixel-aligned-filter.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
+    `
+  }
+};
+
+function showGuide(key) {
+  const g = GUIDES[key];
+  if (!g) return;
+  showPage('guides');
+  document.getElementById('guides-list').style.display = 'none';
+  const det = document.getElementById('guide-detail');
+  det.style.display = '';
+  det.innerHTML = `
+    <button class="back-btn" onclick="backToGuides()">← Back to Guidelines</button>
+    <div class="guide-content">
+      <div style="font-size:28px;margin-bottom:8px">${g.icon}</div>
+      <h2>${g.title}</h2>
+      <div class="guide-meta">Last updated: ${g.updated} &nbsp;·&nbsp; ${g.file}</div>
+      ${g.content}
+    </div>
+  `;
+}
+
+function backToGuides() {
+  document.getElementById('guides-list').style.display = '';
+  document.getElementById('guide-detail').style.display = 'none';
+}
+
+// ─── TASK CALCULATOR ────────────────────────────────────────────────────────
+let entryCount = 0;
+
+function addEntry(defaultPaste) {
+  entryCount++;
+  const n = entryCount;
+  const div = document.createElement('div');
+  div.className = 'entry-block';
+  div.id = 'entry-' + n;
+  div.innerHTML = `
+    <button class="remove-entry" onclick="removeEntry(${n})" title="Remove">✕</button>
+    <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px">Task Group ${n}</div>
+    <div class="form-row">
+      <div class="field">
+        <label>FIRST TASK ID (your first task)</label>
+        <input type="text" id="first-${n}" placeholder="e.g. 4c4f1e9f-eff5-483b-9b87-57260bd81fdc">
+      </div>
+      <div class="field">
+        <label>LAST TASK ID (your last task)</label>
+        <input type="text" id="last-${n}" placeholder="e.g. 173c55ae-759d-4fce-9637-5d1112f768e2">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>MAX TIME CAP (MM:SS)</label>
+        <input type="text" id="cap-${n}" placeholder="e.g. 10:00" value="10:00">
+        <div class="hint">Any task time above this is capped to this value. Below it stays exact.</div>
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="field">
+        <label>PASTE TASK LIST</label>
+        <textarea id="paste-${n}" placeholder="Paste your task list here (tab or space separated columns: ID  Status  Date  MM:SS)">${defaultPaste||''}</textarea>
+        <div class="hint">Paste the full exported list — only the rows between your first and last ID will be used.</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('entries-container').appendChild(div);
+}
+
+function removeEntry(n) {
+  const el = document.getElementById('entry-' + n);
+  if (el) el.remove();
+}
+
+function parseTime(str) {
+  // returns total seconds, or null
+  str = (str || '').trim();
+  const m = str.match(/^(\d+):(\d{2})$/);
+  if (!m) return null;
+  return parseInt(m[1]) * 60 + parseInt(m[2]);
+}
+
+function fmtTime(secs) {
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function fmtDecimal(secs) {
+  const hrs = secs / 3600;
+  const h = Math.floor(hrs);
+  const minFrac = Math.round((hrs - h) * 60);
+  if (h === 0) return `${minFrac} min`;
+  return `${h} hr ${minFrac} min &nbsp;(${hrs.toFixed(2)} hrs)`;
+}
+
+function parsePaste(text) {
+  // returns array of {id, time_str, time_secs}
+  const rows = [];
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  for (const line of lines) {
+    const cols = line.split(/\t| {2,}/).map(c => c.trim()).filter(c => c);
+    if (cols.length < 2) continue;
+    const id = cols[0];
+    // UUID check
+    if (!/^[0-9a-f-]{36}$/i.test(id)) continue;
+    // last column that looks like MM:SS
+    let timeStr = null;
+    for (let i = cols.length - 1; i >= 1; i--) {
+      if (/^\d+:\d{2}$/.test(cols[i])) { timeStr = cols[i]; break; }
+    }
+    if (!timeStr) continue;
+    const secs = parseTime(timeStr);
+    if (secs === null) continue;
+    rows.push({ id, time_str: timeStr, time_secs: secs });
+  }
+  return rows;
+}
+
+function calculate() {
+  const errBox = document.getElementById('err-box');
+  const resultBox = document.getElementById('result-box');
+  errBox.className = 'err-box';
+  resultBox.className = 'result-box';
+
+  const entries = document.querySelectorAll('.entry-block');
+  if (!entries.length) { showErr('Add at least one task group.'); return; }
+
+  let grandTotal = 0;
+  const allGroups = [];
+
+  for (const entry of entries) {
+    const n = entry.id.replace('entry-', '');
+    const firstId = document.getElementById('first-' + n).value.trim().toLowerCase();
+    const lastId  = document.getElementById('last-'  + n).value.trim().toLowerCase();
+    const capStr  = document.getElementById('cap-'   + n).value.trim();
+    const paste   = document.getElementById('paste-' + n).value;
+
+    if (!firstId || !lastId) { showErr('Please fill in both First and Last Task ID for all groups.'); return; }
+    if (!paste.trim()) { showErr('Please paste the task list for all groups.'); return; }
+
+    const capSecs = parseTime(capStr);
+    if (capSecs === null) { showErr(`Invalid max time cap "${capStr}" — use MM:SS format (e.g. 10:00).`); return; }
+
+    const rows = parsePaste(paste);
+    if (!rows.length) { showErr('Could not parse any tasks from the pasted list. Make sure the format is correct.'); return; }
+
+    const firstIdx = rows.findIndex(r => r.id === firstId);
+    const lastIdx  = rows.findIndex(r => r.id === lastId);
+
+    if (firstIdx === -1) { showErr(`First task ID not found in the list:\n${firstId}`); return; }
+    if (lastIdx  === -1) { showErr(`Last task ID not found in the list:\n${lastId}`);  return; }
+
+    const start = Math.min(firstIdx, lastIdx);
+    const end   = Math.max(firstIdx, lastIdx);
+    const slice = rows.slice(start, end + 1);
+
+    const tasks = slice.map(r => {
+      const applied = Math.min(r.time_secs, capSecs);
+      return { id: r.id, raw: r.time_str, raw_secs: r.time_secs, applied_secs: applied, capped: r.time_secs > capSecs };
+    });
+
+    const groupTotal = tasks.reduce((s, t) => s + t.applied_secs, 0);
+    grandTotal += groupTotal;
+    allGroups.push({ n, tasks, groupTotal, capStr });
+  }
+
+  // Build result table
+  const tbody = document.getElementById('result-tbody');
+  tbody.innerHTML = '';
+  let rowNum = 1;
+  for (const grp of allGroups) {
+    if (allGroups.length > 1) {
+      const hdr = document.createElement('tr');
+      hdr.innerHTML = `<td colspan="4" class="grp">Group ${grp.n} — cap: ${grp.capStr} &nbsp; subtotal: ${fmtTime(grp.groupTotal)}</td>`;
+      tbody.appendChild(hdr);
+    }
+    for (const t of grp.tasks) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${rowNum++}</td>
+        <td class="id-col">${t.id}</td>
+        <td>${t.raw}</td>
+        <td class="${t.capped ? 'capped' : ''}">${fmtTime(t.applied_secs)}${t.capped ? ' ⚠' : ''}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  document.getElementById('result-hms').textContent = fmtTime(grandTotal);
+  document.getElementById('result-decimal').innerHTML = fmtDecimal(grandTotal);
+  resultBox.className = 'result-box show';
+  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function showErr(msg) {
+  const b = document.getElementById('err-box');
+  b.textContent = msg;
+  b.className = 'err-box show';
+}
+
+function resetAll() {
+  document.getElementById('entries-container').innerHTML = '';
+  entryCount = 0;
+  document.getElementById('err-box').className = 'err-box';
+  document.getElementById('result-box').className = 'result-box';
+  addEntry();
+}
+
+// init
+addEntry();
+</script>
+</body>
+</html>
