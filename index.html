@@ -392,6 +392,35 @@ body.editing .spc-day:active{opacity:.7;transform:scale(0.95)}
 .pw-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 .pw-ov.on{display:flex}
 
+/* confirm modal */
+.confirm-ov{display:none;position:fixed;inset:0;background:rgba(6,8,15,0.88);z-index:700;align-items:center;justify-content:center;backdrop-filter:blur(10px);padding:20px}
+.confirm-ov.on{display:flex}
+.confirm-box{background:var(--s3);border:1px solid var(--border-h);border-radius:18px;padding:28px 26px;max-width:400px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.confirm-title{font-family:var(--fh);font-weight:800;font-size:16px;color:var(--text);margin-bottom:10px}
+.confirm-msg{font-size:14px;line-height:1.6;color:var(--text2);margin-bottom:24px}
+.confirm-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* changelog panel */
+.cl-ov{display:none;position:fixed;inset:0;z-index:600;background:rgba(6,8,15,0.6);backdrop-filter:blur(6px)}
+.cl-ov.on{display:flex;align-items:flex-start;justify-content:flex-end}
+.cl-panel{background:var(--s1);border-left:1px solid var(--border);width:min(380px,100vw);height:100%;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column}
+.cl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-shrink:0}
+.cl-hdr-title{font-family:var(--fh);font-weight:800;font-size:17px;color:var(--text)}
+.cl-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;line-height:1;transition:color .15s}
+.cl-close:hover{color:var(--text)}
+.cl-empty{color:var(--muted);font-size:13px;text-align:center;padding:40px 0}
+.cl-entry{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.cl-entry-ts{font-size:10px;color:var(--muted);letter-spacing:.5px;margin-bottom:3px}
+.cl-entry-label{font-size:13px;font-weight:500;color:var(--text);margin-bottom:10px}
+.cl-restore-btn{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);border-radius:8px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:var(--fb);transition:background .15s}
+.cl-restore-btn:hover{background:rgba(56,189,248,0.18)}
+/* schedule add/remove person */
+.sched-add-row{display:none;padding:12px 0 4px}
+body.editing .sched-add-row{display:flex}
+.sched-remove-btn{background:none;border:none;color:var(--err);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:6px;opacity:0;transition:opacity .15s;margin-left:6px;line-height:1}
+body.editing .sched-remove-btn{opacity:.55}
+body.editing .sched-remove-btn:hover{opacity:1}
+
 footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;border-top:1px solid var(--border)}
 @media(max-width:700px){
   .nav-tabs{display:none}.nav-status{display:none}
@@ -545,6 +574,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
       <button class="btn btn-secondary btn-sm" onclick="cancelSchedEdit()">Cancel</button>
       <button class="btn btn-primary btn-sm" onclick="saveSchedGh()">💾 Save & Publish</button>
     </div>
+    <button class="btn btn-secondary btn-sm" id="historyBtn" onclick="openChangelog()" style="margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Schedule History</button>
     <div id="dayPicker" class="day-picker-popup"><div class="dp-title" id="dpTitle"></div><div id="dpList"></div></div>
 
     <!-- desktop table -->
@@ -553,6 +583,10 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
     </div>
     <!-- mobile cards -->
     <div class="sched-mobile" id="schedMobile"></div>
+
+    <div class="sched-add-row">
+      <button class="btn btn-secondary btn-sm" onclick="openAddPersonModal()">+ Add Person</button>
+    </div>
 
     <div class="legend">
       <span><div class="dot" style="background:var(--shift)"></div>Working Shift</span>
@@ -611,6 +645,29 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
     <div class="em-actions">
       <button class="btn btn-secondary btn-sm" onclick="closeEditModal()">Cancel</button>
       <button class="btn btn-primary btn-sm" id="saveEditBtn" onclick="saveEditModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGELOG PANEL -->
+<div class="cl-ov" id="clOv">
+  <div class="cl-panel">
+    <div class="cl-hdr">
+      <div class="cl-hdr-title">Schedule History</div>
+      <button class="cl-close" onclick="closeChangelog()">✕</button>
+    </div>
+    <div id="clList"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-ov" id="confirmOv">
+  <div class="confirm-box">
+    <div class="confirm-title">Confirm Change</div>
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="confirm-actions">
+      <button class="btn btn-secondary btn-sm" onclick="confirmCancel()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="confirmOk()">Yes, Confirm</button>
     </div>
   </div>
 </div>
@@ -929,6 +986,38 @@ async function saveEditModal(){
   if(!_editCtx)return;
   const cms=getCMS();
   const{type,id}=_editCtx;
+  // Build confirm message from current field values
+  let _confirmMsg='Are you sure you want to save these changes?';
+  if(type==='hero'){
+    if(id==='eyebrow') _confirmMsg=`Are you sure you want to change the eyebrow text?`;
+    else if(id==='title') _confirmMsg=`Are you sure you want to change the headline?`;
+    else if(id==='sub') _confirmMsg=`Are you sure you want to update the sub-headline?`;
+  }else if(type==='update'){
+    const t=(document.getElementById('ef-title')?.value||'this update').trim();
+    _confirmMsg=_editCtx.isNew?`Are you sure you want to add the update "${t}"?`:`Are you sure you want to save changes to "${t}"?`;
+  }else if(type==='task'||type==='carousel'){
+    const t=(document.getElementById('ef-title')?.value||'this task').trim();
+    _confirmMsg=_editCtx.isNew?`Are you sure you want to add the task "${t}"?`:`Are you sure you want to save changes to "${t}"?`;
+  }else if(type==='member'){
+    const n=(document.getElementById('ef-name')?.value||'this member').trim();
+    _confirmMsg=_editCtx.isNew?`Are you sure you want to add ${n} to the team?`:`Are you sure you want to update ${n}'s info?`;
+  }else if(type==='schedperson'){
+    const n=(document.getElementById('ef-schedperson-name')?.value||'').trim()||'this person';
+    _confirmMsg=`Are you sure you want to add ${n} to the schedule?`;
+  }else if(type==='schedname'){
+    const oldN=getSchedMem()[_editCtx.pi]?.n||'this member';
+    const newN=(document.getElementById('ef-schedname')?.value||'').trim()||'(empty)';
+    _confirmMsg=`Are you sure you want to rename ${oldN} to ${newN}?`;
+  }else if(type==='guide'){
+    const t=(document.getElementById('ef-guide-title')?.value||'this guide').trim();
+    _confirmMsg=`Are you sure you want to update the guide "${t}"?`;
+  }
+  showConfirm(_confirmMsg, async()=>{ await _doSaveEditModal(); });
+}
+async function _doSaveEditModal(){
+  if(!_editCtx)return;
+  const cms=getCMS();
+  const{type,id}=_editCtx;
 
   if(type==='hero'){
     if(id==='eyebrow')cms.hero.eyebrow=document.getElementById('ef-val').value;
@@ -944,6 +1033,14 @@ async function saveEditModal(){
   }else if(type==='member'){
     const m={name:document.getElementById('ef-name').value,hrs:document.getElementById('ef-hrs').value};
     if(_editCtx.isNew){cms.team.push(m);}else{cms.team[_editCtx.midx]=m;}
+  }else if(type==='schedperson'){
+    const name=document.getElementById('ef-schedperson-name')?.value.trim();
+    if(!name){closeEditModal();return;}
+    getSchedMem().push({n:name,s:['OFF','OFF','OFF','OFF','OFF','OFF','OFF']});
+    closeEditModal();
+    markSchedDirty();
+    renderSched();
+    return;
   }else if(type==='schedname'){
     const pi=_editCtx.pi;
     const newName=document.getElementById('ef-schedname').value.trim();
@@ -991,16 +1088,17 @@ async function saveEditModal(){
 
 function deleteItem(type,id){
   const cms=getCMS();
-  if(type==='update'){cms.updates=cms.updates.filter(u=>u.id!==id);}
-  else if(type==='member'){
-    const i=typeof id==='number'?id:parseInt(id);
-    cms.team.splice(i,1);
-  }else if(type==='guide'){
-    if(!confirm('Reset this guide to defaults?'))return;
-    if(cms.guides)delete cms.guides[id];
-    saveCMSLocal(cms);renderGuideGrid();publishCMS(cms);return;
-  }
-  saveCMSLocal(cms);renderHome();publishCMS(cms);
+  let msg='Are you sure you want to delete this item?';
+  if(type==='update'){const u=cms.updates.find(x=>x.id===id);msg=`Are you sure you want to delete the update "${u?.title||id}"?`;}
+  else if(type==='member'){const m=cms.team[typeof id==='number'?id:parseInt(id)];msg=`Are you sure you want to remove ${m?.name||'this member'} from the team?`;}
+  else if(type==='guide'){msg='Are you sure you want to reset this guide to defaults?';}
+  showConfirm(msg,()=>{
+    const c=getCMS();
+    if(type==='update'){c.updates=c.updates.filter(u=>u.id!==id);}
+    else if(type==='member'){const i=typeof id==='number'?id:parseInt(id);c.team.splice(i,1);}
+    else if(type==='guide'){if(!c.guides)c.guides={};delete c.guides[id];saveCMSLocal(c);renderGuideGrid();publishCMS(c);return;}
+    saveCMSLocal(c);renderHome();publishCMS(c);
+  });
 }
 
 async function publishCMS(cms){
@@ -1209,7 +1307,7 @@ function renderSched(){
   // desktop table
   document.getElementById('schedBody').innerHTML=data.map((p,pi)=>{
     const hrs=personHours(p.s);
-    const nameCellContent=`<div class="spc-name-cell">${esc(p.n)}</div><div class="spc-hrs-cell">${hrs.toFixed(1)} hrs</div>`;
+    const nameCellContent=`<div class="spc-name-cell">${esc(p.n)}</div><div class="spc-hrs-cell">${hrs.toFixed(1)} hrs</div><button class="sched-remove-btn" onclick="event.stopPropagation();removeSchedPerson(${pi})" title="Remove ${esc(p.n)}">✕</button>`;
     return`<tr><td data-pi="${pi}" onclick="nameEditClick(this)">${nameCellContent}</td>`+p.s.map((v,di)=>`<td class="${v.trim().toUpperCase()==='OFF'?'off':'sh'}" data-pi="${pi}" data-di="${di}" onclick="editSchedCell(this)">${v}</td>`).join('')+`</tr>`;
   }).join('');
 
@@ -1267,14 +1365,19 @@ function openDayPicker(e,di){
 }
 
 function pickDay(sun){
-  localStorage.setItem(SK,sun);
-  // Auto-sync hero eyebrow with schedule week
-  const monDate=weekDates(sun)[0];
-  const newEyebrow=`Week of ${MONTHS[monDate.getMonth()]} ${monDate.getDate()}, ${monDate.getFullYear()}`;
-  const cms=getCMS();cms.hero.eyebrow=newEyebrow;saveCMSLocal(cms);
-  renderSchedHeaders(sun);
   document.getElementById('dayPicker').classList.remove('on');
-  renderHome();
+  const dates=weekDates(sun);
+  const mon=dates[0],sunD=dates[6];
+  const range=mon.getMonth()===sunD.getMonth()?
+    `${MONTHS[mon.getMonth()]} ${mon.getDate()}–${sunD.getDate()}, ${sunD.getFullYear()}`:
+    `${MONTHS[mon.getMonth()]} ${mon.getDate()} – ${MONTHS[sunD.getMonth()]} ${sunD.getDate()}, ${sunD.getFullYear()}`;
+  showConfirm(`Are you sure you want to set the schedule week to ${range}?`,()=>{
+    localStorage.setItem(SK,sun);
+    const newEyebrow=`Week of ${MONTHS[mon.getMonth()]} ${mon.getDate()}, ${mon.getFullYear()}`;
+    const cms=getCMS();cms.hero.eyebrow=newEyebrow;saveCMSLocal(cms);
+    renderSchedHeaders(sun);
+    renderHome();
+  });
 }
 
 document.addEventListener('click',e=>{const p=document.getElementById('dayPicker');if(!p.contains(e.target))p.classList.remove('on');});
@@ -1289,8 +1392,19 @@ function editSchedCell(td){if(!schedEditing)return;_tpTd=td;
   ['tpFrom','tpTo'].forEach((id,i)=>{const n=normTime(parts[i]||'');const sel=document.getElementById(id);sel.value=(n&&TIME_OPTS.includes(n))?n:TIME_OPTS[0];});
   document.getElementById('tpWrap').classList.add('on');
 }
-function tpSetOff(){if(_tpTd)commitTP('OFF');}
-function tpApply(){if(_tpTd)commitTP(`${document.getElementById('tpFrom').value} – ${document.getElementById('tpTo').value}`);}
+function tpSetOff(){
+  if(!_tpTd)return;
+  const pi=+_tpTd.dataset.pi,di=+_tpTd.dataset.di;
+  const name=getSchedMem()[pi]?.n||'this person';
+  showConfirm(`Are you sure you want to set ${name}'s ${DAYS[di]} to OFF?`,()=>commitTP('OFF'));
+}
+function tpApply(){
+  if(!_tpTd)return;
+  const pi=+_tpTd.dataset.pi,di=+_tpTd.dataset.di;
+  const name=getSchedMem()[pi]?.n||'this person';
+  const from=document.getElementById('tpFrom').value,to=document.getElementById('tpTo').value;
+  showConfirm(`Are you sure you want to change ${name}'s ${DAYS[di]} shift to ${from} – ${to}?`,()=>commitTP(`${from} – ${to}`));
+}
 function commitTP(val){
   const pi=+_tpTd.dataset.pi;
   const di=+_tpTd.dataset.di;
@@ -1326,7 +1440,7 @@ function commitTP(val){
   document.getElementById('schedSub').textContent=`${mem.length} members · ${total.toFixed(1)} hrs this week`;
 }
 function tpCancel(){document.getElementById('tpWrap').classList.remove('on');_tpTd=null;}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){tpCancel();closeSchedPw();closeAdminPw();closeEditModal();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){tpCancel();closeSchedPw();closeAdminPw();closeEditModal();confirmCancel();}});
 let _schedMem=null,schedEditing=false;
 const getSchedMem=()=>{if(!_schedMem)_schedMem=getSD();return _schedMem;};
 const updateSchedMem=(pi,di,v)=>{getSchedMem()[pi].s[di]=v;};
@@ -1342,8 +1456,17 @@ function authSched(){
 }
 function startSchedEdit(){_schedMem=getSD();schedEditing=true;document.body.classList.add('editing');document.getElementById('schedEditBtn').style.display='none';document.getElementById('saveBar').classList.add('on');setSaveSt('Click any cell to edit · Click day header to change week · Click name to rename','');renderSched();}
 function cancelSchedEdit(){schedEditing=false;_schedMem=null;document.body.classList.remove('editing');document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');renderSched();}
-function persistSched(){localStorage.setItem(SC,JSON.stringify(getSchedMem()));_schedMem=null;schedEditing=false;document.body.classList.remove('editing');document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');renderSched();}
+function persistSched(label){
+  const d=getSchedMem();
+  addChangelogEntry(label||'Saved locally',d);
+  localStorage.setItem(SC,JSON.stringify(d));
+  _schedMem=null;schedEditing=false;document.body.classList.remove('editing');
+  document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');renderSched();
+}
 async function saveSchedGh(){
+  showConfirm('Are you sure you want to publish the schedule?',async()=>{ await _doSaveSchedGh(); });
+}
+async function _doSaveSchedGh(){
   const tok=(localStorage.getItem(TK)||DEFAULT_TOK).trim();const repo=(localStorage.getItem(RK)||DEFAULT_REPO).trim();const path=(localStorage.getItem(FK)||DEFAULT_PATH).trim();
   setSaveSt('Publishing…','');const d=getSchedMem();localStorage.setItem(SC,JSON.stringify(d));
   try{
@@ -1351,12 +1474,92 @@ async function saveSchedGh(){
     const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
     const html=document.documentElement.outerHTML.replace(/const DEFAULT_SCHED=\[[\s\S]*?\];/,'const DEFAULT_SCHED='+JSON.stringify(d)+';');
     const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},body:JSON.stringify({message:`Schedule ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
-    if(pr.ok){persistSched();setSaveSt('✓ Published!','ok');}else{const er=await pr.json();setSaveSt('Error: '+(er.message||pr.status),'er');}
+    if(pr.ok){persistSched('Published to GitHub');setSaveSt('✓ Published!','ok');}else{const er=await pr.json();setSaveSt('Error: '+(er.message||pr.status),'er');}
   }catch(er){setSaveSt('Error: '+er.message,'er');}
 }
 function setSaveSt(m,t){const e=document.getElementById('saveSt');e.textContent=m;e.className='save-st'+(t?' '+t:'');}
 document.getElementById('schedOv').addEventListener('click',e=>{if(e.target===document.getElementById('schedOv'))closeSchedPw();});
 document.getElementById('editModalWrap').addEventListener('click',e=>{if(e.target===document.getElementById('editModalWrap'))closeEditModal();});
+document.getElementById('confirmOv').addEventListener('click',e=>{if(e.target===document.getElementById('confirmOv'))confirmCancel();});
+
+// ═══════════════════════════ CONFIRM MODAL ═══════════════════════════
+let _confirmCb=null;
+function showConfirm(msg,cb){
+  _confirmCb=cb;
+  document.getElementById('confirmMsg').textContent=msg;
+  document.getElementById('confirmOv').classList.add('on');
+}
+function confirmOk(){document.getElementById('confirmOv').classList.remove('on');if(_confirmCb){_confirmCb();_confirmCb=null;}}
+function confirmCancel(){document.getElementById('confirmOv').classList.remove('on');_confirmCb=null;}
+
+// ═══════════════════════════ CHANGELOG ═══════════════════════════
+const CL_KEY='exp_cl';
+function getChangelog(){try{return JSON.parse(localStorage.getItem(CL_KEY)||'[]');}catch{return[];}}
+function addChangelogEntry(label,data){
+  const cl=getChangelog();
+  cl.unshift({ts:new Date().toISOString(),label,data:JSON.parse(JSON.stringify(data))});
+  if(cl.length>30)cl.splice(30);
+  localStorage.setItem(CL_KEY,JSON.stringify(cl));
+}
+function openChangelog(){
+  renderChangelogPanel();
+  document.getElementById('clOv').classList.add('on');
+}
+function closeChangelog(){document.getElementById('clOv').classList.remove('on');}
+document.getElementById('clOv').addEventListener('click',e=>{if(e.target===document.getElementById('clOv'))closeChangelog();});
+function renderChangelogPanel(){
+  const cl=getChangelog();
+  const list=document.getElementById('clList');
+  if(!cl.length){list.innerHTML='<div class="cl-empty">No history yet. Changes are recorded each time you save or publish.</div>';return;}
+  list.innerHTML=cl.map((entry,i)=>{
+    const d=new Date(entry.ts);
+    const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const timeStr=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    return`<div class="cl-entry">
+      <div class="cl-entry-ts">${dateStr} at ${timeStr}</div>
+      <div class="cl-entry-label">${esc(entry.label)}</div>
+      <button class="cl-restore-btn" onclick="restoreFromChangelog(${i})">Restore this snapshot</button>
+    </div>`;
+  }).join('');
+}
+function restoreFromChangelog(i){
+  const cl=getChangelog();
+  const entry=cl[i];if(!entry)return;
+  const d=new Date(entry.ts);
+  const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const timeStr=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  showConfirm(`Are you sure you want to restore the schedule from ${dateStr} at ${timeStr}?`,()=>{
+    closeChangelog();
+    _schedMem=JSON.parse(JSON.stringify(entry.data));
+    if(!schedEditing){
+      schedEditing=true;document.body.classList.add('editing');
+      document.getElementById('schedEditBtn').style.display='none';
+      document.getElementById('saveBar').classList.add('on');
+    }
+    setSaveSt('Restored from history — review and publish when ready','');
+    renderSched();
+  });
+}
+
+// ═══════════════════════════ ADD / REMOVE PERSON ═══════════════════════════
+function openAddPersonModal(){
+  if(!schedEditing)return;
+  _editCtx={type:'schedperson',id:'new'};
+  document.getElementById('editModalTitle').textContent='Add Person to Schedule';
+  document.getElementById('editModalFields').innerHTML=`<div class="em-field"><label>Full Name</label><input id="ef-schedperson-name" placeholder="e.g. Sara Ahmed" autofocus></div>`;
+  document.getElementById('editModalWrap').classList.add('on');
+  setTimeout(()=>document.getElementById('ef-schedperson-name').focus(),60);
+}
+function removeSchedPerson(pi){
+  if(!schedEditing)return;
+  const mem=getSchedMem();
+  const name=mem[pi]?.n||'this person';
+  showConfirm(`Are you sure you want to remove ${name} from the schedule?`,()=>{
+    getSchedMem().splice(pi,1);
+    markSchedDirty();
+    renderSched();
+  });
+}
 
 // ═══════════════════════════ INIT ═══════════════════════════
 addCalcEntry();
