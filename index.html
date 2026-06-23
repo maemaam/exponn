@@ -244,6 +244,13 @@ nav{
 .result-tbl th{text-align:left;padding:7px 10px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:700}
 .result-tbl td{padding:7px 10px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.03)}
 .result-tbl td.capped{color:var(--shift)}
+.copy-btn{background:none;border:none;cursor:pointer;color:var(--muted);padding:2px 4px;border-radius:5px;display:inline-flex;align-items:center;vertical-align:middle;transition:color .15s,background .15s;line-height:1}
+.copy-btn:hover{color:var(--accent);background:var(--accent-dim)}
+.copy-btn.copied{color:var(--ok)}
+.grp-decimals{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.grp-decimal-item{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:8px 14px;display:flex;align-items:center;gap:8px}
+.grp-decimal-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-right:2px}
+.grp-decimal-val{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text)}
 .result-tbl td.mono{font-family:'Courier New',monospace;font-size:11px;color:var(--muted)}
 .result-tbl tr.grp-hdr td{color:var(--text);font-weight:700;padding-top:14px;font-family:var(--fh);font-size:12px}
 
@@ -490,7 +497,10 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
       </div>
       <div class="err-msg" id="calc-err"></div>
       <div class="result-card" id="calc-result">
-        <div class="result-decimal" id="r-decimal">—</div>
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div class="result-decimal" id="r-decimal">—</div>
+          <button class="copy-btn" id="r-copy-total" onclick="copyVal('r-decimal','r-copy-total')" title="Copy decimal hours" style="margin-top:10px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </div>
         <div class="result-unit">decimal hours</div>
         <div class="result-time-row">
           <div class="result-time-item">
@@ -502,6 +512,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
             <div class="rt-lbl">minutes total</div>
           </div>
         </div>
+        <div id="r-group-decimals"></div>
         <div class="divider" style="margin:14px 0"></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:12px;text-align:left">Breakdown</div>
         <div style="overflow-x:auto"><table class="result-tbl"><thead><tr><th>#</th><th>Task ID</th><th>Raw</th><th>Applied</th></tr></thead><tbody id="r-tbody"></tbody></table></div>
@@ -1115,15 +1126,41 @@ function doCalc(){
   }
   const tbody=document.getElementById('r-tbody');tbody.innerHTML='';let rn=1;
   for(const g of groups){
-    if(groups.length>1){const hr=document.createElement('tr');hr.className='grp-hdr';hr.innerHTML=`<td colspan="4">Group ${g.n} — cap ${g.cap} · subtotal ${fT(g.sub)}</td>`;tbody.appendChild(hr);}
+    if(groups.length>1){
+      const dec=fDecimal(g.sub);
+      const gid=`grp-dec-${g.n}`;
+      const hr=document.createElement('tr');hr.className='grp-hdr';
+      hr.innerHTML=`<td colspan="4">Group ${g.n} — cap ${g.cap} · subtotal ${fT(g.sub)} · <span id="${gid}">${dec}</span> hrs <button class="copy-btn" onclick="copyVal('${gid}',this)" title="Copy group decimal"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></td>`;
+      tbody.appendChild(hr);
+    }
     for(const t of g.tasks){const tr=document.createElement('tr');tr.innerHTML=`<td>${rn++}</td><td class="mono">${t.id}</td><td>${t.ts}</td><td class="${t.capped?'capped':''}">${fT(t.a)}${t.capped?' <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><polyline points="6 9 12 15 18 9"/></svg>':''}</td>`;tbody.appendChild(tr);}
   }
   document.getElementById('r-decimal').textContent=fDecimal(grand);
   document.getElementById('r-hms-full').textContent=fHMS_full(grand);
   document.getElementById('r-minsec').textContent=fMinSec(grand);
+  // Group decimal breakdown under the time row (only for multi-group)
+  const gdEl=document.getElementById('r-group-decimals');
+  if(groups.length>1){
+    gdEl.innerHTML=`<div class="grp-decimals">${groups.map((g,gi)=>{
+      const id=`gd-pill-${g.n}`;
+      return`<div class="grp-decimal-item"><span class="grp-decimal-label">G${g.n}</span><span class="grp-decimal-val" id="${id}">${fDecimal(g.sub)}</span><span style="font-size:11px;color:var(--muted);margin-left:2px">hrs</span><button class="copy-btn" onclick="copyVal('${id}',this)" title="Copy group ${g.n} decimal"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></div>`;
+    }).join('')}</div>`;
+  }else{gdEl.innerHTML='';}
   res.className='result-card show';res.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function showCErr(m){const b=document.getElementById('calc-err');b.textContent=m;b.className='err-msg show';}
+function copyVal(elId,btn){
+  const el=typeof elId==='string'?document.getElementById(elId):elId;
+  if(!el)return;
+  navigator.clipboard.writeText(el.textContent.trim()).then(()=>{
+    const b=typeof btn==='string'?document.getElementById(btn):btn;
+    if(!b)return;
+    b.classList.add('copied');
+    const orig=b.innerHTML;
+    b.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    setTimeout(()=>{b.innerHTML=orig;b.classList.remove('copied');},1800);
+  });
+}
 function resetCalc(){document.getElementById('calc-entries').innerHTML='';calcCount=0;document.getElementById('calc-err').className='err-msg';document.getElementById('calc-result').className='result-card';addCalcEntry();}
 
 // ═══════════════════════════ SCHEDULE ═══════════════════════════
