@@ -936,7 +936,7 @@ function openEditModal(type,id){
       fields.innerHTML=`<div class="em-field"><label>Eyebrow Label</label><input id="ef-val" value="${esc(cms.hero.eyebrow)}"></div>`;
     }else if(id==='title'){
       title.textContent='Edit Headline';
-      fields.innerHTML=`<div class="em-field"><label>Headline</label><textarea id="ef-val">${esc(cms.hero.title)}</textarea><div class="hint">Wrap words in <strong>[brackets]</strong> for accent color &nbsp;·&nbsp; Press Enter for a second line</div></div>`;
+      fields.innerHTML=`<div class="em-field"><label>Headline</label><textarea id="ef-val">${esc(cms.hero.title)}</textarea><div class="hint"><strong>[brackets]</strong> = accent color &nbsp;·&nbsp; Enter = new line</div></div>`;
     }else if(id==='sub'){
       title.textContent='Edit Sub-Headline';
       fields.innerHTML=`<div class="em-field"><label>Sub-headline</label><textarea id="ef-val">${esc(cms.hero.sub)}</textarea></div>
