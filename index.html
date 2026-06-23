@@ -157,6 +157,9 @@ nav{
 .update-item{background:var(--s1);padding:20px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid var(--border);transition:background .15s;position:relative}
 .update-item:last-child{border-bottom:none}
 .update-item:hover{background:var(--s3)}
+.update-item.linkable{cursor:pointer}
+.update-chevron{font-size:18px;color:var(--border-h);flex-shrink:0;align-self:center;transition:color .15s,transform .15s;line-height:1}
+.update-item.linkable:hover .update-chevron{color:var(--accent);transform:translateX(3px)}
 .update-left{flex:1;min-width:0}
 .tag{display:inline-block;padding:3px 10px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
 .tag-new{background:rgba(56,189,248,0.1);color:var(--accent);border:1px solid var(--accent-border)}
@@ -578,7 +581,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
 
 <script>
 // ═══════════════════════════ CMS DATA ═══════════════════════════
-const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"New tasks\navailable.","sub":"Review the latest guidelines and complete your assessment before starting tasks.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
+const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"New tasks\navailable.","sub":"Review the latest guidelines and complete your assessment before starting tasks.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
 
 const CMS_KEY='exp_cms';
 function getCMS(){try{const s=localStorage.getItem(CMS_KEY);const d=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_CONTENT));if(!d.guides)d.guides={};return d;}catch{return JSON.parse(JSON.stringify(DEFAULT_CONTENT));}}
@@ -640,8 +643,10 @@ function renderHome(){
 
   // updates
   const uc=document.getElementById('updates-container');
-  uc.innerHTML=cms.updates.map(u=>`
-    <div class="update-item" id="ui-${u.id}" style="position:relative">
+  const PAGE_LABELS={'home':'Home','calc':'Time Calculator','guides':'Guidelines','sched':'Schedule'};
+  uc.innerHTML=cms.updates.map(u=>{
+    const hasLink=!adminMode&&u.link;
+    return`<div class="update-item${hasLink?' linkable':''}" id="ui-${u.id}"${hasLink?` onclick="showPage('${u.link}')" role="button" tabindex="0"`:''}">
       <div class="update-left">
         <span class="tag tag-${u.tag||'info'}">${capitalize(u.tag||'info')}</span>
         <div class="update-title">${esc(u.title)}</div>
@@ -650,11 +655,13 @@ function renderHome(){
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0">
         <div class="update-meta">${esc(u.date)}</div>
         <div class="item-actions${adminMode?' visible':''}" id="ia-${u.id}">
-          <button class="ia-btn ia-edit" onclick="openEditModal('update','${u.id}')">✏ Edit</button>
-          <button class="ia-btn ia-del" onclick="deleteItem('update','${u.id}')">✕</button>
+          <button class="ia-btn ia-edit" onclick="event.stopPropagation();openEditModal('update','${u.id}')">✏ Edit</button>
+          <button class="ia-btn ia-del" onclick="event.stopPropagation();deleteItem('update','${u.id}')">✕</button>
         </div>
+        ${!adminMode&&u.link?`<div class="update-chevron">›</div>`:''}
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   // team — compute hours from schedule by name match
   const schedData=getSD();
@@ -799,7 +806,8 @@ function openEditModal(type,id){
       <div class="em-field"><label>Tag</label><select id="ef-tag"><option value="new"${u.tag==='new'?' selected':''}>New</option><option value="updated"${u.tag==='updated'?' selected':''}>Updated</option><option value="alert"${u.tag==='alert'?' selected':''}>Alert</option><option value="info"${u.tag==='info'?' selected':''}>Info</option></select></div>
       <div class="em-field"><label>Title</label><input id="ef-title" value="${esc(u.title)}"></div>
       <div class="em-field"><label>Body</label><textarea id="ef-body">${esc(u.body)}</textarea></div>
-      <div class="em-field"><label>Date</label><input id="ef-date" value="${esc(u.date)}"></div>`;
+      <div class="em-field"><label>Date</label><input id="ef-date" value="${esc(u.date)}"></div>
+      <div class="em-field"><label>Links to Page</label><select id="ef-link"><option value=""${!u.link?' selected':''}>No link</option><option value="home"${u.link==='home'?' selected':''}>Home</option><option value="calc"${u.link==='calc'?' selected':''}>Time Calculator</option><option value="guides"${u.link==='guides'?' selected':''}>Guidelines</option><option value="sched"${u.link==='sched'?' selected':''}>Schedule</option></select></div>`;
     _editCtx.isNew=isNew;_editCtx.uid=u.id;
   }else if(type==='task'||type==='carousel'){
     const isNew=id==='new';
@@ -854,7 +862,8 @@ async function saveEditModal(){
     else if(id==='title')cms.hero.title=document.getElementById('ef-val').value;
     else if(id==='sub'){cms.hero.sub=document.getElementById('ef-val').value;cms.hero.assessmentLink=document.getElementById('ef-assess').value;}
   }else if(type==='update'){
-    const u={id:_editCtx.uid,tag:document.getElementById('ef-tag').value,title:document.getElementById('ef-title').value,body:document.getElementById('ef-body').value,date:document.getElementById('ef-date').value};
+    const linkVal=document.getElementById('ef-link').value;
+    const u={id:_editCtx.uid,tag:document.getElementById('ef-tag').value,title:document.getElementById('ef-title').value,body:document.getElementById('ef-body').value,date:document.getElementById('ef-date').value,...(linkVal?{link:linkVal}:{})};
     if(_editCtx.isNew){cms.updates.unshift(u);}else{const i=cms.updates.findIndex(x=>x.id===u.id);if(i>=0)cms.updates[i]=u;}
   }else if(type==='task'||type==='carousel'){
     const t={id:_editCtx.tid,icon:document.getElementById('ef-icon').value,title:document.getElementById('ef-title').value,desc:document.getElementById('ef-desc').value,label:document.getElementById('ef-label').value,guideKey:document.getElementById('ef-guide').value};
@@ -1167,7 +1176,21 @@ function editSchedCell(td){if(!schedEditing)return;_tpTd=td;
 }
 function tpSetOff(){if(_tpTd)commitTP('OFF');}
 function tpApply(){if(_tpTd)commitTP(`${document.getElementById('tpFrom').value} – ${document.getElementById('tpTo').value}`);}
-function commitTP(val){_tpTd.className=val.toUpperCase()==='OFF'?'off':'sh';_tpTd.textContent=val;updateSchedMem(+_tpTd.dataset.pi,+_tpTd.dataset.di,val);document.getElementById('tpWrap').classList.remove('on');_tpTd=null;}
+function commitTP(val){
+  const pi=+_tpTd.dataset.pi;
+  _tpTd.className=val.toUpperCase()==='OFF'?'off':'sh';
+  _tpTd.textContent=val;
+  updateSchedMem(pi,+_tpTd.dataset.di,val);
+  document.getElementById('tpWrap').classList.remove('on');
+  _tpTd=null;
+  // Refresh this person's hours in the name cell immediately
+  const mem=getSchedMem();
+  const row=document.querySelector(`#schedBody tr:nth-child(${pi+1}) td:first-child`);
+  if(row){const hrs=personHours(mem[pi].s);row.innerHTML=`<div class="spc-name-cell">${esc(mem[pi].n)}</div><div class="spc-hrs-cell">${hrs.toFixed(1)} hrs</div>`;}
+  // Refresh caption with new total
+  const total=mem.reduce((s,p)=>s+personHours(p.s),0);
+  document.getElementById('schedSub').textContent=`${mem.length} members · ${total.toFixed(1)} hrs this week`;
+}
 function tpCancel(){document.getElementById('tpWrap').classList.remove('on');_tpTd=null;}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){tpCancel();closeSchedPw();closeAdminPw();closeEditModal();}});
 let _schedMem=null,schedEditing=false;
