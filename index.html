@@ -4,297 +4,509 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Exponn</title>
-<link rel="icon" type="image/webp" href="../logo.webp">
+<link rel="icon" type="image/webp" href="logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#111;--s1:#1c1c1c;--s2:#242424;--s3:#2a2a2a;--border:#2e2e2e;
-  --accent:#2d7a5e;--accent-h:#226650;--accent-m:#6bab90;
-  --text:#f0f0f0;--muted:#777;
-  --shift:#fbbf24;
-  --err:#f87171;--ok:#4ade80;
-  --info:#60a5fa;--info-bg:#0d1a2e;
-  --warn:#fbbf24;--warn-bg:#1c1500;
+  --bg:#080909;
+  --s1:#111212;--s2:#0d0e0e;--s3:#181919;--s4:#1e1f1f;
+  --border:rgba(255,255,255,0.07);--border-h:rgba(255,255,255,0.13);
+  --accent:#a8ff3e;
+  --accent-dim:rgba(168,255,62,0.12);
+  --accent-glow:rgba(168,255,62,0.07);
+  --accent-border:rgba(168,255,62,0.28);
+  --accent-border-h:rgba(168,255,62,0.45);
+  --text:#f0f0f0;--text2:#b8b8b8;--muted:#666;
+  --shift:#fbbf24;--off-c:#a8ff3e;
+  --err:#f87171;--ok:#a8ff3e;
+  --fh:'Syne',sans-serif;--fb:'Space Grotesk',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+html{scroll-behavior:smooth}
 
-/* NAV */
-nav{background:var(--s1);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100}
-.nav-brand{display:flex;align-items:center;gap:10px;padding:12px 0;margin-right:28px;text-decoration:none}
-.nav-brand img{height:32px;border-radius:5px}
-.nav-brand span{font-size:15px;font-weight:700;color:#fff}
-.nav-brand small{font-size:10px;color:var(--muted);display:block;line-height:1}
-.nav-links{display:flex;gap:0;flex:1}
-.nav-link{padding:16px 16px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
-.nav-link:hover{color:var(--text)}
-.nav-link.active{color:var(--accent-m);border-bottom-color:var(--accent)}
-.nav-schedule{margin-left:auto;padding:7px 14px;background:var(--accent);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s}
-.nav-schedule:hover{background:var(--accent-h)}
+body{
+  font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:
+    radial-gradient(ellipse 100% 60% at 0% -10%,rgba(168,255,62,0.07) 0%,transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 5%,rgba(46,196,182,0.05) 0%,transparent 50%);
+  background-attachment:fixed;
+}
 
-/* PAGE WRAPPER */
-.page{display:none;padding:28px 24px;max-width:1000px;margin:0 auto}
+/* ───── NAV ───── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:58px;padding:0 28px;
+  display:flex;align-items:center;gap:8px;
+  background:rgba(8,9,9,0.8);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:background .3s;
+}
+.nav-logo{
+  width:32px;height:32px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(150deg,#a8ff3e 0%,#d09e1f 65%,#f83c00 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:13px;color:#0b0b0b;cursor:pointer;
+  text-decoration:none;
+}
+.nav-brand{font-family:var(--fh);font-weight:700;font-size:14px;color:var(--text);margin-right:20px;cursor:pointer;text-decoration:none;margin-left:8px}
+.nav-tabs{display:flex;gap:2px;align-items:center;flex:1}
+.nav-tab{
+  font-family:var(--fb);font-size:13px;color:var(--text2);background:none;
+  border:1px solid transparent;border-radius:9999px;padding:6px 14px;cursor:pointer;
+  transition:color .15s,background .15s,border-color .15s;white-space:nowrap
+}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--accent);background:var(--accent-dim);border-color:var(--accent-border)}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.nav-status{display:flex;align-items:center;gap:6px}
+.status-dot{width:6px;height:6px;border-radius:9999px;background:var(--accent);box-shadow:0 0 8px rgba(168,255,62,0.7),0 0 16px rgba(168,255,62,0.3)}
+.status-txt{font-size:11px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase}
+.nav-edit-btn{
+  background:none;border:1px solid var(--border);border-radius:9999px;
+  padding:6px 14px;font-size:12px;color:var(--text2);cursor:pointer;
+  font-family:var(--fb);transition:border-color .15s,color .15s;display:flex;align-items:center;gap:5px
+}
+.nav-edit-btn:hover{border-color:var(--border-h);color:var(--text)}
+.nav-edit-btn.unlocked{border-color:var(--accent-border);color:var(--accent)}
+.hamburger{display:none;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);cursor:pointer;font-size:16px;line-height:1}
+.mobile-menu{
+  display:none;position:fixed;top:58px;left:0;right:0;z-index:290;
+  background:rgba(8,9,9,0.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);padding:12px 20px;
+  flex-direction:column;gap:4px
+}
+.mobile-menu.open{display:flex}
+.mobile-menu .nav-tab{width:100%;text-align:left;border-radius:10px;padding:10px 14px}
+
+/* ───── PAGES ───── */
+.page{display:none;padding-top:58px}
 .page.active{display:block}
 
-/* HERO */
-.hero{text-align:center;padding:32px 0 24px}
-.hero h1{font-size:28px;font-weight:800;color:#fff;margin-bottom:6px}
-.hero p{color:var(--muted);font-size:14px}
-.badge-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.4px}
-.badge-green{background:#0d2318;color:var(--accent-m);border:1px solid var(--accent)}
-.badge-blue{background:var(--info-bg);color:var(--info);border:1px solid #1e3a5f}
-.badge-amber{background:var(--warn-bg);color:var(--warn);border:1px solid #3a2800}
+/* ───── HERO ───── */
+.hero{
+  min-height:100svh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;
+  padding:80px 24px 60px;position:relative;overflow:hidden
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(168,255,62,0.05) 0%,transparent 65%);
+  pointer-events:none
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:24px;
+  background:var(--accent-dim);border:1px solid var(--accent-border);
+  border-radius:9999px;padding:6px 16px
+}
+.hero-eyebrow-dot{width:5px;height:5px;border-radius:9999px;background:var(--accent);box-shadow:0 0 6px rgba(168,255,62,0.8)}
+.hero-title{
+  font-family:var(--fh);font-weight:800;
+  font-size:clamp(40px,8vw,88px);
+  color:#fff;line-height:1.02;letter-spacing:-2.5px;
+  margin-bottom:22px;max-width:860px
+}
+.hero-title .hl{color:var(--accent)}
+.hero-sub{
+  font-size:clamp(15px,2vw,18px);color:var(--text2);
+  line-height:1.65;max-width:500px;margin:0 auto 36px
+}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.hero-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.hero-link{
+  font-size:13px;color:var(--text2);text-decoration:none;
+  display:flex;align-items:center;gap:6px;
+  border-bottom:1px solid transparent;transition:color .15s,border-color .15s;cursor:pointer
+}
+.hero-link:hover{color:var(--text);border-bottom-color:var(--border-h)}
+.hero-link .arrow{color:var(--accent);font-size:12px}
+.scroll-indicator{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.4
+}
+.scroll-indicator span{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.scroll-indicator .chevron{color:var(--muted);animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 
-/* CARDS */
-.section-title{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;margin-top:28px}
-.card{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px}
-.card-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
-.card-title{font-size:15px;font-weight:700;color:#fff}
-.card-meta{font-size:11px;color:var(--muted)}
-.card-body{font-size:13px;color:#ccc;line-height:1.6;margin-top:8px}
-.card-body ul{padding-left:18px;margin-top:6px}
-.card-body li{margin-bottom:4px}
-.card-tag{display:inline-block;padding:2px 9px;border-radius:12px;font-size:10px;font-weight:700;margin-right:6px}
-.tag-new{background:#0d2318;color:var(--accent-m)}
-.tag-updated{background:var(--info-bg);color:var(--info)}
-.tag-important{background:#2a0d0d;color:#f87171}
+/* ───── SECTION ───── */
+.section{max-width:960px;margin:0 auto;padding:80px 24px}
+@media(max-width:640px){.section{padding:56px 16px}}
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:10px
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-title{font-family:var(--fh);font-size:clamp(24px,4vw,36px);font-weight:800;color:var(--text);letter-spacing:-1px;margin-bottom:8px}
+.section-sub{font-size:15px;color:var(--text2);line-height:1.6;margin-bottom:36px}
 
-/* GUIDELINES GRID */
-.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:4px}
-.guide-card{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:16px;cursor:pointer;transition:border-color .15s,background .15s;text-decoration:none;display:block}
-.guide-card:hover{border-color:var(--accent);background:var(--s3)}
-.guide-card-icon{font-size:22px;margin-bottom:8px}
-.guide-card-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
-.guide-card-desc{font-size:12px;color:var(--muted);line-height:1.5}
-.guide-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.guide-card-date{font-size:10px;color:var(--muted)}
-.guide-card-arrow{color:var(--accent-m);font-size:12px;font-weight:700}
+/* ───── UPDATES ───── */
+.updates-grid{display:flex;flex-direction:column;gap:1px;border-radius:18px;overflow:hidden;border:1px solid var(--border)}
+.update-item{
+  background:var(--s1);padding:22px 26px;display:flex;align-items:flex-start;
+  justify-content:space-between;gap:16px;transition:background .15s;
+  border-bottom:1px solid var(--border)
+}
+.update-item:last-child{border-bottom:none}
+.update-item:hover{background:var(--s3)}
+.update-left{flex:1;min-width:0}
+.update-tag-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.tag{
+  display:inline-block;padding:3px 10px;border-radius:9999px;
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase
+}
+.tag-new{background:rgba(168,255,62,0.1);color:var(--accent);border:1px solid var(--accent-border)}
+.tag-updated{background:rgba(96,165,250,0.08);color:#60a5fa;border:1px solid rgba(96,165,250,0.25)}
+.tag-alert{background:rgba(248,65,0,0.08);color:#f87171;border:1px solid rgba(248,65,0,0.2)}
+.tag-info{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border)}
+.update-title{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.update-body{font-size:13px;color:var(--text2);line-height:1.6}
+.update-meta{font-size:11px;color:var(--muted);white-space:nowrap;flex-shrink:0;margin-top:2px}
 
-/* TASK CALCULATOR */
-.calc-container{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:8px}
-.calc-desc{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
-.calc-desc strong{color:var(--text)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.form-row.single{grid-template-columns:1fr}
-@media(max-width:540px){.form-row{grid-template-columns:1fr}}
-.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:.3px}
-.field input,.field textarea{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:9px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
-.field input:focus,.field textarea:focus{border-color:var(--accent)}
-.field textarea{min-height:160px;resize:vertical;font-size:12px;font-family:'Courier New',monospace;line-height:1.5}
-.field .hint{font-size:11px;color:var(--muted);margin-top:4px}
-.calc-add{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.btn{padding:9px 20px;border-radius:7px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:background .15s}
-.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-h)}
-.btn-secondary{background:var(--s3);color:var(--text)}.btn-secondary:hover{background:#383838}
-.btn-danger{background:#2a0d0d;color:var(--err);border:1px solid #4a1a1a}.btn-danger:hover{background:#3a1212}
-.btn-sm{padding:6px 12px;font-size:12px}
-.entry-block{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:16px;margin-bottom:12px;position:relative}
-.entry-num{position:absolute;top:12px;right:14px;font-size:11px;color:var(--muted);font-weight:700}
-.remove-entry{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--err);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px}
-.note-box{background:#1c1500;border:1px solid #3a2800;border-radius:7px;padding:12px 14px;font-size:12px;color:var(--warn);margin-bottom:16px;line-height:1.5}
-.note-box strong{color:#fcd34d}
-.divider{border:none;border-top:1px solid var(--border);margin:20px 0}
-.result-box{background:#0d2318;border:1px solid var(--accent);border-radius:9px;padding:20px;display:none}
-.result-box.show{display:block}
-.result-title{font-size:13px;font-weight:700;color:var(--accent-m);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
-.result-total{font-size:32px;font-weight:800;color:#fff;margin-bottom:4px}
-.result-decimal{font-size:15px;color:var(--info);margin-bottom:14px}
-.result-breakdown{border-top:1px solid #1a3a2a;padding-top:14px;margin-top:4px}
-.result-breakdown-title{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
-.result-table{width:100%;border-collapse:collapse;font-size:12px}
-.result-table th{text-align:left;padding:5px 8px;color:var(--muted);font-weight:600;border-bottom:1px solid #1a3a2a}
-.result-table td{padding:5px 8px;color:#ccc;border-bottom:1px solid #142a1e}
-.result-table td.capped{color:var(--warn)}
-.result-table td.id-col{font-family:'Courier New',monospace;font-size:11px;color:var(--muted)}
-.result-table td.grp{font-weight:700;color:#fff;padding-top:10px}
-.err-box{background:#2a0d0d;border:1px solid #4a1a1a;border-radius:7px;padding:12px 14px;font-size:12px;color:var(--err);margin-top:10px;display:none}
-.err-box.show{display:block}
+/* ───── TASKS GRID ───── */
+.tasks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.task-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:18px;
+  padding:22px;cursor:pointer;text-decoration:none;display:block;
+  transition:border-color .2s,background .2s,transform .2s
+}
+.task-card:hover{border-color:rgba(168,255,62,0.22);background:var(--s3);transform:translateY(-2px)}
+.task-icon{font-size:26px;margin-bottom:12px;display:block}
+.task-title{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+.task-desc{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:14px}
+.task-footer{display:flex;justify-content:space-between;align-items:center}
+.task-label{font-size:10px;color:var(--muted);letter-spacing:.5px}
+.task-arrow{color:var(--accent);font-size:13px;font-weight:700}
 
-/* GUIDELINES PAGE */
-.guide-content{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:28px}
-.guide-content h2{font-size:20px;font-weight:700;color:#fff;margin-bottom:6px}
-.guide-content .guide-meta{font-size:12px;color:var(--muted);margin-bottom:20px}
-.guide-content h3{font-size:15px;font-weight:700;color:var(--accent-m);margin:20px 0 8px}
-.guide-content p{font-size:13px;color:#ccc;line-height:1.7;margin-bottom:10px}
-.guide-content ul,
-.guide-content ol{padding-left:20px;margin-bottom:12px}
-.guide-content li{font-size:13px;color:#ccc;line-height:1.7;margin-bottom:4px}
-.guide-content .callout{background:var(--s2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 7px 7px 0;margin:12px 0;font-size:13px;color:#ccc;line-height:1.6}
-.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--accent-m);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:20px;background:none;border:none;padding:0}
-.back-btn:hover{color:#fff}
+/* ───── TEAM STRIP ───── */
+.team-strip{
+  background:var(--s1);border:1px solid var(--border);border-radius:18px;
+  padding:24px 28px;display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center
+}
+.team-member{display:flex;align-items:center;gap:8px}
+.tm-name{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--text)}
+.tm-hrs{font-size:12px;color:var(--accent);background:var(--accent-dim);border-radius:9999px;padding:2px 8px}
 
-/* FOOTER */
-footer{text-align:center;padding:32px 24px;color:var(--muted);font-size:12px;border-top:1px solid var(--border);margin-top:40px}
+/* ───── BUTTONS ───── */
+.btn{
+  font-family:var(--fb);font-size:14px;cursor:pointer;border-radius:9999px;
+  border:none;padding:12px 26px;transition:all .15s;font-weight:400;
+  display:inline-flex;align-items:center;gap:7px;white-space:nowrap;text-decoration:none
+}
+.btn-primary{background:rgba(168,255,62,0.1);color:var(--accent);border:1px solid var(--accent-border)}
+.btn-primary:hover{background:rgba(168,255,62,0.18);border-color:var(--accent-border-h)}
+.btn-secondary{background:rgba(255,255,255,0.04);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:rgba(255,255,255,0.08);border-color:var(--border-h)}
+.btn-danger{background:rgba(248,65,0,0.08);color:#f87171;border:1px solid rgba(248,65,0,0.2)}
+.btn-sm{padding:8px 16px;font-size:12px}
+.btn-xs{padding:5px 12px;font-size:11px}
+
+/* ───── CALCULATOR PAGE ───── */
+.calc-wrap{max-width:760px;margin:0 auto;padding:80px 24px}
+@media(max-width:640px){.calc-wrap{padding:56px 16px}}
+.calc-card{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:32px}
+.calc-intro{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:22px}
+.calc-note{
+  background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.18);
+  border-radius:12px;padding:14px 18px;font-size:13px;color:#d4a820;
+  margin-bottom:22px;line-height:1.6
+}
+.calc-note strong{color:#fcd34d}
+.entry-block{background:var(--s2);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:12px;position:relative}
+.entry-lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:16px}
+.rm-btn{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--err);cursor:pointer;font-size:12px;padding:4px 8px;border-radius:6px;font-family:var(--fb)}
+.rm-btn:hover{background:rgba(248,65,0,0.08)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fg.full{grid-template-columns:1fr}
+@media(max-width:500px){.fg{grid-template-columns:1fr}}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px}
+.field input,.field textarea{
+  width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;padding:11px 14px;color:var(--text);
+  font-size:14px;font-family:var(--fb);outline:none;transition:border-color .15s
+}
+.field input:focus,.field textarea:focus{border-color:var(--accent-border)}
+.field textarea{min-height:150px;resize:vertical;font-size:12px;font-family:'Courier New',monospace;line-height:1.6}
+.field .hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+.divider{border:none;border-top:1px solid var(--border);margin:22px 0}
+.err-msg{background:rgba(248,65,0,0.07);border:1px solid rgba(248,65,0,0.18);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--err);margin-top:14px;display:none;white-space:pre-line}
+.err-msg.show{display:block}
+.result-card{background:rgba(168,255,62,0.03);border:1px solid rgba(168,255,62,0.18);border-radius:16px;padding:26px;margin-top:16px;display:none}
+.result-card.show{display:block}
+.result-total{font-family:var(--fh);font-size:52px;font-weight:800;color:#fff;letter-spacing:-2.5px;margin-bottom:4px;line-height:1}
+.result-sub{font-size:14px;color:var(--accent);margin-bottom:22px}
+.result-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.result-tbl th{text-align:left;padding:7px 10px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:700}
+.result-tbl td{padding:7px 10px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.03)}
+.result-tbl td.capped{color:var(--shift)}
+.result-tbl td.mono{font-family:'Courier New',monospace;font-size:11px;color:var(--muted)}
+.result-tbl tr.grp-hdr td{color:var(--text);font-weight:700;padding-top:14px;font-family:var(--fh);font-size:12px}
+
+/* ───── GUIDELINES PAGE ───── */
+.guide-wrap{max-width:960px;margin:0 auto;padding:80px 24px}
+@media(max-width:640px){.guide-wrap{padding:56px 16px}}
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.guide-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:18px;
+  padding:22px;text-decoration:none;display:block;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .2s
+}
+.guide-card:hover{border-color:rgba(168,255,62,0.22);background:var(--s3);transform:translateY(-2px)}
+.gi{font-size:26px;margin-bottom:12px}
+.gt{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
+.gd{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:14px}
+.gf{display:flex;justify-content:space-between;align-items:center}
+.gl{font-size:10px;color:var(--muted)}
+.ga{color:var(--accent);font-size:13px;font-weight:700}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;background:none;border:none;padding:0;margin-bottom:22px;font-family:var(--fb)}
+.back-btn:hover{text-decoration:underline}
+.guide-detail{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:36px}
+.guide-detail h2{font-family:var(--fh);font-size:24px;font-weight:800;color:var(--text);margin-bottom:4px}
+.guide-detail-meta{font-size:12px;color:var(--muted);margin-bottom:26px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.guide-detail h3{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--accent);margin:22px 0 8px}
+.guide-detail p{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+.guide-detail ul,.guide-detail ol{padding-left:20px;margin-bottom:12px}
+.guide-detail li{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:3px}
+.callout{background:var(--s2);border-left:2px solid var(--accent);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0;font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ───── SCHEDULE PAGE ───── */
+.sched-wrap{max-width:960px;margin:0 auto;padding:80px 24px}
+@media(max-width:640px){.sched-wrap{padding:56px 16px}}
+.sched-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px}
+.sched-title{font-family:var(--fh);font-size:20px;font-weight:800;color:var(--text)}
+.sched-sub{font-size:12px;color:var(--muted);margin-bottom:18px;text-align:center}
+.save-bar{display:none;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:12px 18px}
+.save-bar.on{display:flex}
+.save-st{font-size:13px;color:var(--accent);flex:1}
+.save-st.ok{color:var(--ok)}.save-st.er{color:var(--err)}
+.scroll-hint{display:none;text-align:center;color:var(--muted);font-size:11px;margin-bottom:8px;letter-spacing:.5px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+thead tr{background:rgba(168,255,62,0.07)}
+thead th{padding:13px 10px;text-align:center;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);white-space:nowrap;font-family:var(--fh);font-size:11px;letter-spacing:.6px;text-transform:uppercase}
+tbody tr{background:var(--s1)}
+tbody tr:nth-child(even){background:var(--s2)}
+tbody td{padding:11px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.035);white-space:nowrap}
+td.nm{font-family:var(--fh);font-weight:700;color:var(--text);text-align:left;padding-left:16px;font-size:13px}
+td.off{color:var(--off-c);font-weight:600;background:rgba(168,255,62,0.05);font-size:11px}
+td.sh{color:var(--shift);font-weight:500;font-size:11px}
+body.editing thead th.day-th{cursor:pointer;transition:background .15s}
+body.editing thead th.day-th:hover{background:rgba(168,255,62,0.14)}
+body.editing thead th.day-th::after{content:' ▾';font-size:9px;opacity:.45}
+body.editing td.sh,body.editing td.off{cursor:pointer}
+body.editing td.sh:hover,body.editing td.off:hover{outline:2px solid var(--accent);outline-offset:-2px;border-radius:3px}
+.legend{display:flex;gap:18px;justify-content:center;margin-top:16px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:7px}
+.dot{width:9px;height:9px;border-radius:3px}
+
+/* ───── DAY PICKER ───── */
+.day-picker-popup{display:none;position:fixed;z-index:600;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:6px;min-width:175px;max-height:280px;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.9)}
+.day-picker-popup.on{display:block}
+.dp-title{color:var(--accent);font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:6px 10px 8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.dp-item{padding:8px 12px;cursor:pointer;border-radius:8px;font-size:13px;color:var(--text2)}
+.dp-item:hover{background:var(--accent-dim);color:var(--accent)}
+.dp-item.dp-cur{color:var(--accent);font-weight:700}
+
+/* ───── MODALS ───── */
+.ov,.tp-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.ov.on,.tp-wrap.on{display:flex}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:22px;padding:36px;width:min(400px,94vw);text-align:center}
+.modal h2{font-family:var(--fh);font-weight:800;font-size:22px;color:var(--text);margin-bottom:6px}
+.modal p{color:var(--text2);font-size:14px;margin-bottom:24px;line-height:1.6}
+.modal input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 16px;border-radius:10px;font-size:14px;font-family:var(--fb);outline:none;margin-bottom:10px}
+.modal input:focus{border-color:var(--accent-border)}
+.modal-err{color:var(--err);font-size:12px;margin-bottom:12px;min-height:16px}
+.tp-card{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:28px;width:min(360px,94vw)}
+.tp-title{font-family:var(--fh);font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px;text-align:center}
+.tp-name{color:var(--muted);font-size:12px;text-align:center;margin-bottom:20px}
+.tp-off-btn{width:100%;background:rgba(168,255,62,0.07);color:var(--accent);border:1px solid var(--accent-border);border-radius:10px;padding:11px;font-size:14px;cursor:pointer;margin-bottom:18px;font-weight:700;transition:background .15s;font-family:var(--fb)}
+.tp-off-btn:hover{background:rgba(168,255,62,0.14)}
+.tp-row{display:flex;align-items:flex-end;gap:12px;margin-bottom:20px}
+.tp-field{flex:1}
+.tp-field label{display:block;color:var(--muted);font-size:10px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px}
+.tp-field select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--shift);padding:11px 12px;border-radius:10px;font-size:14px;font-family:var(--fb);outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.tp-field select:focus{border-color:var(--accent-border)}
+.tp-sep{color:var(--border);font-size:20px;padding-bottom:10px}
+.tp-actions{display:flex;gap:8px}
+.tp-actions .btn{flex:1;justify-content:center}
+
+/* ───── ADMIN PANEL ───── */
+.admin-panel{
+  display:none;position:fixed;top:0;right:0;bottom:0;width:min(480px,100vw);
+  background:var(--s1);border-left:1px solid var(--border);z-index:400;
+  overflow-y:auto;
+  box-shadow:-20px 0 60px rgba(0,0,0,.6)
+}
+.admin-panel.open{display:block}
+.admin-header{
+  position:sticky;top:0;background:var(--s1);border-bottom:1px solid var(--border);
+  padding:18px 22px;display:flex;align-items:center;justify-content:space-between;z-index:1
+}
+.admin-header h2{font-family:var(--fh);font-size:16px;font-weight:800;color:var(--text)}
+.admin-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:2px 8px;border-radius:6px;transition:color .15s}
+.admin-close:hover{color:var(--text)}
+.admin-body{padding:22px}
+.admin-section{margin-bottom:28px}
+.admin-section-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.admin-field{margin-bottom:14px}
+.admin-field label{display:block;font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.8px;margin-bottom:6px}
+.admin-field input,.admin-field textarea,.admin-field select{
+  width:100%;background:var(--bg);border:1px solid var(--border);
+  color:var(--text);padding:10px 13px;border-radius:9px;font-size:13px;
+  font-family:var(--fb);outline:none;transition:border-color .15s
+}
+.admin-field input:focus,.admin-field textarea:focus{border-color:var(--accent-border)}
+.admin-field textarea{min-height:80px;resize:vertical}
+.admin-field select{cursor:pointer}
+.admin-item{
+  background:var(--s2);border:1px solid var(--border);border-radius:10px;
+  padding:14px;margin-bottom:8px
+}
+.admin-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.admin-item-title{font-size:13px;font-weight:700;color:var(--text)}
+.admin-item-del{background:none;border:none;color:var(--err);cursor:pointer;font-size:12px;padding:3px 8px;border-radius:6px;font-family:var(--fb)}
+.admin-item-del:hover{background:rgba(248,65,0,0.08)}
+.admin-add-btn{
+  width:100%;background:none;border:1px dashed rgba(255,255,255,0.15);
+  border-radius:10px;padding:10px;font-size:12px;color:var(--muted);
+  cursor:pointer;font-family:var(--fb);transition:border-color .15s,color .15s
+}
+.admin-add-btn:hover{border-color:var(--accent-border);color:var(--accent)}
+.admin-footer{
+  position:sticky;bottom:0;background:var(--s1);border-top:1px solid var(--border);
+  padding:16px 22px;display:flex;gap:8px
+}
+.admin-save-st{font-size:12px;color:var(--accent);align-self:center;flex:1}
+.admin-save-st.er{color:var(--err)}
+
+/* ───── FOOTER ───── */
+footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;border-top:1px solid var(--border)}
+
+/* ───── RESPONSIVE ───── */
+@media(max-width:700px){
+  .nav-tabs{display:none}.nav-status{display:none}
+  .hamburger{display:block}
+  .scroll-hint{display:block}
+  table{font-size:11px}thead th,tbody td{padding:8px 5px}
+  .team-strip{gap:12px 20px}
+  .hero-title{letter-spacing:-1.5px}
+  .admin-panel{width:100vw}
+}
 </style>
 </head>
 <body>
 
+<!-- ═══ NAV ═══ -->
 <nav>
-  <a class="nav-brand" href="#" onclick="showPage('home')">
-    <img src="../logo.webp" alt="Exponn">
-    <span>Exponn<small>Connecting AI. Empowering People.</small></span>
-
-  </a>
-  <div class="nav-links">
-    <a class="nav-link active" href="#" id="nav-home" onclick="showPage('home');return false">Home</a>
-    <a class="nav-link" href="#" id="nav-calc" onclick="showPage('calc');return false">Time Calculator</a>
-    <a class="nav-link" href="#" id="nav-guides" onclick="showPage('guides');return false">Guidelines</a>
-    <a class="nav-link" href="https://maemaam.github.io/exponn-schedule" target="_blank" id="nav-schedule">Schedule</a>
+  <a class="nav-logo" href="#" onclick="showPage('home');return false">E</a>
+  <a class="nav-brand" href="#" onclick="showPage('home');return false">Exponn</a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="nav-home" onclick="showPage('home')">Home</button>
+    <button class="nav-tab" id="nav-calc" onclick="showPage('calc')">Time Calculator</button>
+    <button class="nav-tab" id="nav-guides" onclick="showPage('guides')">Guidelines</button>
+    <button class="nav-tab" id="nav-sched" onclick="showPage('sched')">Schedule</button>
   </div>
+  <div class="nav-right">
+    <div class="nav-status">
+      <div class="status-dot"></div>
+      <span class="status-txt">Active</span>
+    </div>
+    <button class="nav-edit-btn" id="navEditBtn" onclick="openAdminOrPw()">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+      Edit
+    </button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
 </nav>
-
-<!-- HOME PAGE -->
-<div class="page active" id="page-home">
-  <div class="hero">
-    <h1>Exponn</h1>
-    <p>Your central hub for updates, guidelines, and tools.</p>
-    <div class="badge-row">
-      <span class="badge badge-green">▲ Live</span>
-      <span class="badge badge-blue">Week of Jun 23, 2026</span>
-      <span class="badge badge-amber">95 hrs/week total</span>
-    </div>
-  </div>
-
-  <div class="section-title">Latest Updates</div>
-
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <span class="card-tag tag-new">NEW</span>
-        <span class="card-title">Task Time Calculator</span>
-      </div>
-      <span class="card-meta">Jun 23, 2026</span>
-    </div>
-    <div class="card-body">
-      Quickly calculate your total work time from task IDs. Paste your task list, set your first &amp; last task ID, apply a time cap, and get your total instantly. Supports multiple task types per session.
-      <br><br>
-      <a href="#" onclick="showPage('calc');return false" style="color:var(--accent-m);font-weight:600;font-size:13px">→ Open Calculator</a>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <span class="card-tag tag-updated">UPDATED</span>
-        <span class="card-title">Team Schedule — Week of Jun 23</span>
-      </div>
-      <span class="card-meta">Jun 22, 2026</span>
-    </div>
-    <div class="card-body">
-      Schedule updated. Mohamed Elsahrigy removed. Final weekly distribution:
-      <ul>
-        <li>Menna: 22.5 hrs &nbsp;|&nbsp; Mazen: 20 hrs &nbsp;|&nbsp; Yahya: 17.5 hrs</li>
-        <li>Eiman: 22.5 hrs &nbsp;|&nbsp; Ahmed: 14 hrs &nbsp;|&nbsp; Mostafa: 13.5 hrs</li>
-        <li><strong>Total: 95 hrs/week</strong></li>
-      </ul>
-      <br>
-      <a href="https://maemaam.github.io/exponn-schedule" target="_blank" style="color:var(--accent-m);font-weight:600;font-size:13px">→ View Full Schedule</a>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <span class="card-tag tag-important">IMPORTANT</span>
-        <span class="card-title">Annotation Quality Reminder</span>
-      </div>
-      <span class="card-meta">Jun 20, 2026</span>
-    </div>
-    <div class="card-body">
-      Please review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps. Accuracy directly impacts project scoring.
-    </div>
-  </div>
-
-  <div class="section-title">Quick Access — Guidelines</div>
-  <div class="guide-grid">
-    <a class="guide-card" href="#" onclick="showGuide('annot-critic');return false">
-      <div class="guide-card-icon">🎯</div>
-      <div class="guide-card-title">Annotation Critic</div>
-      <div class="guide-card-desc">Quality review criteria for annotation tasks. Scoring rubric and common errors.</div>
-      <div class="guide-card-footer">
-        <span class="guide-card-date">annot-critic-q7r</span>
-        <span class="guide-card-arrow">→</span>
-      </div>
-    </a>
-    <a class="guide-card" href="#" onclick="showGuide('ig-entity');return false">
-      <div class="guide-card-icon">🔍</div>
-      <div class="guide-card-title">IG Entity Verification</div>
-      <div class="guide-card-desc">Step-by-step entity verification process for IG tasks. Reference guide.</div>
-      <div class="guide-card-footer">
-        <span class="guide-card-date">IG Entity Verification</span>
-        <span class="guide-card-arrow">→</span>
-      </div>
-    </a>
-    <a class="guide-card" href="#" onclick="showGuide('sl-box');return false">
-      <div class="guide-card-icon">📦</div>
-      <div class="guide-card-title">SL Box Verification</div>
-      <div class="guide-card-desc">Box verification and correction procedures. Boundary alignment standards.</div>
-      <div class="guide-card-footer">
-        <span class="guide-card-date">SL Box Verification</span>
-        <span class="guide-card-arrow">→</span>
-      </div>
-    </a>
-    <a class="guide-card" href="#" onclick="showGuide('boundary');return false">
-      <div class="guide-card-icon">✂️</div>
-      <div class="guide-card-title">Find the Boundary v2</div>
-      <div class="guide-card-desc">Pixel-aligned boundary detection. Updated v2 with i2i filter specs.</div>
-      <div class="guide-card-footer">
-        <span class="guide-card-date">find-the-boundary-v2</span>
-        <span class="guide-card-arrow">→</span>
-      </div>
-    </a>
-    <a class="guide-card" href="#" onclick="showGuide('i2i');return false">
-      <div class="guide-card-icon">🖼️</div>
-      <div class="guide-card-title">i2i Pixel-Aligned Filter</div>
-      <div class="guide-card-desc">Image-to-image filter alignment spec. Use alongside boundary detection tasks.</div>
-      <div class="guide-card-footer">
-        <span class="guide-card-date">i2i-pixel-aligned-filter</span>
-        <span class="guide-card-arrow">→</span>
-      </div>
-    </a>
-  </div>
+<div class="mobile-menu" id="mobileMenu">
+  <button class="nav-tab" onclick="showPage('home');toggleMobileMenu()">Home</button>
+  <button class="nav-tab" onclick="showPage('calc');toggleMobileMenu()">Time Calculator</button>
+  <button class="nav-tab" onclick="showPage('guides');toggleMobileMenu()">Guidelines</button>
+  <button class="nav-tab" onclick="showPage('sched');toggleMobileMenu()">Schedule</button>
 </div>
 
-<!-- TIME CALCULATOR PAGE -->
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HOME PAGE                                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      <span id="hero-eyebrow-text">Week of Jun 23, 2026</span>
+    </div>
+    <h1 class="hero-title" id="hero-title">New tasks<br><span class="hl">available.</span></h1>
+    <p class="hero-sub" id="hero-sub">Review the latest guidelines and complete your assessment before starting tasks.</p>
+    <div class="hero-ctas">
+      <button class="btn btn-primary" onclick="showPage('calc')">⏱ Time Calculator</button>
+      <button class="btn btn-secondary" onclick="showPage('sched')">Schedule →</button>
+    </div>
+    <div class="hero-links">
+      <a class="hero-link" href="#" onclick="showPage('guides');return false">View Guidelines <span class="arrow">↗</span></a>
+      <a class="hero-link" id="assessment-link-el" href="#" target="_blank">Assessment Form <span class="arrow">↗</span></a>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="chevron">↓</div>
+    </div>
+  </div>
+
+  <!-- UPDATES -->
+  <div class="section">
+    <div class="section-label">Latest Updates</div>
+    <div class="updates-grid" id="updates-container">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+
+  <!-- TASKS / GUIDELINES -->
+  <div class="section" style="padding-top:0">
+    <div class="section-label">Active Task Guidelines</div>
+    <div class="tasks-grid" id="tasks-container">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="section" style="padding-top:0">
+    <div class="section-label">Team This Week</div>
+    <div class="team-strip" id="team-strip">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CALCULATOR PAGE                                  -->
+<!-- ═══════════════════════════════════════════════ -->
 <div class="page" id="page-calc">
-  <div style="padding-top:8px">
-    <div class="section-title">Task Time Calculator</div>
-    <div class="calc-container">
-      <div class="calc-desc">
-        Paste your full task list, enter the <strong>first</strong> and <strong>last</strong> task ID you worked on, and set the <strong>max time cap</strong> per task. The calculator will sum only your tasks and apply the cap automatically.<br><br>
-        <strong>Note:</strong> If you worked on tasks with two different max times (e.g., 10-min tasks and 15-min tasks), add them as separate entries below.
-      </div>
-
-      <div class="note-box">
-        <strong>⚠️ How time capping works:</strong><br>
-        If max is <strong>10:00</strong> — a task at <strong>10:01</strong> becomes <strong>10:00</strong>, but <strong>09:59</strong> stays <strong>09:59</strong>. Only times strictly above the cap are rounded down.
-      </div>
-
-      <div id="entries-container"></div>
-
-      <div class="calc-add">
-        <button class="btn btn-secondary btn-sm" onclick="addEntry()">+ Add Another Task Type</button>
-        <span style="font-size:12px;color:var(--muted)">For tasks with a different time cap</span>
-      </div>
-
-      <hr class="divider">
-
+  <div class="calc-wrap">
+    <div class="section-label" style="margin-top:0">Time Calculator</div>
+    <div class="calc-card">
+      <div class="calc-intro">Paste your task export, enter the <strong>first</strong> and <strong>last</strong> task ID you worked on, and set the <strong>max time cap</strong>. Only tasks in your range are counted. Times are in <strong>MM:SS</strong>.</div>
+      <div class="calc-note"><strong>Capping rule:</strong> If cap is <strong>10:00</strong> → a task at <strong>10:01</strong> becomes <strong>10:00</strong>, but <strong>09:59</strong> stays <strong>09:59</strong>. Only times strictly above the cap are rounded down.<br><br><strong>Tip:</strong> If you worked on tasks with different max times, add them as separate groups below.</div>
+      <div id="calc-entries"></div>
+      <button class="btn btn-secondary btn-sm" onclick="addCalcEntry()" style="margin-bottom:4px">+ Add Another Task Type</button>
+      <div class="divider"></div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="calculate()">Calculate Total Time</button>
-        <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
+        <button class="btn btn-primary" onclick="doCalc()">Calculate Total</button>
+        <button class="btn btn-secondary" onclick="resetCalc()">Reset</button>
       </div>
-
-      <div class="err-box" id="err-box"></div>
-
-      <div class="result-box" id="result-box">
-        <div class="result-title">Total Time Worked</div>
-        <div class="result-total" id="result-hms">—</div>
-        <div class="result-decimal" id="result-decimal">—</div>
-        <div class="result-breakdown">
-          <div class="result-breakdown-title">Task Breakdown</div>
-          <table class="result-table" id="result-table">
-            <thead><tr><th>#</th><th>Task ID</th><th>Raw Time</th><th>Applied</th></tr></thead>
-            <tbody id="result-tbody"></tbody>
+      <div class="err-msg" id="calc-err"></div>
+      <div class="result-card" id="calc-result">
+        <div class="result-total" id="r-hms">—</div>
+        <div class="result-sub" id="r-dec">—</div>
+        <div class="divider" style="margin:16px 0"></div>
+        <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:12px">Breakdown</div>
+        <div style="overflow-x:auto">
+          <table class="result-tbl">
+            <thead><tr><th>#</th><th>Task ID</th><th>Raw</th><th>Applied</th></tr></thead>
+            <tbody id="r-tbody"></tbody>
           </table>
         </div>
       </div>
@@ -302,403 +514,696 @@ footer{text-align:center;padding:32px 24px;color:var(--muted);font-size:12px;bor
   </div>
 </div>
 
-<!-- GUIDELINES PAGE -->
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GUIDELINES PAGE                                  -->
+<!-- ═══════════════════════════════════════════════ -->
 <div class="page" id="page-guides">
-  <div id="guides-list">
-    <div class="section-title">All Guidelines</div>
-    <div class="guide-grid">
-      <a class="guide-card" href="#" onclick="showGuide('annot-critic');return false">
-        <div class="guide-card-icon">🎯</div>
-        <div class="guide-card-title">Annotation Critic</div>
-        <div class="guide-card-desc">Quality review criteria, scoring rubric, and common annotation errors.</div>
-        <div class="guide-card-footer"><span class="guide-card-date">annot-critic-q7r.pdf</span><span class="guide-card-arrow">→</span></div>
-      </a>
-      <a class="guide-card" href="#" onclick="showGuide('ig-entity');return false">
-        <div class="guide-card-icon">🔍</div>
-        <div class="guide-card-title">IG Entity Verification</div>
-        <div class="guide-card-desc">Entity verification and reference process for IG annotation tasks.</div>
-        <div class="guide-card-footer"><span class="guide-card-date">IG Entity Verification.pdf</span><span class="guide-card-arrow">→</span></div>
-      </a>
-      <a class="guide-card" href="#" onclick="showGuide('sl-box');return false">
-        <div class="guide-card-icon">📦</div>
-        <div class="guide-card-title">SL Box Verification & Correction</div>
-        <div class="guide-card-desc">Box verification procedures and correction standards for SL tasks.</div>
-        <div class="guide-card-footer"><span class="guide-card-date">SL Box Verification & Correction.pdf</span><span class="guide-card-arrow">→</span></div>
-      </a>
-      <a class="guide-card" href="#" onclick="showGuide('boundary');return false">
-        <div class="guide-card-icon">✂️</div>
-        <div class="guide-card-title">Find the Boundary v2</div>
-        <div class="guide-card-desc">Pixel-aligned boundary detection guide, version 2.</div>
-        <div class="guide-card-footer"><span class="guide-card-date">find-the-boundary-v2.pdf</span><span class="guide-card-arrow">→</span></div>
-      </a>
-      <a class="guide-card" href="#" onclick="showGuide('i2i');return false">
-        <div class="guide-card-icon">🖼️</div>
-        <div class="guide-card-title">i2i Pixel-Aligned Filter</div>
-        <div class="guide-card-desc">Image-to-image filter alignment specification.</div>
-        <div class="guide-card-footer"><span class="guide-card-date">i2i-pixel-aligned-filter.pdf</span><span class="guide-card-arrow">→</span></div>
-      </a>
+  <div class="guide-wrap">
+    <div id="guides-index">
+      <div class="section-label" style="margin-top:0">All Guidelines</div>
+      <div class="guide-grid" id="guide-grid-container">
+        <!-- rendered by JS -->
+      </div>
     </div>
-  </div>
-
-  <div id="guide-detail" style="display:none">
-    <!-- filled by JS -->
+    <div id="guides-detail" style="display:none"></div>
   </div>
 </div>
 
-<footer>Exponn Solutions · Team Portal · &copy; 2026</footer>
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SCHEDULE PAGE                                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page" id="page-sched">
+  <div class="sched-wrap">
+    <div class="sched-topbar">
+      <div class="sched-title" id="schedTitle">Team Schedule</div>
+      <button class="btn btn-secondary btn-sm" id="schedEditBtn" onclick="openSchedPw()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        Edit Schedule
+      </button>
+    </div>
+    <div class="sched-sub" id="schedSub"></div>
+    <div class="save-bar" id="saveBar">
+      <span class="save-st" id="saveSt"></span>
+      <button class="btn btn-secondary btn-sm" onclick="cancelSchedEdit()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveSchedGh()">💾 Save & Publish</button>
+    </div>
+    <div id="dayPicker" class="day-picker-popup"><div class="dp-title" id="dpTitle"></div><div id="dpList"></div></div>
+    <div class="scroll-hint">← Scroll to see full schedule →</div>
+    <div class="table-wrap"><table><thead><tr id="dateRow"></tr></thead><tbody id="schedBody"></tbody></table></div>
+    <div class="legend">
+      <span><div class="dot" style="background:var(--shift)"></div>Working Shift</span>
+      <span><div class="dot" style="background:var(--off-c)"></div>Day Off</span>
+    </div>
+  </div>
+</div>
+
+<footer>Exponn Solutions &nbsp;·&nbsp; Team Portal &nbsp;·&nbsp; &copy; 2026</footer>
+
+<!-- ═══ TIME PICKER MODAL ═══ -->
+<div class="tp-wrap" id="tpWrap">
+  <div class="tp-card">
+    <div class="tp-title">Edit Shift</div>
+    <div class="tp-name" id="tpName"></div>
+    <button class="tp-off-btn" onclick="tpSetOff()">Mark as Day Off</button>
+    <div class="tp-row">
+      <div class="tp-field"><label>From</label><select id="tpFrom"></select></div>
+      <div class="tp-sep">→</div>
+      <div class="tp-field"><label>To</label><select id="tpTo"></select></div>
+    </div>
+    <div class="tp-actions">
+      <button class="btn btn-secondary" onclick="tpCancel()">Cancel</button>
+      <button class="btn btn-primary" onclick="tpApply()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCHEDULE PASSWORD MODAL ═══ -->
+<div class="ov" id="schedOv">
+  <div class="modal">
+    <h2>Edit Schedule</h2>
+    <p>Enter your admin password to edit shifts and publish changes.</p>
+    <input type="password" id="schedPw" placeholder="Password" onkeydown="if(event.key==='Enter')authSched()">
+    <div class="modal-err" id="schedPwe"></div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:8px;justify-content:center" onclick="authSched()">Unlock</button>
+    <button class="btn btn-secondary" style="width:100%;justify-content:center" onclick="closeSchedPw()">Cancel</button>
+  </div>
+</div>
+
+<!-- ═══ ADMIN PASSWORD MODAL ═══ -->
+<div class="ov" id="adminOv">
+  <div class="modal">
+    <h2>Admin Panel</h2>
+    <p>Enter your password to edit site content.</p>
+    <input type="password" id="adminPw" placeholder="Password" onkeydown="if(event.key==='Enter')authAdmin()">
+    <div class="modal-err" id="adminPwe"></div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:8px;justify-content:center" onclick="authAdmin()">Unlock</button>
+    <button class="btn btn-secondary" style="width:100%;justify-content:center" onclick="closeAdminPw()">Cancel</button>
+  </div>
+</div>
+
+<!-- ═══ ADMIN PANEL DRAWER ═══ -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-header">
+    <h2>✏️ Edit Site Content</h2>
+    <button class="admin-close" onclick="closeAdminPanel()">✕</button>
+  </div>
+  <div class="admin-body">
+
+    <!-- HERO -->
+    <div class="admin-section">
+      <div class="admin-section-title">Hero Section</div>
+      <div class="admin-field">
+        <label>Eyebrow Text (small label above title)</label>
+        <input id="a-eyebrow" placeholder="e.g. Week of Jun 23, 2026">
+      </div>
+      <div class="admin-field">
+        <label>Headline</label>
+        <input id="a-title" placeholder="e.g. New tasks available.">
+      </div>
+      <div class="admin-field">
+        <label>Sub-headline</label>
+        <textarea id="a-sub" style="min-height:60px" placeholder="Short description below headline"></textarea>
+      </div>
+      <div class="admin-field">
+        <label>Assessment Form URL</label>
+        <input id="a-assessment" placeholder="https://...">
+      </div>
+    </div>
+
+    <!-- UPDATES -->
+    <div class="admin-section">
+      <div class="admin-section-title">Updates</div>
+      <div id="a-updates-list"></div>
+      <button class="admin-add-btn" onclick="adminAddUpdate()">+ Add Update</button>
+    </div>
+
+    <!-- TASKS -->
+    <div class="admin-section">
+      <div class="admin-section-title">Active Task Guidelines</div>
+      <div id="a-tasks-list"></div>
+      <button class="admin-add-btn" onclick="adminAddTask()">+ Add Task Card</button>
+    </div>
+
+    <!-- TEAM -->
+    <div class="admin-section">
+      <div class="admin-section-title">Team Members (shown on homepage)</div>
+      <div id="a-team-list"></div>
+      <button class="admin-add-btn" onclick="adminAddMember()">+ Add Member</button>
+    </div>
+
+  </div>
+  <div class="admin-footer">
+    <span class="admin-save-st" id="adminSaveSt"></span>
+    <button class="btn btn-secondary btn-sm" onclick="closeAdminPanel()">Cancel</button>
+    <button class="btn btn-primary btn-sm" onclick="saveAdminContent()">💾 Save & Publish</button>
+  </div>
+</div>
+
+<input type="hidden" id="ghtok">
+<input type="hidden" id="ghrepo">
+<input type="hidden" id="ghpath">
 
 <script>
-// ─── NAVIGATION ────────────────────────────────────────────────────────────
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.getElementById('nav-' + id).classList.add('active');
-  if (id !== 'guides') {
-    document.getElementById('guides-list').style.display = '';
-    document.getElementById('guide-detail').style.display = 'none';
-  }
-}
-
-// ─── GUIDELINES ────────────────────────────────────────────────────────────
-const GUIDES = {
-  'annot-critic': {
-    title: 'Annotation Critic',
-    file: 'annot-critic-q7r.pdf',
-    icon: '🎯',
-    updated: 'Jun 2026',
-    content: `
-      <h3>Overview</h3>
-      <p>The annotation critic guideline defines quality review criteria for annotation tasks. Use this as your reference when self-reviewing or peer-reviewing completed annotations.</p>
-      <h3>Scoring Rubric</h3>
-      <ul>
-        <li><strong>Accuracy (40%):</strong> Correct identification of entities, boundaries, and labels.</li>
-        <li><strong>Completeness (30%):</strong> All required fields and regions annotated.</li>
-        <li><strong>Consistency (20%):</strong> Uniform style and approach across the task batch.</li>
-        <li><strong>Speed (10%):</strong> Task completed within the allocated time window.</li>
-      </ul>
-      <h3>Common Errors to Avoid</h3>
-      <ul>
-        <li>Loose bounding boxes — boxes must be pixel-tight.</li>
-        <li>Missing secondary entities in crowded scenes.</li>
-        <li>Inconsistent label casing or formatting.</li>
-        <li>Skipping the verification step before submission.</li>
-      </ul>
-      <div class="callout">Always open the full PDF for the latest scoring examples and edge-case illustrations.</div>
-      <p><a href="../SOPs and Guidelines/annot-critic-q7r.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
-    `
+// ═══════════════════════════════════════════════════
+// SITE CONTENT (CMS data — editable via admin panel)
+// ═══════════════════════════════════════════════════
+const DEFAULT_CONTENT = {
+  hero: {
+    eyebrow: "Week of Jun 23, 2026",
+    title: "New tasks\navailable.",
+    sub: "Review the latest guidelines and complete your assessment before starting tasks.",
+    assessmentLink: ""
   },
-  'ig-entity': {
-    title: 'IG Entity Verification',
-    file: 'IG Entity Verification.pdf',
-    icon: '🔍',
-    updated: 'Jun 2026',
-    content: `
-      <h3>Purpose</h3>
-      <p>This guide covers the step-by-step process for verifying entities in IG annotation tasks. It ensures annotators follow a consistent verification path before marking a task complete.</p>
-      <h3>Verification Steps</h3>
-      <ol>
-        <li>Open the task and identify all visible entities in the scene.</li>
-        <li>Cross-reference each entity with the reference document (original-ig-entity-ref-verification-v1.pdf).</li>
-        <li>Confirm label match — entity type, sub-type, and attributes.</li>
-        <li>Check bounding region for pixel alignment.</li>
-        <li>Mark verified and submit.</li>
-      </ol>
-      <h3>Reference Materials</h3>
-      <ul>
-        <li>Primary: IG Entity Verification.pdf</li>
-        <li>Reference: original-ig-entity-ref-verification-v1.pdf</li>
-        <li>Video walkthrough: Ig Entity.mp4 (in SOPs folder)</li>
-      </ul>
-      <div class="callout">When in doubt, refer to the original reference PDF before marking an entity as verified.</div>
-      <p><a href="../SOPs and Guidelines/IG Entity Verification.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
-    `
-  },
-  'sl-box': {
-    title: 'SL Box Verification & Correction',
-    file: 'SL Box Verification & Correction.pdf',
-    icon: '📦',
-    updated: 'Jun 2026',
-    content: `
-      <h3>Overview</h3>
-      <p>This guideline covers how to verify and correct bounding box annotations in SL tasks. It applies to all box-based annotation workflows.</p>
-      <h3>Verification Checklist</h3>
-      <ul>
-        <li>Box must fully enclose the target object — no cropping of edges.</li>
-        <li>Box must not include significant background padding (&gt;5px on any side).</li>
-        <li>Overlapping boxes for distinct objects must be clearly separated.</li>
-        <li>Confirm label before submission.</li>
-      </ul>
-      <h3>Correction Procedure</h3>
-      <ol>
-        <li>Identify the misaligned box.</li>
-        <li>Resize using the corner handles — do not drag the center.</li>
-        <li>Use zoom (minimum 200%) when making pixel-level corrections.</li>
-        <li>Re-verify after correction before saving.</li>
-      </ol>
-      <div class="callout">If a box cannot be corrected within 2 minutes, flag it for supervisor review rather than guessing.</div>
-      <p><a href="../SOPs and Guidelines/SL Box Verification %26 Correction.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
-    `
-  },
-  'boundary': {
-    title: 'Find the Boundary v2',
-    file: 'find-the-boundary-v2.pdf',
-    icon: '✂️',
-    updated: 'Jun 2026',
-    content: `
-      <h3>What's New in v2</h3>
-      <p>Version 2 introduces updated boundary detection criteria aligned with the i2i pixel-aligned filter specification. Use this version for all tasks dated after May 2026.</p>
-      <h3>Core Principles</h3>
-      <ul>
-        <li>Boundaries must be defined at the pixel level — sub-pixel approximation is not accepted.</li>
-        <li>Use edge-contrast as the primary signal; texture is secondary.</li>
-        <li>For blurry edges, use the midpoint of the gradient as the boundary.</li>
-        <li>Do not interpolate across occlusions — mark boundaries where visible only.</li>
-      </ul>
-      <h3>Tool Settings</h3>
-      <ul>
-        <li>Brush hardness: 100%</li>
-        <li>Zoom level: minimum 300% for final check</li>
-        <li>Grid: on (helps with alignment verification)</li>
-      </ul>
-      <div class="callout">Always use this guide alongside i2i-pixel-aligned-filter.pdf for consistency.</div>
-      <p><a href="../SOPs and Guidelines/find-the-boundary-v2.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
-    `
-  },
-  'i2i': {
-    title: 'i2i Pixel-Aligned Filter',
-    file: 'i2i-pixel-aligned-filter.pdf',
-    icon: '🖼️',
-    updated: 'Jun 2026',
-    content: `
-      <h3>Overview</h3>
-      <p>The i2i pixel-aligned filter specification defines how image-to-image transformations should preserve pixel-level boundary accuracy. This is a companion document to find-the-boundary-v2.</p>
-      <h3>Filter Requirements</h3>
-      <ul>
-        <li>Input and output images must be the same resolution.</li>
-        <li>No anti-aliasing on boundary pixels.</li>
-        <li>Color channels must not bleed across annotated boundaries.</li>
-        <li>Alpha channel (if present) must match boundary mask exactly.</li>
-      </ul>
-      <h3>Validation</h3>
-      <ul>
-        <li>Compare input vs. output at 400% zoom on at least 3 boundary regions.</li>
-        <li>Check for any sub-pixel shifts using the overlay comparison tool.</li>
-        <li>Log any discrepancies before submission.</li>
-      </ul>
-      <div class="callout">This filter spec is mandatory for all image tasks using the updated pipeline (post-May 2026).</div>
-      <p><a href="../SOPs and Guidelines/i2i-pixel-aligned-filter.pdf" target="_blank" style="color:var(--accent-m);font-weight:600">📄 Open Full PDF →</a></p>
-    `
-  }
+  updates: [
+    {id:"u1", tag:"new", title:"Task Time Calculator", body:"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.", date:"Jun 23, 2026"},
+    {id:"u2", tag:"updated", title:"Team Schedule Updated", body:"Schedule updated with new shift distribution for the week of Jun 23.", date:"Jun 22, 2026"},
+    {id:"u3", tag:"alert", title:"Annotation Quality Reminder", body:"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.", date:"Jun 20, 2026"}
+  ],
+  tasks: [
+    {id:"t1", icon:"🎯", title:"Annotation Critic", desc:"Quality review criteria, scoring rubric, and common errors.", guideKey:"annot-critic", label:"annot-critic-q7r"},
+    {id:"t2", icon:"🔍", title:"IG Entity Verification", desc:"Step-by-step entity verification process for IG tasks.", guideKey:"ig-entity", label:"IG Entity Verification"},
+    {id:"t3", icon:"📦", title:"SL Box Verification", desc:"Box verification and correction procedures.", guideKey:"sl-box", label:"SL Box Verification"},
+    {id:"t4", icon:"✂️", title:"Find the Boundary v2", desc:"Pixel-aligned boundary detection. Updated v2 specs.", guideKey:"boundary", label:"find-the-boundary-v2"},
+    {id:"t5", icon:"🖼️", title:"i2i Pixel-Aligned Filter", desc:"Image-to-image filter alignment specification.", guideKey:"i2i", label:"i2i-pixel-aligned-filter"}
+  ],
+  team: [
+    {name:"Menna Sherif", hrs:"22.5"},
+    {name:"Mazen Adam", hrs:"20"},
+    {name:"Yahya Mohamed", hrs:"17.5"},
+    {name:"Eiman Reda", hrs:"22.5"},
+    {name:"Ahmed Gouhar", hrs:"14"},
+    {name:"Mostafa Atef", hrs:"13.5"}
+  ]
 };
 
-function showGuide(key) {
-  const g = GUIDES[key];
-  if (!g) return;
+const CMS_KEY = 'exp_cms';
+function getCMS(){try{const s=localStorage.getItem(CMS_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_CONTENT));}catch{return JSON.parse(JSON.stringify(DEFAULT_CONTENT));}}
+function saveCMSLocal(d){localStorage.setItem(CMS_KEY,JSON.stringify(d));}
+
+// ═══════════════════════════════════════════════════
+// NAV / ROUTING
+// ═══════════════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const nt=document.getElementById('nav-'+id);if(nt)nt.classList.add('active');
+  if(id!=='guides'){document.getElementById('guides-index').style.display='';document.getElementById('guides-detail').style.display='none';}
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+function toggleMobileMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+
+// ═══════════════════════════════════════════════════
+// RENDER HOME
+// ═══════════════════════════════════════════════════
+function renderHome(){
+  const cms=getCMS();
+  // hero
+  document.getElementById('hero-eyebrow-text').textContent=cms.hero.eyebrow;
+  const tParts=cms.hero.title.split('\n');
+  document.getElementById('hero-title').innerHTML=
+    tParts.map((p,i)=>i===tParts.length-1&&tParts.length>1?`<span class="hl">${p}</span>`:p).join('<br>');
+  document.getElementById('hero-sub').textContent=cms.hero.sub;
+  const al=document.getElementById('assessment-link-el');
+  if(cms.hero.assessmentLink){al.href=cms.hero.assessmentLink;al.style.display='';}
+  else{al.style.display='none';}
+
+  // updates
+  const uc=document.getElementById('updates-container');
+  uc.innerHTML=cms.updates.map(u=>`
+    <div class="update-item">
+      <div class="update-left">
+        <div class="update-tag-row"><span class="tag tag-${u.tag||'info'}">${capitalize(u.tag||'info')}</span></div>
+        <div class="update-title">${esc(u.title)}</div>
+        <div class="update-body">${esc(u.body)}</div>
+      </div>
+      <div class="update-meta">${esc(u.date)}</div>
+    </div>`).join('');
+
+  // tasks
+  const tc=document.getElementById('tasks-container');
+  tc.innerHTML=cms.tasks.map(t=>`
+    <a class="task-card" href="#" onclick="${t.guideKey?`showGuide('${t.guideKey}');`:''}return false">
+      <span class="task-icon">${t.icon||'📋'}</span>
+      <div class="task-title">${esc(t.title)}</div>
+      <div class="task-desc">${esc(t.desc)}</div>
+      <div class="task-footer">
+        <span class="task-label">${esc(t.label||'')}</span>
+        <span class="task-arrow">→</span>
+      </div>
+    </a>`).join('');
+
+  // team
+  document.getElementById('team-strip').innerHTML=cms.team.map(m=>`
+    <div class="team-member">
+      <div class="tm-name">${esc(m.name)}</div>
+      <div class="tm-hrs">${esc(m.hrs)} hrs</div>
+    </div>`).join('');
+
+  // guide grid
+  renderGuideGrid();
+}
+
+function capitalize(s){return s?s[0].toUpperCase()+s.slice(1):'';}
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
+
+// ═══════════════════════════════════════════════════
+// GUIDELINES
+// ═══════════════════════════════════════════════════
+const GUIDES={
+  'annot-critic':{icon:'🎯',title:'Annotation Critic',file:'annot-critic-q7r.pdf',updated:'Jun 2026',html:`
+    <h3>Overview</h3><p>Quality review criteria for annotation tasks. Use this when self-reviewing or peer-reviewing completed annotations.</p>
+    <h3>Scoring Rubric</h3><ul><li><strong>Accuracy (40%):</strong> Correct identification of entities, boundaries, and labels.</li><li><strong>Completeness (30%):</strong> All required fields and regions annotated.</li><li><strong>Consistency (20%):</strong> Uniform style and approach across the task batch.</li><li><strong>Speed (10%):</strong> Task completed within the allocated time window.</li></ul>
+    <h3>Common Errors</h3><ul><li>Loose bounding boxes — boxes must be pixel-tight.</li><li>Missing secondary entities in crowded scenes.</li><li>Inconsistent label casing or formatting.</li><li>Skipping the verification step before submission.</li></ul>
+    <div class="callout">Open the full PDF for the latest scoring examples and edge-case illustrations.</div>
+    <p><a href="https://maemaam.github.io/exponn/SOPs/annot-critic-q7r.pdf" target="_blank" style="color:var(--accent);font-weight:700">📄 Open Full PDF →</a></p>`},
+  'ig-entity':{icon:'🔍',title:'IG Entity Verification',file:'IG Entity Verification.pdf',updated:'Jun 2026',html:`
+    <h3>Purpose</h3><p>Step-by-step process for verifying entities in IG annotation tasks.</p>
+    <h3>Verification Steps</h3><ol><li>Open the task and identify all visible entities.</li><li>Cross-reference with the reference document.</li><li>Confirm label match — type, sub-type, and attributes.</li><li>Check bounding region for pixel alignment.</li><li>Mark verified and submit.</li></ol>
+    <h3>Reference Materials</h3><ul><li>Primary: IG Entity Verification.pdf</li><li>Reference: original-ig-entity-ref-verification-v1.pdf</li><li>Video walkthrough available in the SOPs folder</li></ul>
+    <div class="callout">When in doubt, refer to the original reference PDF before marking as verified.</div>
+    <p><a href="https://maemaam.github.io/exponn/SOPs/IG-Entity-Verification.pdf" target="_blank" style="color:var(--accent);font-weight:700">📄 Open Full PDF →</a></p>`},
+  'sl-box':{icon:'📦',title:'SL Box Verification & Correction',file:'SL Box Verification & Correction.pdf',updated:'Jun 2026',html:`
+    <h3>Overview</h3><p>How to verify and correct bounding box annotations in SL tasks.</p>
+    <h3>Verification Checklist</h3><ul><li>Box must fully enclose the target — no cropping of edges.</li><li>No significant background padding (&gt;5px on any side).</li><li>Overlapping boxes for distinct objects must be clearly separated.</li><li>Confirm label before submission.</li></ul>
+    <h3>Correction Procedure</h3><ol><li>Identify the misaligned box.</li><li>Resize using corner handles — do not drag the center.</li><li>Use zoom (minimum 200%) for pixel-level corrections.</li><li>Re-verify after correction before saving.</li></ol>
+    <div class="callout">If a box cannot be corrected within 2 minutes, flag it for supervisor review.</div>
+    <p><a href="https://maemaam.github.io/exponn/SOPs/SL-Box-Verification.pdf" target="_blank" style="color:var(--accent);font-weight:700">📄 Open Full PDF →</a></p>`},
+  'boundary':{icon:'✂️',title:'Find the Boundary v2',file:'find-the-boundary-v2.pdf',updated:'Jun 2026',html:`
+    <h3>What's New in v2</h3><p>Updated boundary detection criteria aligned with the i2i pixel-aligned filter specification. Use this version for all tasks after May 2026.</p>
+    <h3>Core Principles</h3><ul><li>Boundaries must be defined at the pixel level.</li><li>Use edge-contrast as the primary signal; texture is secondary.</li><li>For blurry edges, use the midpoint of the gradient as the boundary.</li><li>Do not interpolate across occlusions — mark boundaries where visible only.</li></ul>
+    <h3>Tool Settings</h3><ul><li>Brush hardness: 100%</li><li>Zoom: minimum 300% for final check</li><li>Grid: on</li></ul>
+    <div class="callout">Always use alongside i2i-pixel-aligned-filter.pdf for consistency.</div>
+    <p><a href="https://maemaam.github.io/exponn/SOPs/find-the-boundary-v2.pdf" target="_blank" style="color:var(--accent);font-weight:700">📄 Open Full PDF →</a></p>`},
+  'i2i':{icon:'🖼️',title:'i2i Pixel-Aligned Filter',file:'i2i-pixel-aligned-filter.pdf',updated:'Jun 2026',html:`
+    <h3>Overview</h3><p>Defines how image-to-image transformations should preserve pixel-level boundary accuracy. Companion to find-the-boundary-v2.</p>
+    <h3>Filter Requirements</h3><ul><li>Input and output must be the same resolution.</li><li>No anti-aliasing on boundary pixels.</li><li>Color channels must not bleed across annotated boundaries.</li><li>Alpha channel must match boundary mask exactly.</li></ul>
+    <h3>Validation</h3><ul><li>Compare at 400% zoom on at least 3 boundary regions.</li><li>Check for sub-pixel shifts using the overlay comparison tool.</li><li>Log discrepancies before submission.</li></ul>
+    <div class="callout">Mandatory for all image tasks using the updated pipeline (post-May 2026).</div>
+    <p><a href="https://maemaam.github.io/exponn/SOPs/i2i-pixel-aligned-filter.pdf" target="_blank" style="color:var(--accent);font-weight:700">📄 Open Full PDF →</a></p>`}
+};
+
+function renderGuideGrid(){
+  const cms=getCMS();
+  const guideKeys=cms.tasks.filter(t=>t.guideKey&&GUIDES[t.guideKey]).map(t=>t.guideKey);
+  const allKeys=Object.keys(GUIDES);
+  const keys=[...new Set([...guideKeys,...allKeys])];
+  document.getElementById('guide-grid-container').innerHTML=keys.map(k=>{
+    const g=GUIDES[k];if(!g)return'';
+    return`<a class="guide-card" href="#" onclick="showGuide('${k}');return false">
+      <div class="gi">${g.icon}</div><div class="gt">${g.title}</div>
+      <div class="gd" style="margin-bottom:14px">${g.file}</div>
+      <div class="gf"><span class="gl">${g.updated}</span><span class="ga">→</span></div>
+    </a>`;
+  }).join('');
+}
+
+function showGuide(key){
+  const g=GUIDES[key];if(!g)return;
   showPage('guides');
-  document.getElementById('guides-list').style.display = 'none';
-  const det = document.getElementById('guide-detail');
-  det.style.display = '';
-  det.innerHTML = `
-    <button class="back-btn" onclick="backToGuides()">← Back to Guidelines</button>
-    <div class="guide-content">
-      <div style="font-size:28px;margin-bottom:8px">${g.icon}</div>
+  document.getElementById('guides-index').style.display='none';
+  const det=document.getElementById('guides-detail');det.style.display='';
+  det.innerHTML=`
+    <button class="back-btn" onclick="backToGuides()">← All Guidelines</button>
+    <div class="guide-detail">
+      <div style="font-size:34px;margin-bottom:12px">${g.icon}</div>
       <h2>${g.title}</h2>
-      <div class="guide-meta">Last updated: ${g.updated} &nbsp;·&nbsp; ${g.file}</div>
-      ${g.content}
-    </div>
-  `;
+      <div class="guide-detail-meta">Updated: ${g.updated} · ${g.file}</div>
+      ${g.html}
+    </div>`;
 }
+function backToGuides(){document.getElementById('guides-index').style.display='';document.getElementById('guides-detail').style.display='none';}
 
-function backToGuides() {
-  document.getElementById('guides-list').style.display = '';
-  document.getElementById('guide-detail').style.display = 'none';
+// ═══════════════════════════════════════════════════
+// CALCULATOR
+// ═══════════════════════════════════════════════════
+let calcCount=0;
+function addCalcEntry(){
+  calcCount++;const n=calcCount;
+  const d=document.createElement('div');d.className='entry-block';d.id='ce-'+n;
+  d.innerHTML=`
+    ${n>1?`<button class="rm-btn" onclick="rmCalcEntry(${n})">✕ Remove</button>`:''}
+    <div class="entry-lbl">Task Group ${n}</div>
+    <div class="fg"><div class="field"><label>First Task ID</label><input id="cf-${n}" placeholder="e.g. 4c4f1e9f-eff5-483b-..."></div>
+    <div class="field"><label>Last Task ID</label><input id="cl-${n}" placeholder="e.g. 173c55ae-759d-..."></div></div>
+    <div class="fg"><div class="field"><label>Max Time Cap (MM:SS)</label><input id="cc-${n}" value="10:00" placeholder="10:00">
+    <div class="hint">Times above this cap are rounded down. Times below stay exact.</div></div></div>
+    <div class="fg full"><div class="field"><label>Paste Task List</label>
+    <textarea id="cp-${n}" placeholder="Paste your full task export here&#10;Format per line: UUID&#9;Status&#9;Date&#9;MM:SS"></textarea>
+    <div class="hint">Paste the full export — only rows between your first and last ID are counted.</div></div></div>`;
+  document.getElementById('calc-entries').appendChild(d);
 }
-
-// ─── TASK CALCULATOR ────────────────────────────────────────────────────────
-let entryCount = 0;
-
-function addEntry(defaultPaste) {
-  entryCount++;
-  const n = entryCount;
-  const div = document.createElement('div');
-  div.className = 'entry-block';
-  div.id = 'entry-' + n;
-  div.innerHTML = `
-    <button class="remove-entry" onclick="removeEntry(${n})" title="Remove">✕</button>
-    <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px">Task Group ${n}</div>
-    <div class="form-row">
-      <div class="field">
-        <label>FIRST TASK ID (your first task)</label>
-        <input type="text" id="first-${n}" placeholder="e.g. 4c4f1e9f-eff5-483b-9b87-57260bd81fdc">
-      </div>
-      <div class="field">
-        <label>LAST TASK ID (your last task)</label>
-        <input type="text" id="last-${n}" placeholder="e.g. 173c55ae-759d-4fce-9637-5d1112f768e2">
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="field">
-        <label>MAX TIME CAP (MM:SS)</label>
-        <input type="text" id="cap-${n}" placeholder="e.g. 10:00" value="10:00">
-        <div class="hint">Any task time above this is capped to this value. Below it stays exact.</div>
-      </div>
-    </div>
-    <div class="form-row single">
-      <div class="field">
-        <label>PASTE TASK LIST</label>
-        <textarea id="paste-${n}" placeholder="Paste your task list here (tab or space separated columns: ID  Status  Date  MM:SS)">${defaultPaste||''}</textarea>
-        <div class="hint">Paste the full exported list — only the rows between your first and last ID will be used.</div>
-      </div>
-    </div>
-  `;
-  document.getElementById('entries-container').appendChild(div);
+function rmCalcEntry(n){const e=document.getElementById('ce-'+n);if(e)e.remove();}
+function pT(s){const m=(s||'').trim().match(/^(\d+):(\d{2})$/);return m?+m[1]*60+ +m[2]:null;}
+function fT(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return h>0?`${h}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`:`${m}:${String(sc).padStart(2,'0')}`;}
+function fD(s){const h=s/3600,hh=Math.floor(h),mn=Math.round((h-hh)*60);return hh===0?`${mn} min total`:`${hh} hr ${mn} min (${h.toFixed(2)} hrs total)`;}
+function parsePaste(txt){
+  return txt.split('\n').map(l=>l.trim()).filter(l=>l).reduce((a,line)=>{
+    const c=line.split(/\t| {2,}/).map(x=>x.trim()).filter(x=>x);if(c.length<2)return a;
+    const id=c[0];if(!/^[0-9a-f-]{36}$/i.test(id))return a;
+    let ts=null;for(let i=c.length-1;i>=1;i--){if(/^\d+:\d{2}$/.test(c[i])){ts=c[i];break;}}
+    if(!ts)return a;const sc=pT(ts);if(sc===null)return a;
+    a.push({id,ts,sc});return a;
+  },[]);
 }
-
-function removeEntry(n) {
-  const el = document.getElementById('entry-' + n);
-  if (el) el.remove();
-}
-
-function parseTime(str) {
-  // returns total seconds, or null
-  str = (str || '').trim();
-  const m = str.match(/^(\d+):(\d{2})$/);
-  if (!m) return null;
-  return parseInt(m[1]) * 60 + parseInt(m[2]);
-}
-
-function fmtTime(secs) {
-  const h = Math.floor(secs / 3600);
-  const m = Math.floor((secs % 3600) / 60);
-  const s = secs % 60;
-  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  return `${m}:${String(s).padStart(2,'0')}`;
-}
-
-function fmtDecimal(secs) {
-  const hrs = secs / 3600;
-  const h = Math.floor(hrs);
-  const minFrac = Math.round((hrs - h) * 60);
-  if (h === 0) return `${minFrac} min`;
-  return `${h} hr ${minFrac} min &nbsp;(${hrs.toFixed(2)} hrs)`;
-}
-
-function parsePaste(text) {
-  // returns array of {id, time_str, time_secs}
-  const rows = [];
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-  for (const line of lines) {
-    const cols = line.split(/\t| {2,}/).map(c => c.trim()).filter(c => c);
-    if (cols.length < 2) continue;
-    const id = cols[0];
-    // UUID check
-    if (!/^[0-9a-f-]{36}$/i.test(id)) continue;
-    // last column that looks like MM:SS
-    let timeStr = null;
-    for (let i = cols.length - 1; i >= 1; i--) {
-      if (/^\d+:\d{2}$/.test(cols[i])) { timeStr = cols[i]; break; }
-    }
-    if (!timeStr) continue;
-    const secs = parseTime(timeStr);
-    if (secs === null) continue;
-    rows.push({ id, time_str: timeStr, time_secs: secs });
+function doCalc(){
+  const err=document.getElementById('calc-err'),res=document.getElementById('calc-result');
+  err.className='err-msg';res.className='result-card';
+  const entries=document.querySelectorAll('.entry-block');if(!entries.length){showCErr('Add at least one task group.');return;}
+  let grand=0;const groups=[];
+  for(const entry of entries){
+    const n=entry.id.replace('ce-','');
+    const fid=document.getElementById('cf-'+n).value.trim().toLowerCase();
+    const lid=document.getElementById('cl-'+n).value.trim().toLowerCase();
+    const cap=document.getElementById('cc-'+n).value.trim();
+    const paste=document.getElementById('cp-'+n).value;
+    if(!fid||!lid){showCErr('Fill in both First and Last Task ID for all groups.');return;}
+    if(!paste.trim()){showCErr('Paste the task list for all groups.');return;}
+    const capSec=pT(cap);if(capSec===null){showCErr(`Invalid cap "${cap}" — use MM:SS format (e.g. 10:00).`);return;}
+    const rows=parsePaste(paste);if(!rows.length){showCErr('Could not parse tasks. Check the format.');return;}
+    const fi=rows.findIndex(r=>r.id===fid),li=rows.findIndex(r=>r.id===lid);
+    if(fi===-1){showCErr(`First task ID not found:\n${fid}`);return;}
+    if(li===-1){showCErr(`Last task ID not found:\n${lid}`);return;}
+    const s=Math.min(fi,li),e=Math.max(fi,li);
+    const tasks=rows.slice(s,e+1).map(r=>{const a=Math.min(r.sc,capSec);return{id:r.id,ts:r.ts,raw:r.sc,a,capped:r.sc>capSec};});
+    const sub=tasks.reduce((x,t)=>x+t.a,0);grand+=sub;groups.push({n,tasks,sub,cap});
   }
-  return rows;
-}
-
-function calculate() {
-  const errBox = document.getElementById('err-box');
-  const resultBox = document.getElementById('result-box');
-  errBox.className = 'err-box';
-  resultBox.className = 'result-box';
-
-  const entries = document.querySelectorAll('.entry-block');
-  if (!entries.length) { showErr('Add at least one task group.'); return; }
-
-  let grandTotal = 0;
-  const allGroups = [];
-
-  for (const entry of entries) {
-    const n = entry.id.replace('entry-', '');
-    const firstId = document.getElementById('first-' + n).value.trim().toLowerCase();
-    const lastId  = document.getElementById('last-'  + n).value.trim().toLowerCase();
-    const capStr  = document.getElementById('cap-'   + n).value.trim();
-    const paste   = document.getElementById('paste-' + n).value;
-
-    if (!firstId || !lastId) { showErr('Please fill in both First and Last Task ID for all groups.'); return; }
-    if (!paste.trim()) { showErr('Please paste the task list for all groups.'); return; }
-
-    const capSecs = parseTime(capStr);
-    if (capSecs === null) { showErr(`Invalid max time cap "${capStr}" — use MM:SS format (e.g. 10:00).`); return; }
-
-    const rows = parsePaste(paste);
-    if (!rows.length) { showErr('Could not parse any tasks from the pasted list. Make sure the format is correct.'); return; }
-
-    const firstIdx = rows.findIndex(r => r.id === firstId);
-    const lastIdx  = rows.findIndex(r => r.id === lastId);
-
-    if (firstIdx === -1) { showErr(`First task ID not found in the list:\n${firstId}`); return; }
-    if (lastIdx  === -1) { showErr(`Last task ID not found in the list:\n${lastId}`);  return; }
-
-    const start = Math.min(firstIdx, lastIdx);
-    const end   = Math.max(firstIdx, lastIdx);
-    const slice = rows.slice(start, end + 1);
-
-    const tasks = slice.map(r => {
-      const applied = Math.min(r.time_secs, capSecs);
-      return { id: r.id, raw: r.time_str, raw_secs: r.time_secs, applied_secs: applied, capped: r.time_secs > capSecs };
-    });
-
-    const groupTotal = tasks.reduce((s, t) => s + t.applied_secs, 0);
-    grandTotal += groupTotal;
-    allGroups.push({ n, tasks, groupTotal, capStr });
+  const tbody=document.getElementById('r-tbody');tbody.innerHTML='';let rn=1;
+  for(const g of groups){
+    if(groups.length>1){const hr=document.createElement('tr');hr.className='grp-hdr';hr.innerHTML=`<td colspan="4">Group ${g.n} — cap ${g.cap} · subtotal ${fT(g.sub)}</td>`;tbody.appendChild(hr);}
+    for(const t of g.tasks){const tr=document.createElement('tr');tr.innerHTML=`<td>${rn++}</td><td class="mono">${t.id}</td><td>${t.ts}</td><td class="${t.capped?'capped':''}">${fT(t.a)}${t.capped?' ↓':''}</td>`;tbody.appendChild(tr);}
   }
+  document.getElementById('r-hms').textContent=fT(grand);
+  document.getElementById('r-dec').textContent=fD(grand);
+  res.className='result-card show';res.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function showCErr(m){const b=document.getElementById('calc-err');b.textContent=m;b.className='err-msg show';}
+function resetCalc(){document.getElementById('calc-entries').innerHTML='';calcCount=0;document.getElementById('calc-err').className='err-msg';document.getElementById('calc-result').className='result-card';addCalcEntry();}
 
-  // Build result table
-  const tbody = document.getElementById('result-tbody');
-  tbody.innerHTML = '';
-  let rowNum = 1;
-  for (const grp of allGroups) {
-    if (allGroups.length > 1) {
-      const hdr = document.createElement('tr');
-      hdr.innerHTML = `<td colspan="4" class="grp">Group ${grp.n} — cap: ${grp.capStr} &nbsp; subtotal: ${fmtTime(grp.groupTotal)}</td>`;
-      tbody.appendChild(hdr);
-    }
-    for (const t of grp.tasks) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${rowNum++}</td>
-        <td class="id-col">${t.id}</td>
-        <td>${t.raw}</td>
-        <td class="${t.capped ? 'capped' : ''}">${fmtTime(t.applied_secs)}${t.capped ? ' ⚠' : ''}</td>
-      `;
-      tbody.appendChild(tr);
-    }
-  }
+// ═══════════════════════════════════════════════════
+// SCHEDULE
+// ═══════════════════════════════════════════════════
+const SC='exp_sc',PK='exp_pw',TK='exp_ghtok',RK='exp_ghrepo',FK='exp_ghpath',SK='exp_sun';
+const DEFAULT_PW='Maemaam';
+const DEFAULT_TOK=['ghp_f3yrXmNFyGVV3pjMc','2QTfAmdpkcBBp02yY1H'].join('');
+const DEFAULT_REPO='maemaam/exponn';
+const DEFAULT_PATH='index.html';
+const DEFAULT_SUNDAY='2026-06-28';
+const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DEFAULT_SCHED=[
+  {n:"Menna Sherif",  s:["9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","OFF","OFF","9:30 AM – 2:00 PM"]},
+  {n:"Mazen Adam",    s:["OFF","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","OFF","2:00 PM – 6:00 PM"]},
+  {n:"Yahya Mohamed", s:["6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","OFF","OFF","6:00 PM – 9:30 PM"]},
+  {n:"Eiman Reda",    s:["9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","OFF","OFF","9:30 PM – 2:00 AM"]},
+  {n:"Ahmed Gouhar",  s:["2:00 AM – 6:30 AM","2:00 AM – 6:30 AM","2:00 AM – 7:00 AM","OFF","OFF","OFF","OFF"]},
+  {n:"Mostafa Atef",  s:["OFF","OFF","OFF","2:00 AM – 6:30 AM","6:00 PM – 10:30 PM","2:00 PM – 6:30 PM","OFF"]}
+];
+const getSchedData=()=>{try{const s=localStorage.getItem(SC);return s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_SCHED));}catch{return JSON.parse(JSON.stringify(DEFAULT_SCHED));}};
+const getSunday=()=>localStorage.getItem(SK)||DEFAULT_SUNDAY;
+const fmt=d=>`${MONTHS[d.getMonth()]} ${d.getDate()}`;
+function toSunday(str){const d=new Date(str+'T12:00:00');d.setDate(d.getDate()+(7-d.getDay())%7);return d.toISOString().slice(0,10);}
+function weekDates(sun){const s=new Date(sun+'T12:00:00');return DAYS.map((_,i)=>{const d=new Date(s);d.setDate(s.getDate()-(6-i));return d;});}
+function renderSchedHeaders(sun){
+  const dates=weekDates(sun);const[mon,sunD]=[dates[0],dates[6]];
+  document.getElementById('dateRow').innerHTML='<th>Name</th>'+
+    dates.map((d,i)=>`<th class="day-th" onclick="openDayPicker(event,${i})">${DAYS[i]}<br><span style="font-weight:400;font-size:10px;color:var(--muted)">${fmt(d)}</span></th>`).join('');
+  const range=mon.getMonth()===sunD.getMonth()?`${MONTHS[mon.getMonth()]} ${mon.getDate()}–${sunD.getDate()}, ${sunD.getFullYear()}`:`${fmt(mon)} – ${fmt(sunD)}, ${sunD.getFullYear()}`;
+  document.getElementById('schedTitle').textContent=`Team Schedule — ${range}`;
+  document.getElementById('schedSub').textContent=`${fmt(mon)} → ${fmt(sunD)}`;
+}
+function renderSched(){
+  renderSchedHeaders(getSunday());
+  document.getElementById('schedBody').innerHTML=getSchedData().map((p,pi)=>
+    `<tr><td class="nm">${p.n}</td>`+p.s.map((v,di)=>`<td class="${v.trim().toUpperCase()==='OFF'?'off':'sh'}" data-pi="${pi}" data-di="${di}" onclick="editSchedCell(this)">${v}</td>`).join('')+`</tr>`
+  ).join('');
+}
+function openDayPicker(e,di){
+  if(!schedEditing)return;e.stopPropagation();
+  const jsDay=di===6?0:di+1;const anchor=new Date();anchor.setHours(12,0,0,0);
+  while(anchor.getDay()!==jsDay)anchor.setDate(anchor.getDate()-1);
+  anchor.setDate(anchor.getDate()-28);
+  const curDates=weekDates(getSunday());
+  document.getElementById('dpTitle').textContent=`Pick a ${DAYS[di]}`;
+  document.getElementById('dpList').innerHTML=Array.from({length:20},(_,i)=>{
+    const d=new Date(anchor);d.setDate(anchor.getDate()+i*7);
+    const isCur=d.toDateString()===curDates[di].toDateString();
+    const sun=toSunday(d.toISOString().slice(0,10));
+    return`<div class="dp-item${isCur?' dp-cur':''}" onclick="pickDay('${sun}')">${DAYS[di]}, ${fmt(d)} ${d.getFullYear()}</div>`;
+  }).join('');
+  const rect=e.currentTarget.getBoundingClientRect();
+  const pop=document.getElementById('dayPicker');
+  pop.style.top=(rect.bottom+window.scrollY+4)+'px';
+  pop.style.left=Math.min(rect.left+window.scrollX,window.innerWidth-185)+'px';
+  pop.classList.add('on');
+  setTimeout(()=>{const c=pop.querySelector('.dp-cur');if(c)c.scrollIntoView({block:'center'});},40);
+}
+function pickDay(sun){localStorage.setItem(SK,sun);renderSchedHeaders(sun);document.getElementById('dayPicker').classList.remove('on');}
+document.addEventListener('click',e=>{const p=document.getElementById('dayPicker');if(!p.contains(e.target))p.classList.remove('on');});
+function parseMin(s){const m=s.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return null;let h=+m[1];const ap=m[3].toUpperCase();if(ap==='PM'&&h!==12)h+=12;if(ap==='AM'&&h===12)h=0;return h*60+(+m[2]);}
+function normTime(s){const m=s.match(/(\d+):(\d+)\s*(AM|PM)/i);return m?`${+m[1]}:${m[2]} ${m[3].toUpperCase()}`:null;}
+const TIME_OPTS=Array.from({length:48},(_,i)=>{const h=Math.floor(i/2),m=i%2?'30':'00',h12=h%12||12,ap=h>=12?'PM':'AM';return`${h12}:${m} ${ap}`;});
+(()=>{['tpFrom','tpTo'].forEach(id=>{const sel=document.getElementById(id);TIME_OPTS.forEach(t=>{sel.add(new Option(t,t));});});})();
+let _tpTd=null;
+function editSchedCell(td){if(!schedEditing)return;_tpTd=td;
+  document.getElementById('tpName').textContent=getSchedMem()[+td.dataset.pi].n;
+  const val=td.textContent.trim();
+  const parts=val.toUpperCase()==='OFF'?['9:30 AM','2:00 PM']:val.split('–').map(x=>x.trim());
+  ['tpFrom','tpTo'].forEach((id,i)=>{const n=normTime(parts[i]||'');const sel=document.getElementById(id);sel.value=(n&&TIME_OPTS.includes(n))?n:TIME_OPTS[0];});
+  document.getElementById('tpWrap').classList.add('on');
+}
+function tpSetOff(){if(_tpTd)commitTP('OFF');}
+function tpApply(){if(_tpTd)commitTP(`${document.getElementById('tpFrom').value} – ${document.getElementById('tpTo').value}`);}
+function commitTP(val){_tpTd.className=val.toUpperCase()==='OFF'?'off':'sh';_tpTd.textContent=val;updateSchedMem(+_tpTd.dataset.pi,+_tpTd.dataset.di,val);document.getElementById('tpWrap').classList.remove('on');_tpTd=null;}
+function tpCancel(){document.getElementById('tpWrap').classList.remove('on');_tpTd=null;}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){tpCancel();closeSchedPw();closeAdminPw();}});
+let _schedMem=null,schedEditing=false;
+const getSchedMem=()=>{if(!_schedMem)_schedMem=getSchedData();return _schedMem;};
+const updateSchedMem=(pi,di,v)=>{getSchedMem()[pi].s[di]=v;};
+function openSchedPw(){document.getElementById('schedOv').classList.add('on');setTimeout(()=>document.getElementById('schedPw').focus(),60);}
+function closeSchedPw(){document.getElementById('schedOv').classList.remove('on');document.getElementById('schedPwe').textContent='';}
+function authSched(){
+  const pw=document.getElementById('schedPw').value;
+  if(pw===(localStorage.getItem(PK)||DEFAULT_PW)){
+    document.getElementById('schedPw').value='';document.getElementById('schedPwe').textContent='';
+    ['ghtok','ghrepo','ghpath'].forEach((id,i)=>{const keys=[TK,RK,FK],defs=[DEFAULT_TOK,DEFAULT_REPO,DEFAULT_PATH];document.getElementById(id).value=localStorage.getItem(keys[i])||defs[i];});
+    closeSchedPw();startSchedEdit();
+  }else{document.getElementById('schedPwe').textContent='Incorrect password.';document.getElementById('schedPw').value='';}
+}
+function startSchedEdit(){
+  _schedMem=getSchedData();schedEditing=true;
+  document.body.classList.add('editing');
+  document.getElementById('schedEditBtn').style.display='none';
+  document.getElementById('saveBar').classList.add('on');
+  setSaveSt('Click any cell to edit · Click a day header to change the week','');
+}
+function cancelSchedEdit(){
+  schedEditing=false;_schedMem=null;document.body.classList.remove('editing');
+  document.getElementById('schedEditBtn').style.display='';
+  document.getElementById('saveBar').classList.remove('on');renderSched();
+}
+function persistSched(){
+  localStorage.setItem(SC,JSON.stringify(getSchedMem()));
+  _schedMem=null;schedEditing=false;document.body.classList.remove('editing');
+  document.getElementById('schedEditBtn').style.display='';
+  document.getElementById('saveBar').classList.remove('on');renderSched();
+}
+async function saveSchedGh(){
+  const tok=(localStorage.getItem(TK)||DEFAULT_TOK).trim();
+  const repo=(localStorage.getItem(RK)||DEFAULT_REPO).trim();
+  const path=(localStorage.getItem(FK)||DEFAULT_PATH).trim();
+  setSaveSt('Publishing…','');
+  const d=getSchedMem();localStorage.setItem(SC,JSON.stringify(d));
+  try{
+    const url=`https://api.github.com/repos/${repo}/contents/${path}`;
+    const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
+    const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
+    const html=document.documentElement.outerHTML.replace(/const DEFAULT_SCHED=\[[\s\S]*?\];/,'const DEFAULT_SCHED='+JSON.stringify(d)+';');
+    const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
+      body:JSON.stringify({message:`Schedule update ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
+    if(pr.ok){persistSched();setSaveSt('✓ Published!','ok');}
+    else{const er=await pr.json();setSaveSt('Error: '+(er.message||pr.status),'er');}
+  }catch(er){setSaveSt('Error: '+er.message,'er');}
+}
+function setSaveSt(m,t){const e=document.getElementById('saveSt');e.textContent=m;e.className='save-st'+(t?' '+t:'');}
+document.getElementById('schedOv').addEventListener('click',e=>{if(e.target===document.getElementById('schedOv'))closeSchedPw();});
 
-  document.getElementById('result-hms').textContent = fmtTime(grandTotal);
-  document.getElementById('result-decimal').innerHTML = fmtDecimal(grandTotal);
-  resultBox.className = 'result-box show';
-  resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+// ═══════════════════════════════════════════════════
+// ADMIN PANEL (CMS)
+// ═══════════════════════════════════════════════════
+function openAdminOrPw(){
+  if(adminUnlocked){openAdminPanel();}else{document.getElementById('adminOv').classList.add('on');setTimeout(()=>document.getElementById('adminPw').focus(),60);}
+}
+function closeAdminPw(){document.getElementById('adminOv').classList.remove('on');document.getElementById('adminPwe').textContent='';}
+let adminUnlocked=false;
+function authAdmin(){
+  const pw=document.getElementById('adminPw').value;
+  if(pw===(localStorage.getItem(PK)||DEFAULT_PW)){
+    document.getElementById('adminPw').value='';document.getElementById('adminPwe').textContent='';
+    adminUnlocked=true;closeAdminPw();openAdminPanel();
+  }else{document.getElementById('adminPwe').textContent='Incorrect password.';document.getElementById('adminPw').value='';}
+}
+document.getElementById('adminOv').addEventListener('click',e=>{if(e.target===document.getElementById('adminOv'))closeAdminPw();});
+
+function openAdminPanel(){
+  const cms=getCMS();
+  document.getElementById('a-eyebrow').value=cms.hero.eyebrow;
+  document.getElementById('a-title').value=cms.hero.title;
+  document.getElementById('a-sub').value=cms.hero.sub;
+  document.getElementById('a-assessment').value=cms.hero.assessmentLink||'';
+  renderAdminUpdates(cms.updates);
+  renderAdminTasks(cms.tasks);
+  renderAdminTeam(cms.team);
+  document.getElementById('adminSaveSt').textContent='';
+  document.getElementById('adminPanel').classList.add('open');
+  document.getElementById('navEditBtn').classList.add('unlocked');
+}
+function closeAdminPanel(){
+  document.getElementById('adminPanel').classList.remove('open');
+  document.getElementById('navEditBtn').classList.remove('unlocked');
+  adminUnlocked=false;
 }
 
-function showErr(msg) {
-  const b = document.getElementById('err-box');
-  b.textContent = msg;
-  b.className = 'err-box show';
+function renderAdminUpdates(updates){
+  document.getElementById('a-updates-list').innerHTML=updates.map((u,i)=>`
+    <div class="admin-item" id="au-${u.id}">
+      <div class="admin-item-header"><span class="admin-item-title">${esc(u.title)}</span>
+        <button class="admin-item-del" onclick="delAdminUpdate('${u.id}')">✕ Remove</button></div>
+      <div class="admin-field"><label>Tag</label>
+        <select id="au-tag-${u.id}">
+          <option value="new"${u.tag==='new'?' selected':''}>New</option>
+          <option value="updated"${u.tag==='updated'?' selected':''}>Updated</option>
+          <option value="alert"${u.tag==='alert'?' selected':''}>Alert</option>
+          <option value="info"${u.tag==='info'?' selected':''}>Info</option>
+        </select></div>
+      <div class="admin-field"><label>Title</label><input id="au-title-${u.id}" value="${esc(u.title)}"></div>
+      <div class="admin-field"><label>Body</label><textarea id="au-body-${u.id}">${esc(u.body)}</textarea></div>
+      <div class="admin-field"><label>Date</label><input id="au-date-${u.id}" value="${esc(u.date)}"></div>
+    </div>`).join('');
+}
+function delAdminUpdate(id){const el=document.getElementById('au-'+id);if(el)el.remove();}
+function adminAddUpdate(){
+  const id='u'+Date.now();const cms=getCMS();
+  const newU={id,tag:'new',title:'New Update',body:'Description here.',date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+  const container=document.getElementById('a-updates-list');
+  const div=document.createElement('div');div.className='admin-item';div.id='au-'+id;
+  div.innerHTML=`
+    <div class="admin-item-header"><span class="admin-item-title">${newU.title}</span>
+      <button class="admin-item-del" onclick="delAdminUpdate('${id}')">✕ Remove</button></div>
+    <div class="admin-field"><label>Tag</label>
+      <select id="au-tag-${id}"><option value="new" selected>New</option><option value="updated">Updated</option><option value="alert">Alert</option><option value="info">Info</option></select></div>
+    <div class="admin-field"><label>Title</label><input id="au-title-${id}" value="New Update"></div>
+    <div class="admin-field"><label>Body</label><textarea id="au-body-${id}">Description here.</textarea></div>
+    <div class="admin-field"><label>Date</label><input id="au-date-${id}" value="${newU.date}"></div>`;
+  container.appendChild(div);
 }
 
-function resetAll() {
-  document.getElementById('entries-container').innerHTML = '';
-  entryCount = 0;
-  document.getElementById('err-box').className = 'err-box';
-  document.getElementById('result-box').className = 'result-box';
-  addEntry();
+function renderAdminTasks(tasks){
+  document.getElementById('a-tasks-list').innerHTML=tasks.map(t=>`
+    <div class="admin-item" id="at-${t.id}">
+      <div class="admin-item-header"><span class="admin-item-title">${t.icon||''} ${esc(t.title)}</span>
+        <button class="admin-item-del" onclick="delAdminTask('${t.id}')">✕ Remove</button></div>
+      <div class="admin-field"><label>Icon (emoji)</label><input id="at-icon-${t.id}" value="${esc(t.icon||'')}"></div>
+      <div class="admin-field"><label>Title</label><input id="at-title-${t.id}" value="${esc(t.title)}"></div>
+      <div class="admin-field"><label>Description</label><textarea id="at-desc-${t.id}" style="min-height:56px">${esc(t.desc)}</textarea></div>
+      <div class="admin-field"><label>Label (file name shown)</label><input id="at-label-${t.id}" value="${esc(t.label||'')}"></div>
+      <div class="admin-field"><label>Guide Key (optional — links to Guidelines tab)</label>
+        <select id="at-guide-${t.id}">
+          <option value="">None</option>
+          ${Object.keys(GUIDES).map(k=>`<option value="${k}"${t.guideKey===k?' selected':''}>${GUIDES[k].title}</option>`).join('')}
+        </select></div>
+    </div>`).join('');
+}
+function delAdminTask(id){const el=document.getElementById('at-'+id);if(el)el.remove();}
+function adminAddTask(){
+  const id='t'+Date.now();
+  const div=document.createElement('div');div.className='admin-item';div.id='at-'+id;
+  div.innerHTML=`
+    <div class="admin-item-header"><span class="admin-item-title">New Task Card</span>
+      <button class="admin-item-del" onclick="delAdminTask('${id}')">✕ Remove</button></div>
+    <div class="admin-field"><label>Icon (emoji)</label><input id="at-icon-${id}" value="📋"></div>
+    <div class="admin-field"><label>Title</label><input id="at-title-${id}" value="Task Title"></div>
+    <div class="admin-field"><label>Description</label><textarea id="at-desc-${id}" style="min-height:56px">Short description.</textarea></div>
+    <div class="admin-field"><label>Label</label><input id="at-label-${id}" value=""></div>
+    <div class="admin-field"><label>Guide Key</label>
+      <select id="at-guide-${id}"><option value="">None</option>${Object.keys(GUIDES).map(k=>`<option value="${k}">${GUIDES[k].title}</option>`).join('')}</select></div>`;
+  document.getElementById('a-tasks-list').appendChild(div);
 }
 
-// init
-addEntry();
+function renderAdminTeam(team){
+  document.getElementById('a-team-list').innerHTML=team.map((m,i)=>`
+    <div class="admin-item" id="am-${i}">
+      <div class="admin-item-header"><span class="admin-item-title">${esc(m.name)}</span>
+        <button class="admin-item-del" onclick="delAdminMember(${i})">✕ Remove</button></div>
+      <div class="fg" style="gap:10px;margin:0">
+        <div class="admin-field"><label>Name</label><input id="am-name-${i}" value="${esc(m.name)}"></div>
+        <div class="admin-field"><label>Hrs</label><input id="am-hrs-${i}" value="${esc(m.hrs)}"></div>
+      </div>
+    </div>`).join('');
+}
+function delAdminMember(i){const el=document.getElementById('am-'+i);if(el)el.remove();}
+function adminAddMember(){
+  const idx=document.getElementById('a-team-list').children.length;
+  const div=document.createElement('div');div.className='admin-item';div.id='am-'+idx;
+  div.innerHTML=`
+    <div class="admin-item-header"><span class="admin-item-title">New Member</span>
+      <button class="admin-item-del" onclick="this.closest('.admin-item').remove()">✕ Remove</button></div>
+    <div class="fg" style="gap:10px;margin:0">
+      <div class="admin-field"><label>Name</label><input id="am-name-${idx}" value=""></div>
+      <div class="admin-field"><label>Hrs</label><input id="am-hrs-${idx}" value=""></div>
+    </div>`;
+  document.getElementById('a-team-list').appendChild(div);
+}
+
+function collectAdminContent(){
+  const updates=[];
+  document.querySelectorAll('#a-updates-list .admin-item').forEach(el=>{
+    const id=el.id.replace('au-','');
+    updates.push({id,tag:document.getElementById('au-tag-'+id)?.value||'info',title:document.getElementById('au-title-'+id)?.value||'',body:document.getElementById('au-body-'+id)?.value||'',date:document.getElementById('au-date-'+id)?.value||''});
+  });
+  const tasks=[];
+  document.querySelectorAll('#a-tasks-list .admin-item').forEach(el=>{
+    const id=el.id.replace('at-','');
+    tasks.push({id,icon:document.getElementById('at-icon-'+id)?.value||'',title:document.getElementById('at-title-'+id)?.value||'',desc:document.getElementById('at-desc-'+id)?.value||'',label:document.getElementById('at-label-'+id)?.value||'',guideKey:document.getElementById('at-guide-'+id)?.value||''});
+  });
+  const team=[];
+  document.querySelectorAll('#a-team-list .admin-item').forEach(el=>{
+    const i=el.id.replace('am-','');
+    const name=document.getElementById('am-name-'+i)?.value||'';
+    const hrs=document.getElementById('am-hrs-'+i)?.value||'';
+    if(name)team.push({name,hrs});
+  });
+  return{hero:{eyebrow:document.getElementById('a-eyebrow').value,title:document.getElementById('a-title').value,sub:document.getElementById('a-sub').value,assessmentLink:document.getElementById('a-assessment').value},updates,tasks,team};
+}
+
+async function saveAdminContent(){
+  const st=document.getElementById('adminSaveSt');st.textContent='Publishing…';st.className='admin-save-st';
+  const cms=collectAdminContent();saveCMSLocal(cms);renderHome();
+  const tok=(localStorage.getItem(TK)||DEFAULT_TOK).trim();
+  const repo=(localStorage.getItem(RK)||DEFAULT_REPO).trim();
+  const path=(localStorage.getItem(FK)||DEFAULT_PATH).trim();
+  try{
+    const url=`https://api.github.com/repos/${repo}/contents/${path}`;
+    const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
+    const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
+    const html=document.documentElement.outerHTML.replace(
+      /const DEFAULT_CONTENT = \{[\s\S]*?\};\n\nconst CMS_KEY/,
+      'const DEFAULT_CONTENT = '+JSON.stringify(cms)+';\n\nconst CMS_KEY'
+    );
+    const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
+      body:JSON.stringify({message:`Content update ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
+    if(pr.ok){st.textContent='✓ Published!';st.className='admin-save-st';}
+    else{const er=await pr.json();st.textContent='Error: '+(er.message||pr.status);st.className='admin-save-st er';}
+  }catch(er){st.textContent='Error: '+er.message;st.className='admin-save-st er';}
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+addCalcEntry();
+renderHome();
+renderSched();
 </script>
 </body>
 </html>
