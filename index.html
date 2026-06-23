@@ -72,6 +72,8 @@ nav{
 .hero-title .hl{color:var(--accent)}
 .hero-sub{font-size:clamp(15px,2vw,18px);color:var(--text2);line-height:1.65;max-width:500px;margin:0 auto 36px}
 .hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+@media(max-width:480px){.hero-ctas{flex-direction:column;align-items:stretch;padding:0 24px}.hero-ctas .btn{justify-content:center}
+.hero-links{gap:14px}}
 .hero-links{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
 .hero-link{font-size:13px;color:var(--text2);text-decoration:none;display:flex;align-items:center;gap:6px;border-bottom:1px solid transparent;transition:all .15s;cursor:pointer}
 .hero-link:hover{color:var(--text);border-bottom-color:var(--border-h)}
@@ -158,8 +160,10 @@ nav{
 .update-item:last-child{border-bottom:none}
 .update-item:hover{background:var(--s3)}
 .update-item.linkable{cursor:pointer}
-.update-chevron{font-size:18px;color:var(--border-h);flex-shrink:0;align-self:center;transition:color .15s,transform .15s;line-height:1}
+.update-item.linkable:active{background:var(--s3)}
+.update-chevron{color:var(--border-h);flex-shrink:0;align-self:center;transition:color .15s,transform .15s;display:flex;align-items:center}
 .update-item.linkable:hover .update-chevron{color:var(--accent);transform:translateX(3px)}
+@media(max-width:500px){.update-item{padding:16px 18px;gap:10px}.update-meta{font-size:10px}}
 .update-left{flex:1;min-width:0}
 .tag{display:inline-block;padding:3px 10px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
 .tag-new{background:rgba(56,189,248,0.1);color:var(--accent);border:1px solid var(--accent-border)}
@@ -228,6 +232,7 @@ nav{
 .result-time-row{display:flex;background:var(--s2);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:20px}
 .result-time-item{flex:1;padding:14px 18px;text-align:left}
 .result-time-item+.result-time-item{border-left:1px solid var(--border)}
+@media(max-width:480px){.result-time-row{flex-direction:column}.result-time-item+.result-time-item{border-left:none;border-top:1px solid var(--border)}}
 .rt-val{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--text)}
 .rt-lbl{font-size:10px;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase;margin-top:4px}
 .result-tbl{width:100%;border-collapse:collapse;font-size:13px}
@@ -241,8 +246,19 @@ nav{
 .guide-wrap{max-width:960px;margin:0 auto;padding:80px 24px}
 @media(max-width:640px){.guide-wrap{padding:56px 16px}}
 .guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.guide-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:22px;text-decoration:none;display:block;cursor:pointer;transition:border-color .2s,background .2s,transform .2s;position:relative}
-.guide-card:hover{border-color:rgba(56,189,248,0.25);background:var(--s3);transform:translateY(-2px)}
+@media(max-width:640px){.guide-grid{grid-template-columns:1fr;gap:0;display:flex;flex-direction:column}}
+.guide-card{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:22px;text-decoration:none;display:block;cursor:pointer;transition:border-color .2s,background .2s,transform .2s,box-shadow .2s;position:relative}
+.guide-card:hover{border-color:rgba(56,189,248,0.25);background:var(--s3);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.guide-card:active{transform:scale(0.98)}
+@media(max-width:640px){
+  .guide-card{border-radius:18px;margin-bottom:0;position:sticky;box-shadow:0 -2px 24px rgba(0,0,0,.5)}
+  .guide-card:nth-child(1){top:66px;z-index:10}
+  .guide-card:nth-child(2){top:74px;z-index:9;background:var(--s2)}
+  .guide-card:nth-child(3){top:82px;z-index:8;background:#0f1520}
+  .guide-card:nth-child(4){top:90px;z-index:7;background:var(--s3)}
+  .guide-card:nth-child(5){top:98px;z-index:6;background:#141d2c}
+  .guide-card:hover{transform:none;box-shadow:0 -2px 24px rgba(0,0,0,.5)}
+}
 .gi{font-size:26px;margin-bottom:12px}
 .gt{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);margin-bottom:5px}
 .gd{font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:14px}
@@ -252,6 +268,7 @@ nav{
 .back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;background:none;border:none;padding:0;margin-bottom:22px;font-family:var(--fb)}
 .back-btn:hover{text-decoration:underline}
 .guide-detail{background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:34px}
+@media(max-width:640px){.guide-detail{padding:22px;border-radius:16px}}
 .guide-detail h2{font-family:var(--fh);font-size:24px;font-weight:800;color:var(--text);margin-bottom:4px}
 .guide-detail-meta{font-size:12px;color:var(--muted);margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--border)}
 .guide-detail h3{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--accent);margin:22px 0 8px}
@@ -269,10 +286,12 @@ nav{
 /* ── SCHEDULE PAGE ── */
 .sched-wrap{max-width:1200px;margin:0 auto;padding:80px 24px}
 @media(max-width:640px){.sched-wrap{padding:56px 12px}}
-.sched-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px}
-.sched-title{font-family:var(--fh);font-size:18px;font-weight:800;color:var(--text)}
+.sched-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:10px}
+.sched-title{font-family:var(--fh);font-size:18px;font-weight:800;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:640px){.sched-title{font-size:14px;letter-spacing:-.2px}}
 .sched-sub{font-size:12px;color:var(--muted);margin-bottom:16px;text-align:center}
-.save-bar{display:none;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:12px 18px}
+.save-bar{display:none;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:12px 16px}
+@media(max-width:500px){.save-bar{padding:10px 12px}.save-st{font-size:11px;width:100%}.save-bar .btn{flex:1;justify-content:center}}
 .save-bar.on{display:flex}
 .save-st{font-size:13px;color:var(--accent);flex:1}
 .save-st.ok{color:var(--ok)}.save-st.er{color:var(--err)}
@@ -309,15 +328,18 @@ body.editing .sched-table tbody td:first-child:hover{background:rgba(56,189,248,
 }
 .sched-person-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px}
 .spc-name{font-family:var(--fh);font-size:15px;font-weight:800;color:var(--text);margin-bottom:12px}
-.spc-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.spc-day{border-radius:8px;padding:6px 4px;text-align:center}
+.spc-days{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 2px 4px}
+.spc-days::-webkit-scrollbar{display:none}
+.spc-day{flex:0 0 auto;min-width:66px;border-radius:10px;padding:8px 6px;text-align:center;transition:opacity .15s,transform .15s}
 .spc-day.off{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.15)}
 .spc-day.working{background:rgba(201,164,110,0.08);border:1px solid rgba(201,164,110,0.25)}
+body.editing .spc-day{cursor:pointer}
+body.editing .spc-day:active{opacity:.7;transform:scale(0.95)}
 .spc-day-name{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
 .spc-day.off .spc-day-name{color:rgba(56,189,248,0.5)}
 .spc-day.working .spc-day-name{color:rgba(201,164,110,0.6)}
-.spc-day-time{font-size:9px;color:var(--text2);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.spc-day.off .spc-day-time{color:rgba(56,189,248,0.7);font-weight:600}
+.spc-day-time{font-size:9px;color:var(--text2);line-height:1.4;white-space:nowrap}
+.spc-day.off .spc-day-time{color:rgba(56,189,248,0.8);font-weight:600}
 .spc-day.working .spc-day-time{color:var(--shift)}
 
 .legend{display:flex;gap:18px;justify-content:center;margin-top:16px;font-size:12px;color:var(--muted);flex-wrap:wrap}
@@ -404,7 +426,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
     <h1 class="hero-title" id="hero-title-el">New tasks<br><span class="hl">available.</span></h1>
     <p class="hero-sub" id="hero-sub-el">Review the latest guidelines and complete your assessment before starting tasks.</p>
     <div class="hero-ctas">
-      <button class="btn btn-primary" onclick="showPage('calc')">⏱ Time Calculator</button>
+      <button class="btn btn-primary" onclick="showPage('calc')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Time Calculator</button>
       <button class="btn btn-secondary" onclick="showPage('sched')">Schedule <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
     </div>
     <div class="hero-links">
@@ -1115,18 +1137,34 @@ function renderSched(){
   }).join('');
 
   // mobile cards
-  document.getElementById('schedMobile').innerHTML=data.map((p,pi)=>`
-    <div class="sched-person-card">
-      <div class="spc-name">${esc(p.n)}</div>
+  document.getElementById('schedMobile').innerHTML=data.map((p,pi)=>{
+    const hrs=personHours(p.s);
+    return`<div class="sched-person-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="spc-name">${esc(p.n)}</div>
+        <div class="tm-hrs" style="font-size:11px">${hrs.toFixed(1)} hrs</div>
+      </div>
       <div class="spc-days">${p.s.map((v,di)=>{
         const isOff=v.trim().toUpperCase()==='OFF';
         const short=isOff?'Off':v.replace(' AM','a').replace(' PM','p').replace(' – ','–');
-        return`<div class="spc-day ${isOff?'off':'working'}">
-          <div class="spc-day-name">${DAYS[di].slice(0,1)}</div>
+        return`<div class="spc-day ${isOff?'off':'working'}" data-pi="${pi}" data-di="${di}" onclick="editMobileDay(${pi},${di})">
+          <div class="spc-day-name">${DAYS[di]}</div>
           <div class="spc-day-time">${short}</div>
         </div>`;
       }).join('')}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+}
+
+function editMobileDay(pi,di){
+  if(!schedEditing)return;
+  const mem=getSchedMem();
+  const val=mem[pi].s[di];
+  _tpTd={dataset:{pi:String(pi),di:String(di)},className:val.toUpperCase()==='OFF'?'off':'sh',textContent:val,_mobile:true};
+  document.getElementById('tpName').textContent=mem[pi].n+' – '+DAYS[di];
+  const parts=val.toUpperCase()==='OFF'?['9:30 AM','2:00 PM']:val.split('–').map(x=>x.trim());
+  ['tpFrom','tpTo'].forEach((id,i)=>{const n=normTime(parts[i]||'');const sel=document.getElementById(id);sel.value=(n&&TIME_OPTS.includes(n))?n:TIME_OPTS[0];});
+  document.getElementById('tpWrap').classList.add('on');
 }
 
 function nameEditClick(td){
@@ -1178,16 +1216,35 @@ function tpSetOff(){if(_tpTd)commitTP('OFF');}
 function tpApply(){if(_tpTd)commitTP(`${document.getElementById('tpFrom').value} – ${document.getElementById('tpTo').value}`);}
 function commitTP(val){
   const pi=+_tpTd.dataset.pi;
-  _tpTd.className=val.toUpperCase()==='OFF'?'off':'sh';
-  _tpTd.textContent=val;
-  updateSchedMem(pi,+_tpTd.dataset.di,val);
+  const di=+_tpTd.dataset.di;
+  const isMobile=_tpTd._mobile;
+  if(!isMobile){_tpTd.className=val.toUpperCase()==='OFF'?'off':'sh';_tpTd.textContent=val;}
+  updateSchedMem(pi,di,val);
   document.getElementById('tpWrap').classList.remove('on');
   _tpTd=null;
-  // Refresh this person's hours in the name cell immediately
   const mem=getSchedMem();
+  // Refresh desktop name cell hrs
   const row=document.querySelector(`#schedBody tr:nth-child(${pi+1}) td:first-child`);
   if(row){const hrs=personHours(mem[pi].s);row.innerHTML=`<div class="spc-name-cell">${esc(mem[pi].n)}</div><div class="spc-hrs-cell">${hrs.toFixed(1)} hrs</div>`;}
-  // Refresh caption with new total
+  // If mobile edit, also update the desktop cell
+  if(isMobile){const td=document.querySelector(`#schedBody tr:nth-child(${pi+1}) td:nth-child(${di+2})`);if(td){td.className=val.toUpperCase()==='OFF'?'off':'sh';td.textContent=val;}}
+  // Re-render mobile cards to reflect change
+  const mobileWrap=document.getElementById('schedMobile');
+  if(mobileWrap.children.length){
+    const card=mobileWrap.children[pi];
+    if(card){
+      const hrs=personHours(mem[pi].s);
+      const hrsEl=card.querySelector('.tm-hrs');if(hrsEl)hrsEl.textContent=hrs.toFixed(1)+' hrs';
+      const dayEl=card.querySelectorAll('.spc-day')[di];
+      if(dayEl){
+        const isOff=val.toUpperCase()==='OFF';
+        dayEl.className=`spc-day ${isOff?'off':'working'}`;
+        const short=isOff?'Off':val.replace(' AM','a').replace(' PM','p').replace(' – ','–');
+        dayEl.querySelector('.spc-day-time').textContent=short;
+      }
+    }
+  }
+  // Refresh caption total
   const total=mem.reduce((s,p)=>s+personHours(p.s),0);
   document.getElementById('schedSub').textContent=`${mem.length} members · ${total.toFixed(1)} hrs this week`;
 }
@@ -1223,6 +1280,17 @@ async function saveSchedGh(){
 function setSaveSt(m,t){const e=document.getElementById('saveSt');e.textContent=m;e.className='save-st'+(t?' '+t:'');}
 document.getElementById('schedOv').addEventListener('click',e=>{if(e.target===document.getElementById('schedOv'))closeSchedPw();});
 document.getElementById('editModalWrap').addEventListener('click',e=>{if(e.target===document.getElementById('editModalWrap'))closeEditModal();});
+
+// ═══════════════════════════ CAROUSEL TOUCH ═══════════════════════════
+(()=>{
+  let tx=0;
+  const el=document.getElementById('carousel');
+  el.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+  el.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx;
+    if(Math.abs(dx)>40)carouselMove(dx<0?1:-1);
+  },{passive:true});
+})();
 
 // ═══════════════════════════ INIT ═══════════════════════════
 addCalcEntry();
