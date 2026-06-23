@@ -727,12 +727,19 @@ function personHours(shifts){
 }
 
 // ═══════════════════════════ RENDER HOME ═══════════════════════════
+function renderTitle(raw){
+  // [word] → accent color, \n → line break
+  return (raw||'').split('\n').map(line=>
+    line.split(/(\[[^\]]*\])/).map(tok=>
+      tok.startsWith('[')&&tok.endsWith(']')?`<span class="hl">${esc(tok.slice(1,-1))}</span>`:esc(tok)
+    ).join('')
+  ).join('<br>');
+}
 function renderHome(){
   const cms=getCMS();
   // hero
   document.getElementById('hero-eyebrow-text').textContent=cms.hero.eyebrow;
-  const tParts=cms.hero.title.split('\n');
-  document.getElementById('hero-title-el').innerHTML=tParts.map((p,i)=>i===tParts.length-1&&tParts.length>1?`<span class="hl">${esc(p)}</span>`:esc(p)).join('<br>');
+  document.getElementById('hero-title-el').innerHTML=renderTitle(cms.hero.title);
   // Inject sub with drawn YOU highlight — replace literal YOU (case-insensitive) with styled span
   const rawSub=esc(cms.hero.sub);
   const drawnYou=`<span class="drawn">YOU<svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4 C32 -1, 68 -2, 84 6 C94 12, 96 26, 85 33 C70 41, 28 42, 14 34 C4 27, 3 13, 18 4 Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65"/></svg></span>`;
@@ -929,7 +936,7 @@ function openEditModal(type,id){
       fields.innerHTML=`<div class="em-field"><label>Eyebrow Label</label><input id="ef-val" value="${esc(cms.hero.eyebrow)}"></div>`;
     }else if(id==='title'){
       title.textContent='Edit Headline';
-      fields.innerHTML=`<div class="em-field"><label>Headline (use line break for two lines)</label><textarea id="ef-val">${esc(cms.hero.title)}</textarea></div>`;
+      fields.innerHTML=`<div class="em-field"><label>Headline</label><textarea id="ef-val">${esc(cms.hero.title)}</textarea><div class="hint">Wrap words in <strong>[brackets]</strong> for accent color &nbsp;·&nbsp; Press Enter for a second line</div></div>`;
     }else if(id==='sub'){
       title.textContent='Edit Sub-Headline';
       fields.innerHTML=`<div class="em-field"><label>Sub-headline</label><textarea id="ef-val">${esc(cms.hero.sub)}</textarea></div>
