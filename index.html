@@ -413,8 +413,13 @@ body.editing .spc-day:active{opacity:.7;transform:scale(0.95)}
 .cl-close:hover{color:var(--text)}
 .cl-empty{color:var(--muted);font-size:13px;text-align:center;padding:40px 0}
 .cl-entry{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px}
-.cl-entry-ts{font-size:10px;color:var(--muted);letter-spacing:.5px;margin-bottom:3px}
+.cl-entry-name{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.cl-entry-ts{font-size:10px;color:var(--muted);letter-spacing:.5px;margin-bottom:8px}
 .cl-entry-label{font-size:13px;font-weight:500;color:var(--text);margin-bottom:10px}
+.cl-changes{margin:0 0 10px 0;padding-left:16px;font-size:12px;color:var(--text2);line-height:1.7}
+.cl-changes li{margin-bottom:2px}
+.cl-no-changes{font-size:11px;color:var(--muted);margin-bottom:10px;font-style:italic}
+.cl-entry-device{font-size:11px;color:var(--muted);margin-bottom:12px}
 .cl-restore-btn{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border);border-radius:8px;padding:5px 14px;font-size:12px;cursor:pointer;font-family:var(--fb);transition:background .15s}
 .cl-restore-btn:hover{background:rgba(56,189,248,0.18)}
 /* schedule add/remove person */
@@ -1488,7 +1493,8 @@ function startSchedEdit(){_schedMem=getSD();schedEditing=true;document.body.clas
 function cancelSchedEdit(){schedEditing=false;_schedMem=null;document.body.classList.remove('editing');document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');_setHistoryBtn(false);renderSched();}
 function persistSched(label){
   const d=getSchedMem();
-  addChangelogEntry(label||'Saved locally',d);
+  const oldD=getSD();
+  addChangelogEntry(label||'Saved locally',d,oldD);
   localStorage.setItem(SC,JSON.stringify(d));
   _schedMem=null;schedEditing=false;document.body.classList.remove('editing');
   document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');_setHistoryBtn(false);renderSched();
@@ -1525,48 +1531,95 @@ function confirmCancel(){document.getElementById('confirmOv').classList.remove('
 // ═══════════════════════════ CHANGELOG ═══════════════════════════
 const CL_KEY='exp_cl';
 function getChangelog(){try{return JSON.parse(localStorage.getItem(CL_KEY)||'[]');}catch{return[];}}
-function addChangelogEntry(label,data){
+
+function _getDevice(){
+  const ua=navigator.userAgent;
+  if(/iPhone/i.test(ua))return'iPhone';
+  if(/iPad/i.test(ua))return'iPad';
+  if(/Macintosh/i.test(ua))return'MacBook Pro';
+  if(/Windows/i.test(ua))return'Windows PC';
+  if(/Android/i.test(ua))return'Android';
+  return'Unknown Device';
+}
+
+function _clEntryName(){
+  const d=new Date();
+  const wd=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  return`Change_Log_${wd}${d.getDate()}${mo}`;
+}
+
+function _diffSched(oldData,newData){
+  const changes=[];
+  const oldNames=oldData.map(p=>p.n);
+  const newNames=newData.map(p=>p.n);
+  oldNames.forEach(n=>{if(!newNames.includes(n))changes.push(`${n} was removed from the schedule`);});
+  newNames.forEach(n=>{if(!oldNames.includes(n))changes.push(`${n} was added to the schedule`);});
+  oldData.forEach(op=>{
+    const np=newData.find(p=>p.n===op.n);if(!np)return;
+    op.s.forEach((shift,di)=>{
+      if(shift!==np.s[di])changes.push(`${op.n}'s ${DAYS[di]} shift changed from "${shift}" to "${np.s[di]}"`);
+    });
+  });
+  return changes;
+}
+
+function addChangelogEntry(label,newData,oldData){
   const cl=getChangelog();
-  cl.unshift({ts:new Date().toISOString(),label,data:JSON.parse(JSON.stringify(data))});
-  if(cl.length>30)cl.splice(30);
+  const changes=oldData?_diffSched(oldData,newData):[];
+  cl.unshift({
+    ts:new Date().toISOString(),
+    name:_clEntryName(),
+    label,
+    device:_getDevice(),
+    changes,
+    data:JSON.parse(JSON.stringify(newData))
+  });
+  if(cl.length>50)cl.splice(50);
   localStorage.setItem(CL_KEY,JSON.stringify(cl));
 }
-function openChangelog(){
-  renderChangelogPanel();
-  document.getElementById('clOv').classList.add('on');
-}
+
+function openChangelog(){renderChangelogPanel();document.getElementById('clOv').classList.add('on');}
 function closeChangelog(){document.getElementById('clOv').classList.remove('on');}
 document.getElementById('clOv').addEventListener('click',e=>{if(e.target===document.getElementById('clOv'))closeChangelog();});
+
 function renderChangelogPanel(){
   const cl=getChangelog();
   const list=document.getElementById('clList');
-  if(!cl.length){list.innerHTML='<div class="cl-empty">No history yet. Changes are recorded each time you save or publish.</div>';return;}
+  if(!cl.length){list.innerHTML='<div class="cl-empty">No history yet. Saved each time you publish.</div>';return;}
   list.innerHTML=cl.map((entry,i)=>{
     const d=new Date(entry.ts);
-    const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const dateStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
     const timeStr=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    const changesHtml=entry.changes&&entry.changes.length
+      ?`<ul class="cl-changes">${entry.changes.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`
+      :'<div class="cl-no-changes">No tracked changes</div>';
     return`<div class="cl-entry">
-      <div class="cl-entry-ts">${dateStr} at ${timeStr}</div>
-      <div class="cl-entry-label">${esc(entry.label)}</div>
+      <div class="cl-entry-name">${esc(entry.name||'Snapshot')}</div>
+      <div class="cl-entry-ts">${dateStr} · ${timeStr}</div>
+      ${changesHtml}
+      <div class="cl-entry-device">✦ ${esc(entry.device||'Unknown Device')}</div>
       <button class="cl-restore-btn" onclick="restoreFromChangelog(${i})">Restore this snapshot</button>
     </div>`;
   }).join('');
 }
+
 function restoreFromChangelog(i){
   const cl=getChangelog();
   const entry=cl[i];if(!entry)return;
   const d=new Date(entry.ts);
   const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
   const timeStr=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  showConfirm(`Are you sure you want to restore the schedule from ${dateStr} at ${timeStr}?`,()=>{
+  showConfirm(`Restore schedule from ${entry.name||dateStr} at ${timeStr}? All other history is preserved.`,()=>{
     closeChangelog();
     _schedMem=JSON.parse(JSON.stringify(entry.data));
     if(!schedEditing){
       schedEditing=true;document.body.classList.add('editing');
       document.getElementById('schedEditBtn').style.display='none';
       document.getElementById('saveBar').classList.add('on');
+      _setHistoryBtn(true);
     }
-    setSaveSt('Restored from history — review and publish when ready','');
+    setSaveSt('Restored — review and publish when ready','');
     renderSched();
   });
 }
