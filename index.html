@@ -1353,14 +1353,7 @@ const DEFAULT_REPO='maemaam/exponn';const DEFAULT_PATH='index.html';
 const DEFAULT_SUNDAY='2026-06-28';
 const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const DEFAULT_SCHED=[
-  {n:"Menna Sherif",  s:["9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","OFF","OFF","9:30 AM – 2:00 PM"]},
-  {n:"Mazen Adam",    s:["OFF","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","OFF","2:00 PM – 6:00 PM"]},
-  {n:"Yahya Mohamed", s:["6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","OFF","OFF","6:00 PM – 9:30 PM"]},
-  {n:"Eiman Reda",    s:["9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","OFF","OFF","9:30 PM – 2:00 AM"]},
-  {n:"Ahmed Gouhar",  s:["2:00 AM – 6:30 AM","2:00 AM – 6:30 AM","2:00 AM – 7:00 AM","OFF","OFF","OFF","OFF"]},
-  {n:"Mostafa Atef",  s:["OFF","OFF","OFF","2:00 AM – 6:30 AM","6:00 PM – 10:30 PM","2:00 PM – 6:30 PM","OFF"]}
-];
+const DEFAULT_SCHED=[{"n":"Menna Sherif","s":["9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","9:30 AM – 2:00 PM","OFF","OFF","9:30 AM – 2:00 PM"]},{"n":"Mazen Adam","s":["OFF","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","2:00 PM – 6:00 PM","OFF","2:00 PM – 6:00 PM"]},{"n":"Yahya Mohamed","s":["6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","6:00 PM – 9:30 PM","OFF","OFF","6:00 PM – 9:30 PM"]},{"n":"Eiman Reda","s":["9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","9:30 PM – 2:00 AM","OFF","OFF","9:30 PM – 2:00 AM"]},{"n":"Ahmed Gouhar","s":["OFF","3:00 AM – 7:30 AM","2:00 AM – 7:00 AM","OFF","11:00 PM – 4:00 AM","OFF","OFF"]},{"n":"Mostafa Atef","s":["OFF","OFF","OFF","2:00 AM – 6:30 AM","6:00 PM – 10:30 PM","2:00 PM – 6:30 PM","OFF"]}];
 const getSD=()=>{try{const s=localStorage.getItem(SC);return s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_SCHED));}catch{return JSON.parse(JSON.stringify(DEFAULT_SCHED));}};
 const getSunday=()=>localStorage.getItem(SK)||DEFAULT_SUNDAY;
 const fmt=d=>`${MONTHS[d.getMonth()]} ${d.getDate()}`;
