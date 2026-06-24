@@ -71,9 +71,9 @@ nav{
 .hero-slogan{font-size:12px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
 .hero-title{font-family:var(--fh);font-weight:800;font-size:clamp(36px,6vw,88px);color:#fff;line-height:1.05;letter-spacing:-2px;margin-bottom:22px;max-width:min(1300px,92vw)}
 .hero-title .hl{color:var(--accent)}
-.drawn{position:relative;display:inline-block}
-.drawn svg{position:absolute;left:-18%;top:-30%;width:136%;height:160%;overflow:visible;pointer-events:none}
-.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--text2);line-height:1.65;max-width:500px;margin:0 auto 36px}
+.drawn{position:relative;display:inline-block;padding:0 0.15em}
+.drawn svg{position:absolute;left:-22%;top:-35%;width:144%;height:170%;overflow:visible;pointer-events:none}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--text2);line-height:1.65;max-width:min(760px,92vw);margin:0 auto 36px;white-space:normal}
 .hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
 @media(max-width:480px){.hero-ctas{flex-direction:column;align-items:stretch;padding:0 24px}.hero-ctas .btn{justify-content:center}
 .hero-links{gap:14px}}
@@ -474,7 +474,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
     </div>
     <p class="hero-slogan">Training Intelligence, One Label at a Time</p>
     <h1 class="hero-title" id="hero-title-el">Exponn Employee Hub</h1>
-    <p class="hero-sub" id="hero-sub-el">Everything <span class="drawn" style="white-space:nowrap">YOU<svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4 C32 -1, 68 -2, 84 6 C94 12, 96 26, 85 33 C70 41, 28 42, 14 34 C4 27, 3 13, 18 4 Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65"/></svg></span> need; tasks, updates, and team resources.</p>
+    <p class="hero-sub" id="hero-sub-el">YOUR hub for tasks, updates, and team resources — built for <span class="drawn" style="white-space:nowrap">YOU<svg viewBox="0 0 110 46" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 6 C28 -2, 72 -3, 92 7 C104 13, 106 28, 94 36 C78 44, 26 45, 12 36 C2 28, 2 13, 16 6 Z" stroke="#38bdf8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/><path d="M8 16 C14 8, 36 2, 62 4 C88 6, 108 14, 106 26 C104 36, 84 42, 58 42 C30 42, 6 36, 4 26 C3 20, 5 18, 8 16 Z" stroke="#38bdf8" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.35"/></svg></span>.</p>
     <div class="hero-ctas">
       <button class="btn btn-primary" onclick="showPage('calc')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Time Calculator</button>
       <button class="btn btn-secondary" onclick="showPage('sched')">Schedule <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
@@ -685,7 +685,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
 
 <script>
 // ═══════════════════════════ CMS DATA ═══════════════════════════
-const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn\n[Employee Hub]","titleSubRatio":0.52,"sub":"Everything YOU need; tasks, updates, and team resources.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
+const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn\n[Employee Hub]","titleSubRatio":0.52,"sub":"YOUR hub for tasks, updates, and team resources — built for YOU.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
 
 const CMS_KEY='exp_cms';
 function getCMS(){
@@ -697,7 +697,7 @@ function getCMS(){
     if(d.hero){
       if(d.hero.title==='New tasks\navailable.'||d.hero.title==='New tasks available.'||d.hero.title==='Exponn Employee Hub')d.hero.title=DEFAULT_CONTENT.hero.title;
       if(!d.hero.titleSubRatio)d.hero.titleSubRatio=DEFAULT_CONTENT.hero.titleSubRatio;
-      if(d.hero.sub&&d.hero.sub.startsWith('Review the latest'))d.hero.sub=DEFAULT_CONTENT.hero.sub;
+      if(d.hero.sub&&(d.hero.sub.startsWith('Review the latest')||d.hero.sub.startsWith('Everything YOU')))d.hero.sub=DEFAULT_CONTENT.hero.sub;
     }
     return d;
   }catch{return JSON.parse(JSON.stringify(DEFAULT_CONTENT));}
@@ -766,10 +766,10 @@ function renderHome(){
   // hero
   document.getElementById('hero-eyebrow-text').textContent=cms.hero.eyebrow;
   document.getElementById('hero-title-el').innerHTML=renderTitle(cms.hero.title,cms.hero.titleSubRatio);
-  // Inject sub with drawn YOU highlight — replace literal YOU (case-insensitive) with styled span
+  // Any ALL-CAPS word (2+ letters) gets the drawn double-oval circle
+  const _circleSvg=`<svg viewBox="0 0 110 46" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 6 C28 -2, 72 -3, 92 7 C104 13, 106 28, 94 36 C78 44, 26 45, 12 36 C2 28, 2 13, 16 6 Z" stroke="#38bdf8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/><path d="M8 16 C14 8, 36 2, 62 4 C88 6, 108 14, 106 26 C104 36, 84 42, 58 42 C30 42, 6 36, 4 26 C3 20, 5 18, 8 16 Z" stroke="#38bdf8" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.35"/></svg>`;
   const rawSub=esc(cms.hero.sub);
-  const drawnYou=`<span class="drawn">YOU<svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4 C32 -1, 68 -2, 84 6 C94 12, 96 26, 85 33 C70 41, 28 42, 14 34 C4 27, 3 13, 18 4 Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65"/></svg></span>`;
-  document.getElementById('hero-sub-el').innerHTML=rawSub.replace(/\bYOU\b/gi,drawnYou);
+  document.getElementById('hero-sub-el').innerHTML=rawSub.replace(/\b([A-Z]{2,})\b/g,(_,w)=>`<span class="drawn" style="white-space:nowrap">${w}${_circleSvg}</span>`);
   const al=document.getElementById('assessment-el');
   if(cms.hero.assessmentLink){al.href=cms.hero.assessmentLink;al.style.display='';}else{al.style.display='none';}
 
