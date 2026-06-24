@@ -68,7 +68,7 @@ nav{
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 45%,rgba(56,189,248,0.05) 0%,transparent 65%);pointer-events:none}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:9999px;padding:6px 16px;cursor:pointer}
 .hero-eyebrow-dot{width:5px;height:5px;border-radius:9999px;background:var(--accent);box-shadow:0 0 6px rgba(56,189,248,0.9)}
-.hero-slogan{font-size:12px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.hero-slogan{font-size:12px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92vw}
 .hero-title{font-family:var(--fh);font-weight:800;font-size:clamp(36px,6vw,88px);color:#fff;line-height:1.05;letter-spacing:-2px;margin-bottom:22px;max-width:min(1300px,92vw)}
 .hero-title .hl{color:var(--accent)}
 .drawn{position:relative;display:inline-block;padding:0 0.15em}
@@ -706,15 +706,21 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
 
 <script>
 // ═══════════════════════════ CMS DATA ═══════════════════════════
-const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn\n[Employee Hub]","titleSubRatio":0.52,"sub":"YOUR hub for tasks, updates, and team resources — built for YOU.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
+const DEFAULT_CONTENT = {"_v":1750800000000,"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn\n[Employee Hub]","titleSubRatio":0.52,"sub":"YOUR hub for tasks, updates, and team resources — built for YOU.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
 
 const CMS_KEY='exp_cms';
 function getCMS(){
   try{
     const s=localStorage.getItem(CMS_KEY);
+    // Version-bust: if the baked-in DEFAULT_CONTENT has a newer _v than what's cached, wipe the cache
+    if(s){
+      const cached=JSON.parse(s);
+      const baked=DEFAULT_CONTENT._v||0;
+      const stored=cached._v||0;
+      if(baked>stored){localStorage.removeItem(CMS_KEY);return JSON.parse(JSON.stringify(DEFAULT_CONTENT));}
+    }
     const d=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_CONTENT));
     if(!d.guides)d.guides={};
-    // Migrate: update hero title/sub if still on old defaults
     if(d.hero){
       if(d.hero.title==='New tasks\navailable.'||d.hero.title==='New tasks available.'||d.hero.title==='Exponn Employee Hub')d.hero.title=DEFAULT_CONTENT.hero.title;
       if(!d.hero.titleSubRatio)d.hero.titleSubRatio=DEFAULT_CONTENT.hero.titleSubRatio;
@@ -1176,7 +1182,8 @@ async function publishCMS(cms){
     const url=`https://api.github.com/repos/${repo}/contents/${path}`;
     const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
     const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
-    const newCmsStr='const DEFAULT_CONTENT = '+JSON.stringify(cms)+';';
+    const stamped=Object.assign({},cms,{_v:Date.now()});saveCMSLocal(stamped);
+    const newCmsStr='const DEFAULT_CONTENT = '+JSON.stringify(stamped)+';';
     ['ghtok','ghrepo','ghpath'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     const html=document.documentElement.outerHTML.replace(/const DEFAULT_CONTENT = \{[\s\S]*?\};(?=\s*\nconst CMS_KEY)/,newCmsStr);
     const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
