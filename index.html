@@ -982,7 +982,7 @@ function openEditModal(type,id){
       title.textContent='Edit Headline';
       const r=cms.hero.titleSubRatio||0.52;
       fields.innerHTML=`<div class="em-field"><label>Headline</label><textarea id="ef-val">${esc(cms.hero.title)}</textarea><div class="hint"><strong>[brackets]</strong> = accent color &nbsp;·&nbsp; Enter = new line</div></div>
-        <div class="em-field"><label>Second Line Size</label><select id="ef-subratio"><option value="0.38"${r<=0.38?' selected':''}>Tiny</option><option value="0.48"${r>0.38&&r<=0.5?' selected':''}>Small</option><option value="0.55"${r>0.5&&r<=0.6?' selected':''}>Medium</option><option value="0.68"${r>0.6?' selected':''}>Large</option></select></div>`;
+        <div class="em-field"><label>Second Line Size</label><select id="ef-subratio"><option value="0.38"${r<=0.38?' selected':''}>Tiny</option><option value="0.48"${r>0.38&&r<=0.5?' selected':''}>Small</option><option value="0.55"${r>0.5&&r<=0.6?' selected':''}>Medium</option><option value="0.68"${r>0.6&&r<=0.74?' selected':''}>Large</option><option value="0.82"${r>0.74?' selected':''}>Larger</option></select></div>`;
     }else if(id==='sub'){
       title.textContent='Edit Sub-Headline';
       fields.innerHTML=`<div class="em-field"><label>Sub-headline</label><textarea id="ef-val">${esc(cms.hero.sub)}</textarea></div>
@@ -1161,10 +1161,17 @@ function deleteItem(type,id){
   });
 }
 
+function _showCmsToast(msg,type){
+  let t=document.getElementById('cmsToast');
+  if(!t){t=document.createElement('div');t.id='cmsToast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--border);border-radius:12px;padding:10px 20px;font-size:13px;font-family:var(--fb);z-index:900;pointer-events:none;transition:opacity .3s';document.body.appendChild(t);}
+  t.textContent=msg;t.style.color=type==='ok'?'var(--accent)':type==='er'?'#f87171':'var(--text2)';t.style.opacity='1';
+  clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0';},3000);
+}
 async function publishCMS(cms){
   const tok=(localStorage.getItem('exp_ghtok')||DEFAULT_TOK).trim();
   const repo=(localStorage.getItem('exp_ghrepo')||DEFAULT_REPO).trim();
   const path=(localStorage.getItem('exp_ghpath')||DEFAULT_PATH).trim();
+  _showCmsToast('Publishing…','');
   try{
     const url=`https://api.github.com/repos/${repo}/contents/${path}`;
     const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
@@ -1172,9 +1179,11 @@ async function publishCMS(cms){
     const newCmsStr='const DEFAULT_CONTENT = '+JSON.stringify(cms)+';';
     ['ghtok','ghrepo','ghpath'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     const html=document.documentElement.outerHTML.replace(/const DEFAULT_CONTENT = \{[\s\S]*?\};(?=\s*\nconst CMS_KEY)/,newCmsStr);
-    await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
+    const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
       body:JSON.stringify({message:`Content update ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
-  }catch(e){console.warn('Publish failed',e);}
+    if(pr.ok){_showCmsToast('✓ Published — live for everyone','ok');}
+    else{const er=await pr.json();_showCmsToast('Publish failed: '+(er.message||pr.status),'er');}
+  }catch(e){_showCmsToast('Publish failed: '+e.message,'er');}
 }
 
 // ═══════════════════════════ GUIDELINES ═══════════════════════════
