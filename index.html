@@ -459,7 +459,6 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
     <button class="nav-tab active" id="nav-home" onclick="showPage('home')">Home</button>
     <button class="nav-tab" id="nav-calc" onclick="showPage('calc')">Time Calculator</button>
     <button class="nav-tab" id="nav-guides" onclick="showPage('guides')">Guidelines</button>
-    <button class="nav-tab" id="nav-sched" onclick="showPage('sched')">Schedule</button>
   </div>
   <div class="nav-right">
     <div class="nav-status"><div class="status-dot"></div><span class="status-txt">Active</span></div>
@@ -474,7 +473,6 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
   <button class="nav-tab" onclick="showPage('home');toggleMobileMenu()">Home</button>
   <button class="nav-tab" onclick="showPage('calc');toggleMobileMenu()">Time Calculator</button>
   <button class="nav-tab" onclick="showPage('guides');toggleMobileMenu()">Guidelines</button>
-  <button class="nav-tab" onclick="showPage('sched');toggleMobileMenu()">Schedule</button>
 </div>
 
 <!-- ═══════════ HOME PAGE ═══════════ -->
@@ -706,7 +704,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
 
 <script>
 // ═══════════════════════════ CMS DATA ═══════════════════════════
-const DEFAULT_CONTENT = {"_v":1750800000000,"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn\n[Employee Hub]","titleSubRatio":0.52,"sub":"YOUR hub for tasks, updates, and team resources — built for YOU.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
+const DEFAULT_CONTENT = {"_v":1751000000000,"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn\n[Employee Hub]","titleSubRatio":0.68,"sub":"Tasks, updates, and team resources • Built for YOU.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
 
 const CMS_KEY='exp_cms';
 function getCMS(){
@@ -724,7 +722,8 @@ function getCMS(){
     if(d.hero){
       if(d.hero.title==='New tasks\navailable.'||d.hero.title==='New tasks available.'||d.hero.title==='Exponn Employee Hub')d.hero.title=DEFAULT_CONTENT.hero.title;
       if(!d.hero.titleSubRatio)d.hero.titleSubRatio=DEFAULT_CONTENT.hero.titleSubRatio;
-      if(d.hero.sub&&(d.hero.sub.startsWith('Review the latest')||d.hero.sub.startsWith('Everything YOU')))d.hero.sub=DEFAULT_CONTENT.hero.sub;
+      if(d.hero.sub&&(d.hero.sub.startsWith('Review the latest')||d.hero.sub.startsWith('Everything YOU')||d.hero.sub.startsWith('YOUR hub')))d.hero.sub=DEFAULT_CONTENT.hero.sub;
+      if(!d.hero.titleSubRatio||d.hero.titleSubRatio<0.65)d.hero.titleSubRatio=DEFAULT_CONTENT.hero.titleSubRatio;
     }
     return d;
   }catch{return JSON.parse(JSON.stringify(DEFAULT_CONTENT));}
@@ -1173,26 +1172,30 @@ function _showCmsToast(msg,type){
   t.textContent=msg;t.style.color=type==='ok'?'var(--accent)':type==='er'?'#f87171':'var(--text2)';t.style.opacity='1';
   clearTimeout(t._tid);t._tid=setTimeout(()=>{t.style.opacity='0';},3000);
 }
+async function _ghFetchRaw(tok,repo,path){
+  const url=`https://api.github.com/repos/${repo}/contents/${path}`;
+  const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
+  const r=await fetch(url,{headers:hdr});
+  const j=await r.json();
+  const raw=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+  return{url,hdr,sha:j.sha,raw};
+}
+async function _ghPush(url,hdr,sha,html,msg){
+  return fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
+    body:JSON.stringify({message:msg,content:btoa(unescape(encodeURIComponent(html))),sha})});
+}
 async function publishCMS(cms){
   const tok=(localStorage.getItem('exp_ghtok')||DEFAULT_TOK).trim();
   const repo=(localStorage.getItem('exp_ghrepo')||DEFAULT_REPO).trim();
   const path=(localStorage.getItem('exp_ghpath')||DEFAULT_PATH).trim();
   _showCmsToast('Publishing…','');
   try{
-    const url=`https://api.github.com/repos/${repo}/contents/${path}`;
-    const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
-    const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
-    const stamped=Object.assign({},cms,{_v:Date.now()});saveCMSLocal(stamped);
+    const{url,hdr,sha,raw}=await _ghFetchRaw(tok,repo,path);
+    const stamped=Object.assign({},cms,{_v:Date.now()});
+    saveCMSLocal(stamped);
     const newCmsStr='const DEFAULT_CONTENT = '+JSON.stringify(stamped)+';';
-    ['ghtok','ghrepo','ghpath'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    let html=document.documentElement.outerHTML.replace(/const DEFAULT_CONTENT = \{[\s\S]*?\};(?=\s*\nconst CMS_KEY)/,newCmsStr);
-    // Strip any admin/edit UI state so new visitors start clean
-    html=html.replace(/id="navEditBtn"\s+class="nav-edit-btn unlocked"/g,'id="navEditBtn" class="nav-edit-btn"');
-    html=html.replace(/<body([^>]*)\sclass="([^"]*\s)?editing(\s[^"]*)?"/g,(m,pre,b,a)=>{const c=((b||'')+(a||'')).trim();return`<body${pre}${c?` class="${c}"`:''}`});
-    html=html.replace(/id="saveBar"\s+class="save-bar on"/g,'id="saveBar" class="save-bar"');
-    html=html.replace(/id="schedEditBtn"([^>]*)style="[^"]*display\s*:\s*none[^"]*"/g,'id="schedEditBtn"$1');
-    const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
-      body:JSON.stringify({message:`Content update ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
+    const updated=raw.replace(/const DEFAULT_CONTENT = \{[\s\S]*?\};(?=\s*\nconst CMS_KEY)/,newCmsStr);
+    const pr=await _ghPush(url,hdr,sha,updated,`Content update ${new Date().toISOString().slice(0,10)}`);
     if(pr.ok){_showCmsToast('✓ Published — live for everyone','ok');}
     else{const er=await pr.json();_showCmsToast('Publish failed: '+(er.message||pr.status),'er');}
   }catch(e){_showCmsToast('Publish failed: '+e.message,'er');}
@@ -1567,16 +1570,9 @@ async function _doSaveSchedGh(){
   const tok=(localStorage.getItem(TK)||DEFAULT_TOK).trim();const repo=(localStorage.getItem(RK)||DEFAULT_REPO).trim();const path=(localStorage.getItem(FK)||DEFAULT_PATH).trim();
   setSaveSt('Publishing…','');const d=getSchedMem();const _preOldD=getSD();localStorage.setItem(SC,JSON.stringify(d));
   try{
-    const url=`https://api.github.com/repos/${repo}/contents/${path}`;const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
-    const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
-    ['ghtok','ghrepo','ghpath'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    // Capture HTML then strip any editing UI state so new visitors don't see edit mode
-    let html=document.documentElement.outerHTML.replace(/const DEFAULT_SCHED=\[[\s\S]*?\];/,'const DEFAULT_SCHED='+JSON.stringify(d)+';');
-    html=html.replace(/<body([^>]*)\sclass="([^"]*\s)?editing(\s[^"]*)?"/g,(m,pre,b,a)=>{const c=((b||'')+(a||'')).trim();return`<body${pre}${c?` class="${c}"`:''}`});
-    html=html.replace(/id="schedEditBtn"([^>]*)style="[^"]*display\s*:\s*none[^"]*"/g,'id="schedEditBtn"$1');
-    html=html.replace(/id="saveBar"\s+class="save-bar on"/g,'id="saveBar" class="save-bar"');
-    html=html.replace(/id="historyBtn"([^>]*)style="[^"]*display\s*:\s*flex[^"]*"/g,'id="historyBtn"$1style="display:none"');
-    const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},body:JSON.stringify({message:`Schedule ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
+    const{url,hdr,sha,raw}=await _ghFetchRaw(tok,repo,path);
+    const updated=raw.replace(/const DEFAULT_SCHED=\[[\s\S]*?\];/,'const DEFAULT_SCHED='+JSON.stringify(d)+';');
+    const pr=await _ghPush(url,hdr,sha,updated,`Schedule ${new Date().toISOString().slice(0,10)}`);
     if(pr.ok){persistSched('Published to GitHub',_preOldD,true);setSaveSt('✓ Published!','ok');}else{const er=await pr.json();setSaveSt('Error: '+(er.message||pr.status),'er');}
   }catch(er){setSaveSt('Error: '+er.message,'er');}
 }
