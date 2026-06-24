@@ -1503,9 +1503,9 @@ function authSched(){
 function _setHistoryBtn(visible){const b=document.getElementById('historyBtn');if(b)b.style.display=visible?'flex':'none';}
 function startSchedEdit(){_schedMem=getSD();schedEditing=true;document.body.classList.add('editing');document.getElementById('schedEditBtn').style.display='none';document.getElementById('saveBar').classList.add('on');_setHistoryBtn(true);setSaveSt('Click any cell to edit · Click day header to change week · Click name to rename','');renderSched();}
 function cancelSchedEdit(){schedEditing=false;_schedMem=null;document.body.classList.remove('editing');document.getElementById('schedEditBtn').style.display='';document.getElementById('saveBar').classList.remove('on');_setHistoryBtn(false);renderSched();}
-function persistSched(label){
+function persistSched(label,preOldD){
   const d=getSchedMem();
-  const oldD=getSD();
+  const oldD=preOldD||getSD();
   addChangelogEntry(label||'Saved locally',d,oldD);
   localStorage.setItem(SC,JSON.stringify(d));
   _schedMem=null;schedEditing=false;document.body.classList.remove('editing');
@@ -1516,14 +1516,14 @@ async function saveSchedGh(){
 }
 async function _doSaveSchedGh(){
   const tok=(localStorage.getItem(TK)||DEFAULT_TOK).trim();const repo=(localStorage.getItem(RK)||DEFAULT_REPO).trim();const path=(localStorage.getItem(FK)||DEFAULT_PATH).trim();
-  setSaveSt('Publishing…','');const d=getSchedMem();localStorage.setItem(SC,JSON.stringify(d));
+  setSaveSt('Publishing…','');const d=getSchedMem();const _preOldD=getSD();localStorage.setItem(SC,JSON.stringify(d));
   try{
     const url=`https://api.github.com/repos/${repo}/contents/${path}`;const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
     const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
     ['ghtok','ghrepo','ghpath'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     const html=document.documentElement.outerHTML.replace(/const DEFAULT_SCHED=\[[\s\S]*?\];/,'const DEFAULT_SCHED='+JSON.stringify(d)+';');
     const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},body:JSON.stringify({message:`Schedule ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
-    if(pr.ok){persistSched('Published to GitHub');setSaveSt('✓ Published!','ok');}else{const er=await pr.json();setSaveSt('Error: '+(er.message||pr.status),'er');}
+    if(pr.ok){persistSched('Published to GitHub',_preOldD);setSaveSt('✓ Published!','ok');}else{const er=await pr.json();setSaveSt('Error: '+(er.message||pr.status),'er');}
   }catch(er){setSaveSt('Error: '+er.message,'er');}
 }
 function setSaveSt(m,t){const e=document.getElementById('saveSt');e.textContent=m;e.className='save-st'+(t?' '+t:'');}
