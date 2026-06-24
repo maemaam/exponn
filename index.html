@@ -685,7 +685,7 @@ footer{text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;bor
 
 <script>
 // ═══════════════════════════ CMS DATA ═══════════════════════════
-const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn Employee Hub","sub":"Everything YOU need; tasks, updates, and team resources.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
+const DEFAULT_CONTENT = {"hero":{"eyebrow":"Week of Jun 22, 2026","title":"Exponn\n[Employee Hub]","titleSubRatio":0.52,"sub":"Everything YOU need; tasks, updates, and team resources.","assessmentLink":""},"updates":[{"id":"u1","tag":"new","title":"Task Time Calculator","body":"Quickly calculate your total work time from task IDs. Paste your task list, set your first & last task ID, apply a time cap, and get your total instantly.","date":"Jun 23, 2026","link":"calc"},{"id":"u2","tag":"updated","title":"Team Schedule Updated","body":"Schedule updated with new shift distribution for the week of Jun 23.","date":"Jun 22, 2026","link":"sched"},{"id":"u3","tag":"alert","title":"Annotation Quality Reminder","body":"Review the annotation critic guidelines before starting tasks. Pay close attention to boundary precision and entity verification steps.","date":"Jun 20, 2026","link":"guides"}],"tasks":[{"id":"t1","icon":"🎯","title":"Annotation Critic","desc":"Quality review criteria, scoring rubric, and common errors.","guideKey":"annot-critic","label":"annot-critic-q7r"},{"id":"t2","icon":"🔍","title":"IG Entity Verification","desc":"Step-by-step entity verification process for IG tasks.","guideKey":"ig-entity","label":"IG Entity Verification"},{"id":"t3","icon":"📦","title":"SL Box Verification","desc":"Box verification and correction procedures.","guideKey":"sl-box","label":"SL Box Verification"},{"id":"t4","icon":"✂️","title":"Find the Boundary v2","desc":"Pixel-aligned boundary detection. Updated v2 specs.","guideKey":"boundary","label":"find-the-boundary-v2"},{"id":"t5","icon":"🖼️","title":"i2i Pixel-Aligned Filter","desc":"Image-to-image filter alignment specification.","guideKey":"i2i","label":"i2i-pixel-aligned-filter"}],"team":[{"name":"Menna Sherif","hrs":"22.5"},{"name":"Mazen Adam","hrs":"20"},{"name":"Yahya Mohamed","hrs":"17.5"},{"name":"Eiman Reda","hrs":"22.5"},{"name":"Ahmed Gouhar","hrs":"14"},{"name":"Mostafa Atef","hrs":"13.5"}],"guides":{}};
 
 const CMS_KEY='exp_cms';
 function getCMS(){
@@ -695,7 +695,8 @@ function getCMS(){
     if(!d.guides)d.guides={};
     // Migrate: update hero title/sub if still on old defaults
     if(d.hero){
-      if(d.hero.title==='New tasks\navailable.'||d.hero.title==='New tasks available.')d.hero.title=DEFAULT_CONTENT.hero.title;
+      if(d.hero.title==='New tasks\navailable.'||d.hero.title==='New tasks available.'||d.hero.title==='Exponn Employee Hub')d.hero.title=DEFAULT_CONTENT.hero.title;
+      if(!d.hero.titleSubRatio)d.hero.titleSubRatio=DEFAULT_CONTENT.hero.titleSubRatio;
       if(d.hero.sub&&d.hero.sub.startsWith('Review the latest'))d.hero.sub=DEFAULT_CONTENT.hero.sub;
     }
     return d;
@@ -744,19 +745,27 @@ function personHours(shifts){
 }
 
 // ═══════════════════════════ RENDER HOME ═══════════════════════════
-function renderTitle(raw){
-  // [word] → accent color, \n → line break
-  return (raw||'').split('\n').map(line=>
-    line.split(/(\[[^\]]*\])/).map(tok=>
-      tok.startsWith('[')&&tok.endsWith(']')?`<span class="hl">${esc(tok.slice(1,-1))}</span>`:esc(tok)
-    ).join('')
-  ).join('<br>');
+function _parseLine(line){
+  return line.split(/(\[[^\]]*\])/).map(tok=>
+    tok.startsWith('[')&&tok.endsWith(']')?`<span class="hl">${esc(tok.slice(1,-1))}</span>`:esc(tok)
+  ).join('');
+}
+function renderTitle(raw,subRatio){
+  const ratio=subRatio||0.52;
+  const lines=(raw||'').split('\n');
+  if(lines.length===1)return _parseLine(lines[0]);
+  return lines.map((line,i)=>{
+    const size=i===0?'1em':`${ratio}em`;
+    const lh=i===0?'1.05':'1.08';
+    const mt=i===0?'0':'0.08em';
+    return`<span style="display:block;font-size:${size};line-height:${lh};margin-top:${mt}">${_parseLine(line)}</span>`;
+  }).join('');
 }
 function renderHome(){
   const cms=getCMS();
   // hero
   document.getElementById('hero-eyebrow-text').textContent=cms.hero.eyebrow;
-  document.getElementById('hero-title-el').innerHTML=renderTitle(cms.hero.title);
+  document.getElementById('hero-title-el').innerHTML=renderTitle(cms.hero.title,cms.hero.titleSubRatio);
   // Inject sub with drawn YOU highlight — replace literal YOU (case-insensitive) with styled span
   const rawSub=esc(cms.hero.sub);
   const drawnYou=`<span class="drawn">YOU<svg viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4 C32 -1, 68 -2, 84 6 C94 12, 96 26, 85 33 C70 41, 28 42, 14 34 C4 27, 3 13, 18 4 Z" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.65"/></svg></span>`;
@@ -953,7 +962,9 @@ function openEditModal(type,id){
       fields.innerHTML=`<div class="em-field"><label>Eyebrow Label</label><input id="ef-val" value="${esc(cms.hero.eyebrow)}"></div>`;
     }else if(id==='title'){
       title.textContent='Edit Headline';
-      fields.innerHTML=`<div class="em-field"><label>Headline</label><textarea id="ef-val">${esc(cms.hero.title)}</textarea><div class="hint"><strong>[brackets]</strong> = accent color &nbsp;·&nbsp; Enter = new line</div></div>`;
+      const r=cms.hero.titleSubRatio||0.52;
+      fields.innerHTML=`<div class="em-field"><label>Headline</label><textarea id="ef-val">${esc(cms.hero.title)}</textarea><div class="hint"><strong>[brackets]</strong> = accent color &nbsp;·&nbsp; Enter = new line</div></div>
+        <div class="em-field"><label>Second Line Size</label><select id="ef-subratio"><option value="0.38"${r<=0.38?' selected':''}>Tiny</option><option value="0.48"${r>0.38&&r<=0.5?' selected':''}>Small</option><option value="0.55"${r>0.5&&r<=0.6?' selected':''}>Medium</option><option value="0.68"${r>0.6?' selected':''}>Large</option></select></div>`;
     }else if(id==='sub'){
       title.textContent='Edit Sub-Headline';
       fields.innerHTML=`<div class="em-field"><label>Sub-headline</label><textarea id="ef-val">${esc(cms.hero.sub)}</textarea></div>
@@ -1052,7 +1063,7 @@ async function _doSaveEditModal(){
 
   if(type==='hero'){
     if(id==='eyebrow')cms.hero.eyebrow=document.getElementById('ef-val').value;
-    else if(id==='title')cms.hero.title=document.getElementById('ef-val').value;
+    else if(id==='title'){cms.hero.title=document.getElementById('ef-val').value;const sr=document.getElementById('ef-subratio');if(sr)cms.hero.titleSubRatio=parseFloat(sr.value);}
     else if(id==='sub'){cms.hero.sub=document.getElementById('ef-val').value;cms.hero.assessmentLink=document.getElementById('ef-assess').value;}
   }else if(type==='update'){
     const linkVal=document.getElementById('ef-link').value;
