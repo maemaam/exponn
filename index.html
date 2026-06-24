@@ -1141,6 +1141,7 @@ async function publishCMS(cms){
     const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
     const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
     const newCmsStr='const DEFAULT_CONTENT = '+JSON.stringify(cms)+';';
+    ['ghtok','ghrepo','ghpath'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     const html=document.documentElement.outerHTML.replace(/const DEFAULT_CONTENT = \{[\s\S]*?\};(?=\s*\nconst CMS_KEY)/,newCmsStr);
     await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},
       body:JSON.stringify({message:`Content update ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
@@ -1324,7 +1325,7 @@ function renderSchedHeaders(sun){
 function renderSched(){
   const sun=getSunday();const dates=weekDates(sun);
   renderSchedHeaders(sun);
-  const data=getSD();
+  const data=getSchedMem();
 
   // Update schedSub
   const n=data.length;
@@ -1508,6 +1509,7 @@ async function _doSaveSchedGh(){
   try{
     const url=`https://api.github.com/repos/${repo}/contents/${path}`;const hdr={Authorization:`Bearer ${tok}`,Accept:'application/vnd.github+json'};
     const gr=await fetch(url,{headers:hdr});const sha=gr.ok?(await gr.json()).sha:null;
+    ['ghtok','ghrepo','ghpath'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     const html=document.documentElement.outerHTML.replace(/const DEFAULT_SCHED=\[[\s\S]*?\];/,'const DEFAULT_SCHED='+JSON.stringify(d)+';');
     const pr=await fetch(url,{method:'PUT',headers:{...hdr,'Content-Type':'application/json'},body:JSON.stringify({message:`Schedule ${new Date().toISOString().slice(0,10)}`,content:btoa(unescape(encodeURIComponent(html))),...(sha?{sha}:{})})});
     if(pr.ok){persistSched('Published to GitHub');setSaveSt('✓ Published!','ok');}else{const er=await pr.json();setSaveSt('Error: '+(er.message||pr.status),'er');}
